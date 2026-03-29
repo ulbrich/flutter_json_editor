@@ -96,13 +96,6 @@ class _EditorPageState extends State<EditorPage> {
               //         ),
               //   },
               // ),
-              initialData: const {
-                'firstName': 'Jane',
-                'lastName': 'Doe',
-                'favouriteColour': '#ff0000',
-                'notes':
-                    'This is some Markdown formatted text the user **can not edit**, but might be useful to show in the form... :-)',
-              },
               onRefLookup: (refUrl, fieldPath, currentValue) async {
                 // Add your logic here to fetch data based on the `refUrl`. You
                 // might want to add headers for authentication or e.g. replace
@@ -128,6 +121,13 @@ class _EditorPageState extends State<EditorPage> {
                 }
 
                 return null;
+              },
+              initialData: const {
+                'firstName': 'Jane',
+                'lastName': 'Doe',
+                'favouriteColour': '#ff0000',
+                'notes':
+                    'This is some Markdown formatted text the user **can not edit**, but might be useful to show in the form... :-)',
               },
               onUpdate: (fullData, diff) {
                 setState(() {
