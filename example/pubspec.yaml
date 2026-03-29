@@ -1,0 +1,23 @@
+name: flutter_json_editor_example
+description: Example app demonstrating flutter_json_editor
+
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_json_editor:
+    path: ../
+  json_schema: ^5.2.2
+  http: ^1.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
