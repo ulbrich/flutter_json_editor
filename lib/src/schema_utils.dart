@@ -114,14 +114,16 @@ class SchemaUtils {
       // Rewrite $ref values that use $defs to use definitions
       if (key == r'$ref' && value is String) {
         if (value.startsWith('http://') || value.startsWith('https://')) {
-          // URL $ref: replace the entire object with a placeholder schema.
-          // JsonSchema.create() cannot resolve URLs synchronously, so we
-          // convert to {"type": "string", "x-remote-ref": "the-url"} which
-          // SchemaResolver detects and routes to RemoteRefEditor.
-          return <String, dynamic>{
-            'type': 'string',
-            'x-remote-ref': value,
-          };
+          // URL $ref: strip the $ref and store the URL as x-remote-ref.
+          // JsonSchema.create() cannot resolve URLs synchronously, so
+          // SchemaResolver detects x-remote-ref and routes accordingly.
+          // Preserve all sibling properties (type, title, x-format, etc.)
+          // by continuing the loop instead of returning early.
+          result['x-remote-ref'] = value;
+          if (!schemaMap.containsKey('type')) {
+            result['type'] = 'string';
+          }
+          continue;
         }
         value = value.replaceAll(r'#/$defs/', '#/definitions/');
       }

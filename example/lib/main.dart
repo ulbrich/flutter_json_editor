@@ -5,7 +5,7 @@ import 'package:flutter_json_editor/flutter_json_editor.dart';
 // import 'package:http/http.dart' as http;
 import 'package:json_schema/json_schema.dart';
 
-import 'schemas/complex_schema.dart';
+import 'schemas/example_schema.dart';
 
 void main() => runApp(const ExampleApp());
 
@@ -39,7 +39,7 @@ class _EditorPageState extends State<EditorPage> {
   void initState() {
     super.initState();
     _schema = SchemaUtils.createSchema(
-      Map<String, dynamic>.from(complexSchemaMap),
+      Map<String, dynamic>.from(exampleSchemaMap),
     );
   }
 
@@ -100,6 +100,8 @@ class _EditorPageState extends State<EditorPage> {
                 'firstName': 'Jane',
                 'lastName': 'Doe',
                 'favouriteColour': '#ff0000',
+                'notes':
+                    'This is something the user can not edit, but might be useful to show in the form.',
               },
               onRefLookup: (refUrl, fieldPath, currentValue) async {
                 // Add your logic here to fetch data based on the `refUrl`. You
@@ -118,7 +120,11 @@ class _EditorPageState extends State<EditorPage> {
                 // final data = jsonDecode(response.body) as Map<String, dynamic>;
 
                 if (refUrl == 'https://example.com/api/hobbies') {
-                  return complexSchemaHobbyRefLookupResponse;
+                  return exampleSchemaHobbyRefLookupResponse;
+                }
+
+                if (refUrl == 'https://example.com/api/avatars') {
+                  return exampleSchemaAvatarRefLookupResponse;
                 }
 
                 return null;

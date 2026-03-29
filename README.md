@@ -146,7 +146,7 @@ JsonEditor(
     },
     // Override by x-format value
     formatOverrides: {
-      'rating': ({required schema, required path, required value,
+      'star-rating': ({required schema, required path, required value,
           required onChanged, required isRequired, isNullable = false}) =>
           MyStarRatingEditor(value: value, onChanged: onChanged),
     },
@@ -167,7 +167,8 @@ The library ships with built-in editors activated via the `x-format` schema exte
 | `x-format` value | Editor | Stored format |
 |---|---|---|
 | `"colour"` or `"color"` | Interactive HSV colour wheel with brightness slider | `#rrggbb` hex string (e.g. `"#ff0000"`) |
-| `"rating"` or `"star-rating"` | Clickable 0–5 star rating | `int` or `String` depending on schema type |
+| `"star-rating"` | Clickable 0–5 star rating | `int` or `String` depending on schema type |
+| `"image-url-picker"` | Selectable image thumbnail grid | Selected value (URL or ID) |
 
 ```json
 {
@@ -179,7 +180,7 @@ The library ships with built-in editors activated via the `x-format` schema exte
   },
   "performance": {
     "type": "integer",
-    "x-format": "rating",
+    "x-format": "star-rating",
     "title": "Performance Rating",
     "minimum": 0,
     "maximum": 5,
@@ -189,6 +190,10 @@ The library ships with built-in editors activated via the `x-format` schema exte
 ```
 
 The star rating editor works with both `"type": "integer"` (stores `int`) and `"type": "string"` (stores `String`). Clicking a star sets the rating; clicking the same star again resets to 0.
+
+The image picker supports two modes:
+- **Simple enum** — each `enum` value is an image URL; the selected URL is stored as the value.
+- **Remote `$ref`** — resolves a remote reference via `onRefLookup`. The response's `enumSource` is parsed: `title` is treated as the image URL, `value` (e.g. an ID) is stored as the result.
 
 You can override a built-in format editor by providing your own builder for the same key in `formatOverrides`.
 
@@ -241,6 +246,7 @@ Results are cached per URL for the lifetime of the widget.
 | `format` (email, uri) | Validation |
 | `x-format` (colour/color) | Built-in colour wheel editor |
 | `x-format` (rating/star-rating) | Built-in star rating editor |
+| `x-format` (image-picker/image-select) | Built-in image picker editor |
 | `default` values | Applied on field creation |
 | Reorderable arrays | Full (drag handles) |
 

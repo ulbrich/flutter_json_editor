@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:json_schema/json_schema.dart';
 
 import 'editors/colour_editor.dart';
+import 'editors/image_picker_editor.dart';
 import 'editors/star_rating_editor.dart';
 import 'schema_field_editor.dart';
 
@@ -57,12 +58,35 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _imagePickerEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ImagePickerEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
     'colour': _colourEditorBuilder,
     'color': _colourEditorBuilder,
-    'rating': _starRatingEditorBuilder,
+    'image-url-picker': _imagePickerEditorBuilder,
     'star-rating': _starRatingEditorBuilder,
   };
+
+  /// Look up a builder by `x-format` value only. Used by [SchemaResolver] to
+  /// check format overrides before remote-ref routing.
+  SchemaFieldEditorBuilder? resolveFormat(String xFormat) {
+    return _formatOverrides[xFormat];
+  }
 
   SchemaFieldEditorBuilder? resolve(JsonSchema schema, String path) {
     // 1. Check path overrides

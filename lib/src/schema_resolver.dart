@@ -24,7 +24,25 @@ class SchemaResolver {
     bool isNullable = false,
     int refDepth = 0,
   }) {
-    // 0a. Detect x-remote-ref (URL $ref replaced during sanitization)
+    // 0a. Check format overrides first — they take priority even when a
+    //     remote $ref is present, so that e.g. x-format: "image-picker"
+    //     can handle its own $ref resolution.
+    final xFormat = schema.schemaMap?['x-format'];
+    if (xFormat is String && registry != null) {
+      final formatBuilder = registry.resolveFormat(xFormat);
+      if (formatBuilder != null) {
+        return formatBuilder(
+          schema: schema,
+          path: path,
+          value: value,
+          onChanged: onChanged,
+          isRequired: isRequired,
+          isNullable: isNullable,
+        );
+      }
+    }
+
+    // 0b. Detect x-remote-ref (URL $ref replaced during sanitization)
     final remoteRef = schema.schemaMap?['x-remote-ref'];
     if (remoteRef is String) {
       return RemoteRefEditor(
@@ -38,7 +56,7 @@ class SchemaResolver {
       );
     }
 
-    // 0b. $ref resolution with circular reference protection
+    // 0c. $ref resolution with circular reference protection
     final originalRef = schema.ref;
     schema = SchemaUtils.resolveRef(schema);
     if (originalRef != null) {
@@ -49,7 +67,7 @@ class SchemaResolver {
       }
     }
 
-    // 1. Check registry for override
+    // 1. Check registry for override (path, predicate, type — format already checked above)
     if (registry != null) {
       final builder = registry.resolve(schema, path);
       if (builder != null) {

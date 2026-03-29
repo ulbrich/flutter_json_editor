@@ -100,6 +100,8 @@ class _StringEditorState extends State<StringEditor> {
               enabled: !isDisabled,
               obscureText: isObscured,
               keyboardType: _keyboardType(),
+              maxLines: isDisabled ? null : 1,
+              minLines: isDisabled ? 1 : null,
               decoration: InputDecoration(
                 labelText: _buildLabel(),
                 helperText: widget.schema.description,

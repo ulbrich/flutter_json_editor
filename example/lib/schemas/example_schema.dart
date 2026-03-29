@@ -1,4 +1,4 @@
-const complexSchemaMap = {
+const exampleSchemaMap = {
   "\$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Employee Record",
   "type": "object",
@@ -64,21 +64,28 @@ const complexSchemaMap = {
       "description": "Arbitrary key-value tags",
       "additionalProperties": {"type": "string"}
     },
-    "favouriteColour": {
-      "type": "string",
-      "x-format": "colour",
-      "title": "Favourite Colour",
-      "description": "Pick your favourite colour",
-      "default": "#ff0000"
-    },
     "performance": {
       "type": "integer",
-      "x-format": "rating",
+      "x-format": "star-rating",
       "title": "Performance Rating",
       "description": "Rate employee performance (0–5 stars)",
       "minimum": 0,
       "maximum": 5,
       "default": 0
+    },
+    "avatar": {
+      "type": "string",
+      "x-format": "image-url-picker",
+      "title": "Avatar",
+      "description": "Choose a profile picture",
+      "\$ref": "https://example.com/api/avatars"
+    },
+    "themeColour": {
+      "type": "string",
+      "x-format": "colour",
+      "title": "Theme Colour",
+      "description": "Pick your colour for UX theming",
+      "default": "#ff0000"
     },
     "notes": {"type": "string", "title": "Internal Notes", "readOnly": true}
   },
@@ -105,7 +112,49 @@ const complexSchemaMap = {
   }
 };
 
-const complexSchemaHobbyRefLookupResponse = {
+const exampleSchemaAvatarRefLookupResponse = {
+  "type": "string",
+  "enumSource": [
+    {
+      "value": "{{item.value}}",
+      "title": "{{item.title}}",
+      "source": [
+        {
+          "value": "avatar-1",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Felix&size=128"
+        },
+        {
+          "value": "avatar-2",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Aneka&size=128"
+        },
+        {
+          "value": "avatar-3",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Lily&size=128"
+        },
+        {
+          "value": "avatar-4",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Max&size=128"
+        },
+        {
+          "value": "avatar-5",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Sam&size=128"
+        },
+        {
+          "value": "avatar-6",
+          "title":
+              "https://api.dicebear.com/9.x/adventurer/png?seed=Zoe&size=128"
+        }
+      ]
+    }
+  ]
+};
+
+const exampleSchemaHobbyRefLookupResponse = {
   "type": "string",
   "enumSource": [
     {
