@@ -16,7 +16,7 @@ gave us the help we needed.
 
 ## Features
 
-- **Full type coverage** — String, number, integer, boolean, enum, object, array, and map editors out of the box
+- **Full type coverage** — String, number, integer, boolean, enum, object, array, map, and colour picker editors out of the box
 - **Nested structures** — Objects within objects, arrays of objects, maps with dynamic keys
 - **Conditional fields** — `if`/`then`/`else` branches show and hide fields based on data state
 - **Property dependencies** — Fields that appear or become required based on other field values
@@ -25,7 +25,8 @@ gave us the help we needed.
 - **Remote `$ref` resolution** — Async lookup for external schema references with caching, dropdown or typeahead based on result count
 - **Diff tracking** — `DiffCalculator` reports only the paths that changed between updates
 - **Theming** — `JsonEditorTheme` extension integrates with your Material 3 theme
-- **Custom editors** — `EditorRegistry` lets you override any field by path, type, or predicate
+- **Custom editors** — `EditorRegistry` lets you override any field by path, `x-format`, type, or predicate
+- **Built-in format editors** — `x-format: "colour"` (or `"color"`) renders an interactive colour wheel picker
 - **Circular reference protection** — Self-referential schemas are safely capped at a configurable depth
 
 ## Getting Started
@@ -71,7 +72,7 @@ JsonEditor(
 
 When the widget builds, `SchemaResolver` walks the schema and picks the right editor for each field. The resolution order is:
 
-1. **Registry overrides** — your custom editors (by path, predicate, or type)
+1. **Registry overrides** — your custom editors (by path, `x-format`, predicate, or type)
 2. **Remote `$ref`** — URL references resolved via async callback
 3. **`$ref` resolution** — local references followed (with circular depth protection)
 4. **Composition** — `oneOf`/`anyOf` render a variant selector
@@ -139,17 +140,55 @@ JsonEditor(
   registry: EditorRegistryData(
     // Override by exact field path
     pathOverrides: {
-      '/address/zip': (context, schema, value, onChanged, fieldName) =>
+      'address.zip': ({required schema, required path, required value,
+          required onChanged, required isRequired, isNullable = false}) =>
           MyCustomZipEditor(value: value, onChanged: onChanged),
+    },
+    // Override by x-format value
+    formatOverrides: {
+      'rating': ({required schema, required path, required value,
+          required onChanged, required isRequired, isNullable = false}) =>
+          MyStarRatingEditor(value: value, onChanged: onChanged),
     },
     // Override by schema type
     typeOverrides: {
-      SchemaType.string: (context, schema, value, onChanged, fieldName) =>
+      SchemaType.string: ({required schema, required path, required value,
+          required onChanged, required isRequired, isNullable = false}) =>
           MyFancyStringEditor(schema: schema, value: value, onChanged: onChanged),
     },
   ),
 )
 ```
+
+### Built-in Format Editors
+
+The library ships with built-in editors activated via the `x-format` schema extension. These work automatically without any registry configuration:
+
+| `x-format` value | Editor | Stored format |
+|---|---|---|
+| `"colour"` or `"color"` | Interactive HSV colour wheel with brightness slider | `#rrggbb` hex string (e.g. `"#ff0000"`) |
+
+```json
+{
+  "favouriteColour": {
+    "type": "string",
+    "x-format": "colour",
+    "title": "Favourite Colour",
+    "default": "#ff0000"
+  }
+}
+```
+
+You can override a built-in format editor by providing your own builder for the same key in `formatOverrides`.
+
+### Resolution Priority
+
+Registry overrides are checked in this order (first match wins):
+
+1. **Path overrides** — exact field path match
+2. **Format overrides** — `x-format` value match (includes built-in defaults)
+3. **Predicate overrides** — first matching predicate
+4. **Type overrides** — schema type match
 
 ## Remote References
 
@@ -189,6 +228,7 @@ Results are cached per URL for the lifetime of the widget.
 | `minItems` / `maxItems` | Full |
 | `minimum` / `maximum` | Validation |
 | `format` (email, uri) | Validation |
+| `x-format` (colour/color) | Built-in colour wheel editor |
 | `default` values | Applied on field creation |
 | Reorderable arrays | Full (drag handles) |
 
