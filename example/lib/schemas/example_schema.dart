@@ -14,26 +14,6 @@ const exampleSchemaMap = {
     "lastName": {"type": "string", "title": "Last Name", "minLength": 1},
     "age": {"type": "integer", "title": "Age", "minimum": 18, "maximum": 120},
     "email": {"type": "string", "title": "Email", "format": "email"},
-    "isActive": {
-      "type": "boolean",
-      "title": "Active Employee",
-      "default": true
-    },
-    "employeeType": {
-      "type": "string",
-      "title": "Employee Type",
-      "enum": ["full-time", "part-time", "contractor", "intern"],
-    },
-    "hobby": {
-      "type": "string",
-      "title": "Hobby",
-      "\$ref": "https://example.com/api/hobbies"
-    },
-    "department": {
-      "type": ["string", "null"],
-      "title": "Department",
-      "description": "Nullable department field"
-    },
     "address": {
       "type": "object",
       "title": "Address",
@@ -73,13 +53,6 @@ const exampleSchemaMap = {
       "maximum": 5,
       "default": 0
     },
-    "avatar": {
-      "type": "string",
-      "x-format": "image-url-picker",
-      "title": "Avatar",
-      "description": "Choose a profile picture",
-      "\$ref": "https://example.com/api/avatars"
-    },
     "themeColour": {
       "type": "string",
       "x-format": "colour",
@@ -87,12 +60,39 @@ const exampleSchemaMap = {
       "description": "Pick your colour for UX theming",
       "default": "#ff0000"
     },
+    "avatar": {
+      "type": "string",
+      "x-format": "image-url-picker",
+      "title": "Avatar",
+      "description": "Choose a profile picture",
+      "\$ref": "https://example.com/api/avatars"
+    },
+    "hobby": {
+      "type": "string",
+      "title": "Hobby",
+      "\$ref": "https://example.com/api/hobbies"
+    },
     "notes": {
       "type": "string",
       "x-format": "markdown",
       "title": "Internal Notes",
       "readOnly": true
-    }
+    },
+    "department": {
+      "type": ["string", "null"],
+      "title": "Department",
+      "description": "Nullable department field"
+    },
+    "isActive": {
+      "type": "boolean",
+      "title": "Active Employee",
+      "default": true
+    },
+    "employeeType": {
+      "type": "string",
+      "title": "Employee Type",
+      "enum": ["full-time", "part-time", "contractor", "intern"],
+    },
   },
   "if": {
     "properties": {
@@ -114,7 +114,7 @@ const exampleSchemaMap = {
     "properties": {
       "salary": {"type": "number", "title": "Annual Salary", "minimum": 0}
     }
-  }
+  },
 };
 
 const exampleSchemaAvatarRefLookupResponse = {
