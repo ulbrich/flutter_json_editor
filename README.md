@@ -167,6 +167,7 @@ The library ships with built-in editors activated via the `x-format` schema exte
 | `x-format` value | Editor | Stored format |
 |---|---|---|
 | `"colour"` or `"color"` | Interactive HSV colour wheel with brightness slider | `#rrggbb` hex string (e.g. `"#ff0000"`) |
+| `"rating"` or `"star-rating"` | Clickable 0–5 star rating | `int` or `String` depending on schema type |
 
 ```json
 {
@@ -175,9 +176,19 @@ The library ships with built-in editors activated via the `x-format` schema exte
     "x-format": "colour",
     "title": "Favourite Colour",
     "default": "#ff0000"
+  },
+  "performance": {
+    "type": "integer",
+    "x-format": "rating",
+    "title": "Performance Rating",
+    "minimum": 0,
+    "maximum": 5,
+    "default": 0
   }
 }
 ```
+
+The star rating editor works with both `"type": "integer"` (stores `int`) and `"type": "string"` (stores `String`). Clicking a star sets the rating; clicking the same star again resets to 0.
 
 You can override a built-in format editor by providing your own builder for the same key in `formatOverrides`.
 
@@ -229,6 +240,7 @@ Results are cached per URL for the lifetime of the widget.
 | `minimum` / `maximum` | Validation |
 | `format` (email, uri) | Validation |
 | `x-format` (colour/color) | Built-in colour wheel editor |
+| `x-format` (rating/star-rating) | Built-in star rating editor |
 | `default` values | Applied on field creation |
 | Reorderable arrays | Full (drag handles) |
 

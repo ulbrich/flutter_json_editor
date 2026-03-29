@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:json_schema/json_schema.dart';
 
 import 'editors/colour_editor.dart';
+import 'editors/star_rating_editor.dart';
 import 'schema_field_editor.dart';
 
 class EditorRegistryData {
@@ -39,9 +40,28 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _starRatingEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          StarRatingEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
     'colour': _colourEditorBuilder,
     'color': _colourEditorBuilder,
+    'rating': _starRatingEditorBuilder,
+    'star-rating': _starRatingEditorBuilder,
   };
 
   SchemaFieldEditorBuilder? resolve(JsonSchema schema, String path) {

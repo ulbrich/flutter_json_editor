@@ -13,6 +13,7 @@ for a couple of hints on how to extend the example to e.g. read references from 
 - **Remote `$ref`** — a `hobby` field resolved via async callback (simulated API)
 - **Nullable fields** — `department` can be cleared
 - **Colour picker** — `favouriteColour` uses the built-in colour wheel editor via `x-format: "colour"`
+- **Star rating** — `performance` uses the built-in star rating editor via `x-format: "rating"`
 - **Read-only fields** — `notes` rendered as non-editable
 - **Live diff preview** — expandable panels show the full data and the most recent diff
 

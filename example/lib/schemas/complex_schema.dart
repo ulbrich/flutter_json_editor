@@ -71,6 +71,15 @@ const complexSchemaMap = {
       "description": "Pick your favourite colour",
       "default": "#ff0000"
     },
+    "performance": {
+      "type": "integer",
+      "x-format": "rating",
+      "title": "Performance Rating",
+      "description": "Rate employee performance (0–5 stars)",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
     "notes": {"type": "string", "title": "Internal Notes", "readOnly": true}
   },
   "if": {
