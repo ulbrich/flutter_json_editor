@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 
 import 'editors/colour_editor.dart';
 import 'editors/image_picker_editor.dart';
+import 'editors/markdown_editor.dart';
 import 'editors/star_rating_editor.dart';
 import 'schema_field_editor.dart';
 
@@ -75,10 +76,28 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _markdownEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          MarkdownEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
     'colour': _colourEditorBuilder,
     'color': _colourEditorBuilder,
     'image-url-picker': _imagePickerEditorBuilder,
+    'markdown': _markdownEditorBuilder,
     'star-rating': _starRatingEditorBuilder,
   };
 

@@ -87,7 +87,12 @@ const exampleSchemaMap = {
       "description": "Pick your colour for UX theming",
       "default": "#ff0000"
     },
-    "notes": {"type": "string", "title": "Internal Notes", "readOnly": true}
+    "notes": {
+      "type": "string",
+      "x-format": "markdown",
+      "title": "Internal Notes",
+      "readOnly": true
+    }
   },
   "if": {
     "properties": {

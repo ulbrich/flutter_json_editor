@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_markdown_plus: ^1.0.7
   json_schema: ^5.2.2
   uuid: ^4.0.0
 
