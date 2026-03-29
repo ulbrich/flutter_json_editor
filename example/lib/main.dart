@@ -101,7 +101,7 @@ class _EditorPageState extends State<EditorPage> {
                 'lastName': 'Doe',
                 'favouriteColour': '#ff0000',
                 'notes':
-                    'This is something the user **can not edit**, but might be useful to show in the form... :-)',
+                    'This is some Markdown formatted text the user **can not edit**, but might be useful to show in the form... :-)',
               },
               onRefLookup: (refUrl, fieldPath, currentValue) async {
                 // Add your logic here to fetch data based on the `refUrl`. You
