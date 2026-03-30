@@ -134,33 +134,27 @@ const exampleSchemaAvatarRefLookupResponse = {
       "source": [
         {
           "value": "avatar-1",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Felix&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Felix&size=128"
         },
         {
           "value": "avatar-2",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Aneka&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Aneka&size=128"
         },
         {
           "value": "avatar-3",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Lily&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Lily&size=128"
         },
         {
           "value": "avatar-4",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Max&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Max&size=128"
         },
         {
           "value": "avatar-5",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Sam&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Sam&size=128"
         },
         {
           "value": "avatar-6",
-          "title":
-              "https://api.dicebear.com/9.x/adventurer/png?seed=Zoe&size=128"
+          "title": "https://api.dicebear.com/9.x/thumbs/png?seed=Zoe&size=128"
         }
       ]
     }
