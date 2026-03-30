@@ -1,0 +1,37 @@
+{
+  "@@locale": "de",
+
+  "clearToNullTooltip": "Leeren",
+  "clearTooltip": "Leeren",
+  "addItemTooltip": "Eintrag hinzufügen",
+  "addEntryTooltip": "Eintrag hinzufügen",
+
+  "keyLabel": "Schlüssel",
+  "dateLabel": "Datum",
+  "hourLabel": "Stunde",
+  "minuteLabel": "Minute",
+  "timeLabel": "Uhrzeit",
+  "clearSelectionLabel": "Auswahl aufheben",
+  "noImagesAvailableLabel": "Keine Bilder verfügbar",
+  "noneOptionLabel": "— Keine Auswahl —",
+
+  "oneOfLabel": "eines von",
+  "anyOfLabel": "beliebig aus",
+  "compositionOptionLabel": "Option {index}",
+
+  "invalidNumberFormat": "Ungültiges Zahlenformat",
+
+  "noRefLookupCallbackError": "Kein onRefLookup-Callback angegeben",
+  "remoteDataUnavailableError": "Remote-Daten nicht verfügbar",
+  "remoteSchemaUnavailableError": "Remote-Schema nicht verfügbar",
+  "noEnumSourceError": "Keine enumSource in der Antwort",
+  "failedToLoadError": "Laden fehlgeschlagen: {details}",
+
+  "noSvgAssetPathError": "Kein SVG-Pfad angegeben (x-svg-asset).",
+  "failedToLoadSvgError": "SVG konnte nicht geladen werden: {details}",
+  "svgNotAvailableError": "SVG nicht verfügbar.",
+  "preservedIdsHint": "+ {count} nicht dargestellte ID(s) (beibehalten)",
+
+  "editorPlaceholder": "Editor für {type} bei {path}",
+  "addNestedLabel": "{typeName} hinzufügen"
+}

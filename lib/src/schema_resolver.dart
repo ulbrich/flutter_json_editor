@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 
 import 'editor_registry.dart';
 import 'editors/array_editor.dart';
+import 'l10n/json_editor_l10n.dart';
 import 'editors/boolean_editor.dart';
 import 'editors/composition_editor.dart';
 import 'editors/enum_editor.dart';
@@ -250,7 +251,7 @@ class _PlaceholderEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Editor for $schemaType at ${path.isEmpty ? '(root)' : path}');
+    return Text(JsonEditorL10n.of(context).editorPlaceholder(schemaType, path));
   }
 }
 
@@ -267,7 +268,7 @@ class _CircularRefWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: null,
-      child: Text('Add nested $typeName'),
+      child: Text(JsonEditorL10n.of(context).addNestedLabel(typeName)),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 
 import 'diff_calculator.dart';
 import 'editor_registry.dart';
+import 'l10n/generated/json_editor_localizations.dart';
 import 'ref_lookup_provider.dart';
 import 'schema_resolver.dart';
 
@@ -117,6 +118,21 @@ class JsonEditorState extends State<JsonEditor> {
       minTypeAhead: widget.minTypeAhead,
       child: child,
     );
+
+    // Ensure JsonEditorLocalizations is always available — even when the
+    // consuming app does not register the delegate itself.
+    final hasL10n = Localizations.of<JsonEditorLocalizations>(
+          context,
+          JsonEditorLocalizations,
+        ) !=
+        null;
+    if (!hasL10n) {
+      child = Localizations.override(
+        context: context,
+        delegates: const [JsonEditorLocalizations.delegate],
+        child: child,
+      );
+    }
 
     return child;
   }

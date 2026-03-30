@@ -100,7 +100,7 @@ void main() {
       expect(received, isNull);
     });
 
-    testWidgets('non-required shows null option "-- None --"', (tester) async {
+    testWidgets('non-required shows null option "— None —"', (tester) async {
       final schema = JsonSchema.create({
         'oneOf': [
           {'type': 'string', 'title': 'Text'},
@@ -115,7 +115,7 @@ void main() {
       )));
       await tester.tap(find.byType(DropdownButtonFormField<int>));
       await tester.pumpAndSettle();
-      expect(find.text('-- None --'), findsWidgets);
+      expect(find.text('— None —'), findsWidgets);
     });
 
     testWidgets('required field hides null option', (tester) async {

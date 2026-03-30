@@ -1,0 +1,6 @@
+arb-dir: lib/src/l10n
+template-arb-file: json_editor_en.arb
+output-localization-file: json_editor_localizations.dart
+output-class: JsonEditorLocalizations
+output-dir: lib/src/l10n/generated
+nullable-getter: false

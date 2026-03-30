@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../ref_lookup_provider.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
@@ -110,7 +111,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
     if (provider?.onRefLookup == null) {
       setState(() {
         _loading = false;
-        _error = 'No onRefLookup callback provided';
+        _error = JsonEditorL10n.of(context).noRefLookupCallbackError;
       });
       return;
     }
@@ -120,7 +121,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
       if (result == null) {
         setState(() {
           _loading = false;
-          _error = 'Remote data unavailable';
+          _error = JsonEditorL10n.of(context).remoteDataUnavailableError;
         });
         return;
       }
@@ -128,7 +129,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
     } catch (e) {
       setState(() {
         _loading = false;
-        _error = 'Failed to load: $e';
+        _error = JsonEditorL10n.of(context).failedToLoadError(e.toString());
       });
     }
   }
@@ -138,7 +139,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
     if (enumSources == null || enumSources.isEmpty) {
       setState(() {
         _loading = false;
-        _error = 'No enumSource in response';
+        _error = JsonEditorL10n.of(context).noEnumSourceError;
       });
       return;
     }
@@ -256,7 +257,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
           const SizedBox(height: 8),
           if (_items.isEmpty)
             Text(
-              'No images available',
+              JsonEditorL10n.of(context).noImagesAvailableLabel,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -303,7 +304,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
             TextButton.icon(
               onPressed: () => widget.onChanged(null),
               icon: const Icon(Icons.clear, size: 18),
-              label: const Text('Clear selection'),
+              label: Text(JsonEditorL10n.of(context).clearSelectionLabel),
             ),
           ],
         ],

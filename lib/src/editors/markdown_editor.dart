@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -133,7 +134,7 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
           if (widget.isNullable && widget.value != null)
             IconButton(
               icon: const Icon(Icons.clear),
-              tooltip: 'Clear to null',
+              tooltip: JsonEditorL10n.of(context).clearToNullTooltip,
               onPressed: _clearToNull,
             ),
         ],

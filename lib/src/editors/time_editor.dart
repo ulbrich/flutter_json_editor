@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -190,9 +191,11 @@ class TimeEditorState extends State<TimeEditor> {
               child: DropdownButtonFormField<int>(
                 value: _localTime
                     ?.hour, // ignore deprecated_member_use: initialValue doesn't sync on rebuild
-                decoration: widget.showHeader
-                    ? const InputDecoration(labelText: 'Hour')
-                    : const InputDecoration(labelText: 'Time'),
+                decoration: InputDecoration(
+                  labelText: widget.showHeader
+                      ? JsonEditorL10n.of(context).hourLabel
+                      : JsonEditorL10n.of(context).timeLabel,
+                ),
                 items: [
                   for (var h = 0; h < 24; h++)
                     DropdownMenuItem(
@@ -212,9 +215,11 @@ class TimeEditorState extends State<TimeEditor> {
               child: DropdownButtonFormField<int>(
                 value: _localTime
                     ?.minute, // ignore deprecated_member_use: initialValue doesn't sync on rebuild
-                decoration: widget.showHeader
-                    ? const InputDecoration(labelText: 'Minute')
-                    : InputDecoration(labelText: _timezoneLabel),
+                decoration: InputDecoration(
+                  labelText: widget.showHeader
+                      ? JsonEditorL10n.of(context).minuteLabel
+                      : _timezoneLabel,
+                ),
                 items: [
                   for (var m = 0; m < 60; m++)
                     DropdownMenuItem(

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xml/xml.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -151,7 +152,7 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
       if (mounted) {
         setState(() {
           _loading = false;
-          _error = 'No SVG asset path specified (x-svg-asset).';
+          _error = JsonEditorL10n.of(context).noSvgAssetPathError;
         });
       }
       return;
@@ -171,7 +172,7 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
       if (mounted) {
         setState(() {
           _loading = false;
-          _error = 'Failed to load SVG: $e';
+          _error = JsonEditorL10n.of(context).failedToLoadSvgError(e.toString());
         });
       }
     }
@@ -513,7 +514,7 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
       return Padding(
         padding: editorTheme.fieldPadding,
         child: Text(
-          _error ?? 'SVG not available.',
+          _error ?? JsonEditorL10n.of(context).svgNotAvailableError,
           style: editorTheme.errorStyle ??
               TextStyle(color: Theme.of(context).colorScheme.error),
         ),
@@ -545,7 +546,7 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
               if (widget.isNullable && widget.value != null)
                 IconButton(
                   icon: const Icon(Icons.clear, size: 18),
-                  tooltip: 'Clear to null',
+                  tooltip: JsonEditorL10n.of(context).clearToNullTooltip,
                   onPressed: () => widget.onChanged(null),
                 ),
             ],
@@ -610,7 +611,7 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                '+ ${_unknownIds.length} ID(s) not in this SVG (preserved)',
+                JsonEditorL10n.of(context).preservedIdsHint(_unknownIds.length),
                 style: editorTheme.helperStyle ??
                     Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontStyle: FontStyle.italic,

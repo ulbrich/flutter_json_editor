@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../ref_lookup_provider.dart';
 
 class EnumSourceItem {
@@ -53,7 +54,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
     if (provider?.onRefLookup == null) {
       setState(() {
         _loading = false;
-        _error = 'No onRefLookup callback provided';
+        _error = JsonEditorL10n.of(context).noRefLookupCallbackError;
       });
       return;
     }
@@ -64,7 +65,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
       if (result == null) {
         setState(() {
           _loading = false;
-          _error = 'Remote schema unavailable';
+          _error = JsonEditorL10n.of(context).remoteSchemaUnavailableError;
         });
         return;
       }
@@ -72,7 +73,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
     } catch (e) {
       setState(() {
         _loading = false;
-        _error = 'Failed to load: $e';
+        _error = JsonEditorL10n.of(context).failedToLoadError(e.toString());
       });
     }
   }
@@ -82,7 +83,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
     if (enumSources == null || enumSources.isEmpty) {
       setState(() {
         _loading = false;
-        _error = 'No enumSource in response';
+        _error = JsonEditorL10n.of(context).noEnumSourceError;
       });
       return;
     }
@@ -159,7 +160,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
         enabled: false,
         decoration: InputDecoration(
           labelText: labelText,
-          errorText: _error ?? 'Remote schema unavailable',
+          errorText: _error ?? JsonEditorL10n.of(context).remoteSchemaUnavailableError,
         ),
       );
     }
@@ -189,9 +190,9 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
       initialValue: widget.value as String?,
       items: [
         if (!widget.isRequired || widget.isNullable)
-          const DropdownMenuItem<String>(
+          DropdownMenuItem<String>(
             value: null,
-            child: Text('-- None --'),
+            child: Text(JsonEditorL10n.of(context).noneOptionLabel),
           ),
         ..._items!.map(
           (item) => DropdownMenuItem<String>(

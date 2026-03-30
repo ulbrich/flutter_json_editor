@@ -1,0 +1,115 @@
+{
+  "@@locale": "en",
+
+  "clearToNullTooltip": "Clear to null",
+  "@clearToNullTooltip": { "description": "Tooltip for buttons that clear a nullable field to null" },
+
+  "clearTooltip": "Clear",
+  "@clearTooltip": { "description": "Short tooltip for clear buttons" },
+
+  "addItemTooltip": "Add item",
+  "@addItemTooltip": { "description": "Tooltip for the add-item button in array editors" },
+
+  "addEntryTooltip": "Add entry",
+  "@addEntryTooltip": { "description": "Tooltip for the add-entry button in map editors" },
+
+  "keyLabel": "Key",
+  "@keyLabel": { "description": "Label for map entry key fields" },
+
+  "dateLabel": "Date",
+  "@dateLabel": { "description": "Label for date picker fields" },
+
+  "hourLabel": "Hour",
+  "@hourLabel": { "description": "Label for the hour dropdown" },
+
+  "minuteLabel": "Minute",
+  "@minuteLabel": { "description": "Label for the minute dropdown" },
+
+  "timeLabel": "Time",
+  "@timeLabel": { "description": "Label for time picker fields" },
+
+  "clearSelectionLabel": "Clear selection",
+  "@clearSelectionLabel": { "description": "Label for the clear-selection button in image pickers" },
+
+  "noImagesAvailableLabel": "No images available",
+  "@noImagesAvailableLabel": { "description": "Shown when an image picker has no images to display" },
+
+  "noneOptionLabel": "— None —",
+  "@noneOptionLabel": { "description": "Placeholder option in dropdowns where no value is selected" },
+
+  "oneOfLabel": "one of",
+  "@oneOfLabel": { "description": "Label fragment for oneOf composition" },
+
+  "anyOfLabel": "any of",
+  "@anyOfLabel": { "description": "Label fragment for anyOf composition" },
+
+  "compositionOptionLabel": "Option {index}",
+  "@compositionOptionLabel": {
+    "description": "Default label for a composition option at the given 1-based index",
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+
+  "invalidNumberFormat": "Invalid number format",
+  "@invalidNumberFormat": { "description": "Error message when a number field contains non-numeric text" },
+
+  "noRefLookupCallbackError": "No onRefLookup callback provided",
+  "@noRefLookupCallbackError": { "description": "Error when no onRefLookup callback was provided but a ref was found" },
+
+  "remoteDataUnavailableError": "Remote data unavailable",
+  "@remoteDataUnavailableError": { "description": "Error when remote data could not be loaded" },
+
+  "remoteSchemaUnavailableError": "Remote schema unavailable",
+  "@remoteSchemaUnavailableError": { "description": "Error when a remote schema could not be loaded" },
+
+  "noEnumSourceError": "No enumSource in response",
+  "@noEnumSourceError": { "description": "Error when the remote response contains no enumSource" },
+
+  "failedToLoadError": "Failed to load: {details}",
+  "@failedToLoadError": {
+    "description": "Generic failed-to-load error",
+    "placeholders": {
+      "details": { "type": "String" }
+    }
+  },
+
+  "noSvgAssetPathError": "No SVG asset path specified (x-svg-asset).",
+  "@noSvgAssetPathError": { "description": "Error when no x-svg-asset path is specified in the schema" },
+
+  "failedToLoadSvgError": "Failed to load SVG: {details}",
+  "@failedToLoadSvgError": {
+    "description": "Error when the SVG file could not be loaded",
+    "placeholders": {
+      "details": { "type": "String" }
+    }
+  },
+
+  "svgNotAvailableError": "SVG not available.",
+  "@svgNotAvailableError": { "description": "Shown when the SVG string is null or unavailable" },
+
+  "preservedIdsHint": "+ {count} not displayed ID(s) (preserved)",
+  "@preservedIdsHint": {
+    "description": "Hint about IDs preserved from other SVGs",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "editorPlaceholder": "Editor for {type} at {path}",
+  "@editorPlaceholder": {
+    "description": "Placeholder text for an unresolved editor",
+    "placeholders": {
+      "type": { "type": "String" },
+      "path": { "type": "String" }
+    }
+  },
+
+  "addNestedLabel": "Add nested {typeName}",
+  "@addNestedLabel": {
+    "description": "Button label to add a nested object/array",
+    "placeholders": {
+      "typeName": { "type": "String" }
+    }
+  }
+}

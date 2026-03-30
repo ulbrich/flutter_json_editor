@@ -10,6 +10,8 @@ export 'src/diff_calculator.dart';
 export 'src/validation_helper.dart';
 export 'src/theme/editor_theme.dart';
 export 'src/theme/editor_theme_defaults.dart';
+export 'src/l10n/generated/json_editor_localizations.dart';
+export 'src/l10n/json_editor_l10n.dart';
 export 'src/editors/colour_editor.dart';
 export 'src/editors/date_editor.dart';
 export 'src/editors/date_time_editor.dart';

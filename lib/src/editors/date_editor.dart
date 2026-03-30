@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -168,7 +169,7 @@ class DateEditorState extends State<DateEditor> {
       borderRadius: BorderRadius.circular(4),
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: 'Date',
+          labelText: JsonEditorL10n.of(context).dateLabel,
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -176,7 +177,7 @@ class DateEditorState extends State<DateEditor> {
               if (widget.isNullable && _localDate != null)
                 IconButton(
                   icon: const Icon(Icons.clear, size: 18),
-                  tooltip: 'Clear',
+                  tooltip: JsonEditorL10n.of(context).clearTooltip,
                   onPressed: () {
                     setState(() => _localDate = null);
                     _emitValue(null);

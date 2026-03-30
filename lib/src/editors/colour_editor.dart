@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -145,7 +146,7 @@ class _ColourEditorState extends State<ColourEditor> {
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.clear),
-                  tooltip: 'Clear to null',
+                  tooltip: JsonEditorL10n.of(context).clearToNullTooltip,
                   onPressed: () => widget.onChanged(null),
                 ),
               ],

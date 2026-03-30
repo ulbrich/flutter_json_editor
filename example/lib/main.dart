@@ -17,6 +17,9 @@ class ExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'JSON Editor Demo',
       theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
+      locale: const Locale('de'),
+      localizationsDelegates: JsonEditorLocalizations.localizationsDelegates,
+      supportedLocales: JsonEditorLocalizations.supportedLocales,
       home: const EditorPage(),
     );
   }

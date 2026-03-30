@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 
 import '../editor_registry.dart';
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../schema_resolver.dart';
 
@@ -58,7 +59,7 @@ class _CompositionEditorState extends State<CompositionEditor> {
   }
 
   String _getSubSchemaLabel(JsonSchema subSchema, int index) {
-    return subSchema.title ?? 'Option ${index + 1}';
+    return subSchema.title ?? JsonEditorL10n.of(context).compositionOptionLabel(index + 1);
   }
 
   @override
@@ -73,14 +74,14 @@ class _CompositionEditorState extends State<CompositionEditor> {
       children: [
         DropdownButtonFormField<int>(
           decoration: InputDecoration(
-            labelText: '$title (${isOneOf ? "one of" : "any of"})'
+            labelText: '$title (${isOneOf ? JsonEditorL10n.of(context).oneOfLabel : JsonEditorL10n.of(context).anyOfLabel})'
                 '${widget.isRequired ? " *" : ""}',
             helperText: widget.schema.description,
           ),
           value: _selectedIndex,
           items: [
             if (!widget.isRequired || widget.isNullable)
-              const DropdownMenuItem<int>(value: null, child: Text('-- None --')),
+              DropdownMenuItem<int>(value: null, child: Text(JsonEditorL10n.of(context).noneOptionLabel)),
             ...subSchemas.asMap().entries.map((entry) => DropdownMenuItem<int>(
                   value: entry.key,
                   child: Text(_getSubSchemaLabel(entry.value, entry.key)),

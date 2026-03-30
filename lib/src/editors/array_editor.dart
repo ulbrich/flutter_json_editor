@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 import 'package:uuid/uuid.dart';
 
 import '../editor_registry.dart';
+import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../schema_resolver.dart';
 import '../schema_utils.dart';
@@ -141,7 +142,7 @@ class _ArrayEditorState extends State<ArrayEditor> {
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: _addItem,
-                tooltip: 'Add item',
+                tooltip: JsonEditorL10n.of(context).addItemTooltip,
               ),
           ],
         ),
