@@ -127,6 +127,9 @@ class _EditorPageState extends State<EditorPage> {
                 'lastName': 'Doe',
                 'favouriteColour': '#ff0000',
                 'seating': 'office-a-desk-a5,office-b-desk-c1',
+                'contractStartDate': '2023-06-15',
+                'lastCheckIn': '2026-03-29T08:30:00Z',
+                'preferredMeetingTime': '09:00:00',
                 'notes':
                     'This is some Markdown formatted text the user **can not edit**, but might be useful to show in the form... :-)',
               },

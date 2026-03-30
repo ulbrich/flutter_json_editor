@@ -3,7 +3,7 @@
 A Flutter widget that dynamically generates interactive forms from [JSON Schema (Draft 7)](https://json-schema.org/draft-07). Drop in a schema, get a fully functional form — with validation, nested objects, arrays, conditional fields, and more.
 
 **Warning:** This sideproject was implemented mainly using AI tools. Use it with a grain
-of more salt than any other open source project.
+of more salt than with any other open source project you're using.
 
 ## The Idea
 
@@ -12,11 +12,13 @@ Building forms by hand is tedious. Building forms that mirror a complex, evolvin
 Obviously this is nothing new and we took inspiration from the Javascript [JSON Editor](https://github.com/json-editor/json-editor) project we successfully used in web projects back in time. We wanted to have that for a long time in Flutter and the raise of AI tools
 gave us the help we needed.
 
-**Flutter JSON Editor** takes a JSON Schema and renders a complete, editable form widget. When the user changes a value, you get the full data object *and* a precise diff of what changed. No form-builder boilerplate, no manual field wiring — just schema in, data out.
+The Flutter JSON Editor takes a JSON Schema and renders a complete, editable form widget. When the user changes a value, you get the full data object *and* a precise diff of what changed. No form-builder boilerplate, no manual field wiring — just schema in, data out.
+
+Take the example project for s spin and judge for yourself. Feel free to suggest extensions, but make sure they always support i18n and don't introduce new dependencies. We want to keep this package small and rather provide a companion project with additional niche editors.
 
 ## Features
 
-- **Full type coverage** — String, number, integer, boolean, enum, object, array, map, and colour picker editors out of the box
+- **Full type coverage** — String, number, integer, boolean, enum, object, array, map, colour picker, date/time, and SVG part picker editors out of the box
 - **Nested structures** — Objects within objects, arrays of objects, maps with dynamic keys
 - **Conditional fields** — `if`/`then`/`else` branches show and hide fields based on data state
 - **Property dependencies** — Fields that appear or become required based on other field values
@@ -26,7 +28,7 @@ gave us the help we needed.
 - **Diff tracking** — `DiffCalculator` reports only the paths that changed between updates
 - **Theming** — `JsonEditorTheme` extension integrates with your Material 3 theme
 - **Custom editors** — `EditorRegistry` lets you override any field by path, `x-format`, type, or predicate
-- **Built-in format editors** — `x-format: "colour"` (or `"color"`) renders an interactive colour wheel picker
+- **Built-in format editors** — `x-format` or standard `format` activates colour wheel, star rating, image picker, date/time pickers, SVG part picker, and Markdown renderer
 - **Circular reference protection** — Self-referential schemas are safely capped at a configurable depth
 
 ## Getting Started
@@ -164,11 +166,18 @@ JsonEditor(
 
 The library ships with built-in editors activated via the `x-format` schema extension. These work automatically without any registry configuration:
 
-| `x-format` value | Editor | Stored format |
+| `x-format` / `format` value | Editor | Stored format |
 |---|---|---|
 | `"colour"` or `"color"` | Interactive HSV colour wheel with brightness slider | `#rrggbb` hex string (e.g. `"#ff0000"`) |
 | `"star-rating"` | Clickable 0–5 star rating | `int` or `String` depending on schema type |
 | `"image-url-picker"` | Selectable image thumbnail grid | Selected value (URL or ID) |
+| `"date"` | Date picker dialog | `"yyyy-MM-dd"` string or seconds-since-epoch `int` |
+| `"time"` | Hour/minute dropdown selectors | `"HH:mm:ss"` string or seconds-since-midnight `int` |
+| `"date-time"` | Combined date picker + time dropdowns | ISO 8601 string or seconds-since-epoch `int` |
+| `"markdown"` | Markdown renderer (read-only) or multiline text editor | `String` |
+| `"svg-part-picker"` | Interactive SVG region selector | Comma-separated `String` or `List<String>` |
+
+These editors activate via `x-format` or the standard JSON Schema `format` field (e.g. `"format": "date"` works the same as `"x-format": "date"`).
 
 ```json
 {
@@ -185,15 +194,35 @@ The library ships with built-in editors activated via the `x-format` schema exte
     "minimum": 0,
     "maximum": 5,
     "default": 0
+  },
+  "startDate": {
+    "type": "string",
+    "format": "date",
+    "title": "Start Date"
+  },
+  "lastCheckIn": {
+    "type": "string",
+    "x-format": "date-time",
+    "title": "Last Check-In"
+  },
+  "seating": {
+    "type": "string",
+    "x-format": "svg-part-picker",
+    "x-svg-asset": "assets/images/office-plan.svg",
+    "title": "Allocated Desk"
   }
 }
 ```
 
-The star rating editor works with both `"type": "integer"` (stores `int`) and `"type": "string"` (stores `String`). Clicking a star sets the rating; clicking the same star again resets to 0.
+**Date/time editors** accept both string and numeric schema types. String values use ISO 8601 format; numeric values use seconds since epoch (UTC). Values are always stored as UTC but displayed in the user's local timezone with a timezone indicator.
 
-The image picker supports two modes:
+**Star rating editor** works with both `"type": "integer"` (stores `int`) and `"type": "string"` (stores `String`). Clicking a star sets the rating; clicking the same star again resets to 0.
+
+**Image picker** supports two modes:
 - **Simple enum** — each `enum` value is an image URL; the selected URL is stored as the value.
 - **Remote `$ref`** — resolves a remote reference via `onRefLookup`. The response's `enumSource` is parsed: `title` is treated as the image URL, `value` (e.g. an ID) is stored as the result.
+
+**SVG part picker** renders any SVG asset and lets users toggle selection of regions. Selectable elements are identified by having both an `id` and a `data-state` attribute. The `x-svg-asset` schema property specifies the asset path. IDs present in the data but not found in the SVG are preserved, allowing multiple SVGs to edit different aspects of the same dataset without data loss.
 
 You can override a built-in format editor by providing your own builder for the same key in `formatOverrides`.
 
@@ -202,7 +231,7 @@ You can override a built-in format editor by providing your own builder for the 
 Registry overrides are checked in this order (first match wins):
 
 1. **Path overrides** — exact field path match
-2. **Format overrides** — `x-format` value match (includes built-in defaults)
+2. **Format overrides** — `x-format` value match, then standard `format` fallback (includes built-in defaults)
 3. **Predicate overrides** — first matching predicate
 4. **Type overrides** — schema type match
 
@@ -244,9 +273,14 @@ Results are cached per URL for the lifetime of the widget.
 | `minItems` / `maxItems` | Full |
 | `minimum` / `maximum` | Validation |
 | `format` (email, uri) | Validation |
-| `x-format` (colour/color) | Built-in colour wheel editor |
-| `x-format` (rating/star-rating) | Built-in star rating editor |
-| `x-format` (image-picker/image-select) | Built-in image picker editor |
+| `format` / `x-format` (colour/color) | Built-in colour wheel editor |
+| `format` / `x-format` (star-rating) | Built-in star rating editor |
+| `format` / `x-format` (image-url-picker) | Built-in image picker editor |
+| `format` / `x-format` (date) | Built-in date picker |
+| `format` / `x-format` (time) | Built-in time picker (dropdowns) |
+| `format` / `x-format` (date-time) | Built-in combined date-time picker |
+| `format` / `x-format` (markdown) | Built-in Markdown renderer/editor |
+| `x-format` (svg-part-picker) | Built-in interactive SVG region picker |
 | `default` values | Applied on field creation |
 | Reorderable arrays | Full (drag handles) |
 

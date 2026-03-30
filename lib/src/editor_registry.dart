@@ -2,10 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:json_schema/json_schema.dart';
 
 import 'editors/colour_editor.dart';
+import 'editors/date_editor.dart';
+import 'editors/date_time_editor.dart';
 import 'editors/image_picker_editor.dart';
 import 'editors/markdown_editor.dart';
 import 'editors/star_rating_editor.dart';
 import 'editors/svg_part_picker_editor.dart';
+import 'editors/time_editor.dart';
 import 'schema_field_editor.dart';
 
 class EditorRegistryData {
@@ -94,6 +97,57 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _dateEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          DateEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _timeEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          TimeEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _dateTimeEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          DateTimeEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
   static SchemaFieldEditorBuilder get _svgPartPickerEditorBuilder => ({
         required JsonSchema schema,
         required String path,
@@ -114,10 +168,13 @@ class EditorRegistryData {
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
     'colour': _colourEditorBuilder,
     'color': _colourEditorBuilder,
+    'date': _dateEditorBuilder,
+    'date-time': _dateTimeEditorBuilder,
     'image-url-picker': _imagePickerEditorBuilder,
     'markdown': _markdownEditorBuilder,
     'star-rating': _starRatingEditorBuilder,
     'svg-part-picker': _svgPartPickerEditorBuilder,
+    'time': _timeEditorBuilder,
   };
 
   /// Look up a builder by `x-format` value only. Used by [SchemaResolver] to
@@ -132,10 +189,15 @@ class EditorRegistryData {
       return _pathOverrides[path];
     }
 
-    // 2. Check x-format overrides
+    // 2. Check x-format overrides, then fall back to standard JSON Schema
+    //    `format` so that e.g. "format": "date" also resolves.
     final xFormat = schema.schemaMap?['x-format'];
     if (xFormat is String && _formatOverrides.containsKey(xFormat)) {
       return _formatOverrides[xFormat];
+    }
+    final stdFormat = schema.format;
+    if (stdFormat != null && _formatOverrides.containsKey(stdFormat)) {
+      return _formatOverrides[stdFormat];
     }
 
     // 3. Check predicate overrides (first match wins)

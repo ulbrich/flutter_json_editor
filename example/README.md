@@ -15,6 +15,11 @@ for a couple of hints on how to extend the example to e.g. read references from 
 - **Colour picker** — `favouriteColour` uses the built-in colour wheel editor via `x-format: "colour"`
 - **Star rating** — `performance` uses the built-in star rating editor via `x-format: "star-rating"`
 - **Image URL picker** — `avatar` uses the built-in image picker editor via `x-format: "image-url-picker"` with `$ref` for value/image URL pairs
+- **Date picker** — `contractStartDate` uses the built-in date picker via `format: "date"`
+- **Date-time picker** — `lastCheckIn` uses the combined date + time editor via `x-format: "date-time"`, stored as ISO 8601 UTC
+- **Time picker** — `preferredMeetingTime` uses hour/minute dropdowns via `x-format: "time"`, displayed in local timezone
+- **SVG part picker** — `seating` uses an interactive office floor plan SVG via `x-format: "svg-part-picker"`, preserving IDs from other SVGs
+- **Markdown** — `notes` rendered as formatted Markdown (read-only) via `x-format: "markdown"`
 - **Read-only fields** — `notes` rendered as non-editable
 - **Live diff preview** — expandable panels show the full data and the most recent diff
 

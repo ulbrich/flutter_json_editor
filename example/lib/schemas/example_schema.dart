@@ -82,10 +82,22 @@ const exampleSchemaMap = {
       "title": "Department",
       "description": "Nullable department field"
     },
+    "preferredMeetingTime": {
+      "type": "string",
+      "x-format": "time",
+      "title": "Preferred Meeting Time",
+      "description": "Preferred time for daily stand-up"
+    },
     "isActive": {
       "type": "boolean",
       "title": "Active Employee",
       "default": true
+    },
+    "lastCheckIn": {
+      "type": "string",
+      "x-format": "date-time",
+      "title": "Last Check-In",
+      "description": "Most recent check-in date and time"
     },
     "performance": {
       "type": "integer",
@@ -100,6 +112,12 @@ const exampleSchemaMap = {
       "type": "string",
       "title": "Employee Type",
       "enum": ["full-time", "part-time", "contractor", "intern"],
+    },
+    "contractStartDate": {
+      "type": "string",
+      "x-format": "date",
+      "title": "Contract Start Date",
+      "description": "Date when the employee started"
     },
   },
   "if": {
