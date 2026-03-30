@@ -44,14 +44,13 @@ const exampleSchemaMap = {
       "description": "Arbitrary key-value tags",
       "additionalProperties": {"type": "string"}
     },
-    "performance": {
-      "type": "integer",
-      "x-format": "star-rating",
-      "title": "Performance Rating",
-      "description": "Rate employee performance (0–5 stars)",
-      "minimum": 0,
-      "maximum": 5,
-      "default": 0
+    "seating": {
+      "type": "string",
+      "x-format": "svg-part-picker",
+      "x-svg-asset": "assets/images/office-plan.svg",
+      "title": "Allocated Desk",
+      "description":
+          "Select the allocated desk in the office from the floor plan"
     },
     "themeColour": {
       "type": "string",
@@ -87,6 +86,15 @@ const exampleSchemaMap = {
       "type": "boolean",
       "title": "Active Employee",
       "default": true
+    },
+    "performance": {
+      "type": "integer",
+      "x-format": "star-rating",
+      "title": "Performance Rating",
+      "description": "Rate employee performance (0–5 stars)",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
     },
     "employeeType": {
       "type": "string",

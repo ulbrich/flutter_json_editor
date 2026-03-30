@@ -126,6 +126,7 @@ class _EditorPageState extends State<EditorPage> {
                 'firstName': 'Jane',
                 'lastName': 'Doe',
                 'favouriteColour': '#ff0000',
+                'seating': 'office-a-desk-a5,office-b-desk-c1',
                 'notes':
                     'This is some Markdown formatted text the user **can not edit**, but might be useful to show in the form... :-)',
               },

@@ -1,0 +1,120 @@
+<svg viewBox="0 0 700 480" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .region {
+      fill: #2c2c4a;
+      stroke: #555;
+      stroke-width: 1.2;
+      cursor: pointer;
+      transition: fill 0.15s, stroke 0.15s;
+    }
+    .region:hover {
+      fill: #3a3a5a;
+      stroke: #888;
+    }
+    .region[data-state="selected"] {
+      fill: #c62828;
+      stroke: #ff5252;
+    }
+    .region[data-state="selected"]:hover {
+      fill: #d32f2f;
+      stroke: #ff8a80;
+    }
+    .label { fill: #eee; font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-anchor: middle; pointer-events: none; }
+    .title { fill: #000; font-family: Helvetica, Arial, sans-serif; font-size: 15px; text-anchor: middle; font-weight: 800; }
+  </style>
+
+  <!-- Front View -->
+  <text x="175" y="22" class="title">Front</text>
+  <g id="front" transform="translate(175, 30)">
+    <!-- Head -->
+    <ellipse id="front-head" data-region="Front Head" data-state="default" class="region" cx="0" cy="32" rx="27" ry="30" />
+
+    <!-- Upper Body -->
+    <rect id="front-upper-body" data-region="Front Upper Body" data-state="default" class="region" x="-38" y="72" width="76" height="95" rx="8" />
+
+    <!-- Lower Body -->
+    <rect id="front-lower-body" data-region="Front Lower Body" data-state="default" class="region" x="-32" y="172" width="64" height="60" rx="6" />
+
+    <!-- Right Arm (person's right = viewer's left) -->
+    <rect id="front-right-upper-arm" data-region="Front Right Upper Arm" data-state="default" class="region" x="-66" y="76" width="22" height="62" rx="10" />
+    <rect id="front-right-lower-arm" data-region="Front Right Lower Arm" data-state="default" class="region" x="-64" y="143" width="20" height="60" rx="9" />
+    <ellipse id="front-right-hand" data-region="Front Right Hand" data-state="default" class="region" cx="-54" cy="217" rx="12" ry="14" />
+
+    <!-- Left Arm (person's left = viewer's right) -->
+    <rect id="front-left-upper-arm" data-region="Front Left Upper Arm" data-state="default" class="region" x="44" y="76" width="22" height="62" rx="10" />
+    <rect id="front-left-lower-arm" data-region="Front Left Lower Arm" data-state="default" class="region" x="44" y="143" width="20" height="60" rx="9" />
+    <ellipse id="front-left-hand" data-region="Front Left Hand" data-state="default" class="region" cx="54" cy="217" rx="12" ry="14" />
+
+    <!-- Right Leg (person's right = viewer's left) -->
+    <rect id="front-right-upper-leg" data-region="Front Right Upper Leg" data-state="default" class="region" x="-30" y="237" width="27" height="82" rx="8" />
+    <rect id="front-right-lower-leg" data-region="Front Right Lower Leg" data-state="default" class="region" x="-28" y="324" width="24" height="75" rx="8" />
+    <rect id="front-right-foot" data-region="Front Right Foot" data-state="default" class="region" x="-33" y="403" width="28" height="15" rx="6" />
+
+    <!-- Left Leg (person's left = viewer's right) -->
+    <rect id="front-left-upper-leg" data-region="Front Left Upper Leg" data-state="default" class="region" x="3" y="237" width="27" height="82" rx="8" />
+    <rect id="front-left-lower-leg" data-region="Front Left Lower Leg" data-state="default" class="region" x="4" y="324" width="24" height="75" rx="8" />
+    <rect id="front-left-foot" data-region="Front Left Foot" data-state="default" class="region" x="5" y="403" width="28" height="15" rx="6" />
+  </g>
+
+  <!-- Labels (front) -->
+  <g transform="translate(175, 30)" class="label">
+    <text x="0" y="34">Head</text>
+    <text x="0" y="90">
+      <tspan x="0" dy="0">Upper</tspan>
+      <tspan x="0" dy="12">Body</tspan>
+    </text>
+    <text x="0" y="180">
+      <tspan x="0" dy="0">Lower</tspan>
+      <tspan x="0" dy="12">Body</tspan>
+    </text>
+  </g>
+
+  <!-- Divider -->
+  <line x1="350" y1="15" x2="350" y2="465" stroke="#333" stroke-width="1" stroke-dasharray="6,4" />
+
+  <!-- Back View -->
+  <text x="525" y="22" class="title">Back</text>
+  <g id="back" transform="translate(525, 30)">
+    <!-- Head -->
+    <ellipse id="back-head" data-region="Back Head" data-state="default" class="region" cx="0" cy="32" rx="27" ry="30" />
+
+    <!-- Upper Body -->
+    <rect id="back-upper-body" data-region="Back Upper Body" data-state="default" class="region" x="-38" y="72" width="76" height="95" rx="8" />
+
+    <!-- Lower Body -->
+    <rect id="back-lower-body" data-region="Back Lower Body" data-state="default" class="region" x="-32" y="172" width="64" height="60" rx="6" />
+
+    <!-- Left Arm (person's left = viewer's left on BACK view) -->
+    <rect id="back-left-upper-arm" data-region="Back Left Upper Arm" data-state="default" class="region" x="-66" y="76" width="22" height="62" rx="10" />
+    <rect id="back-left-lower-arm" data-region="Back Left Lower Arm" data-state="default" class="region" x="-64" y="143" width="20" height="60" rx="9" />
+    <ellipse id="back-left-hand" data-region="Back Left Hand" data-state="default" class="region" cx="-54" cy="217" rx="12" ry="14" />
+
+    <!-- Right Arm (person's right = viewer's right on BACK view) -->
+    <rect id="back-right-upper-arm" data-region="Back Right Upper Arm" data-state="default" class="region" x="44" y="76" width="22" height="62" rx="10" />
+    <rect id="back-right-lower-arm" data-region="Back Right Lower Arm" data-state="default" class="region" x="44" y="143" width="20" height="60" rx="9" />
+    <ellipse id="back-right-hand" data-region="Back Right Hand" data-state="default" class="region" cx="54" cy="217" rx="12" ry="14" />
+
+    <!-- Left Leg (person's left = viewer's left on BACK view) -->
+    <rect id="back-left-upper-leg" data-region="Back Left Upper Leg" data-state="default" class="region" x="-30" y="237" width="27" height="82" rx="8" />
+    <rect id="back-left-lower-leg" data-region="Back Left Lower Leg" data-state="default" class="region" x="-28" y="324" width="24" height="75" rx="8" />
+    <rect id="back-left-foot" data-region="Back Left Foot" data-state="default" class="region" x="-33" y="403" width="28" height="15" rx="6" />
+
+    <!-- Right Leg (person's right = viewer's right on BACK view) -->
+    <rect id="back-right-upper-leg" data-region="Back Right Upper Leg" data-state="default" class="region" x="3" y="237" width="27" height="82" rx="8" />
+    <rect id="back-right-lower-leg" data-region="Back Right Lower Leg" data-state="default" class="region" x="4" y="324" width="24" height="75" rx="8" />
+    <rect id="back-right-foot" data-region="Back Right Foot" data-state="default" class="region" x="5" y="403" width="28" height="15" rx="6" />
+  </g>
+
+  <!-- Labels (back) -->
+  <g transform="translate(525, 30)" class="label">
+    <text x="0" y="34">Head</text>
+    <text x="0" y="90">
+      <tspan x="0" dy="0">Upper</tspan>
+      <tspan x="0" dy="12">Back</tspan>
+    </text>
+    <text x="0" y="180">
+      <tspan x="0" dy="0">Lower</tspan>
+      <tspan x="0" dy="12">Back</tspan>
+    </text>
+  </g>
+</svg>

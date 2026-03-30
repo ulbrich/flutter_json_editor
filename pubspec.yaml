@@ -11,8 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_markdown_plus: ^1.0.7
+  flutter_svg: ^2.0.17
   json_schema: ^5.2.2
   uuid: ^4.0.0
+  xml: ^6.5.0
 
 dev_dependencies:
   flutter_test:

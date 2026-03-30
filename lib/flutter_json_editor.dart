@@ -15,4 +15,5 @@ export 'src/editors/image_picker_editor.dart';
 export 'src/editors/markdown_editor.dart';
 export 'src/editors/star_rating_editor.dart';
 export 'src/editors/string_editor.dart';
+export 'src/editors/svg_part_picker_editor.dart';
 export 'src/editors/remote_ref_editor.dart' show EnumSourceItem;

@@ -5,6 +5,7 @@ import 'editors/colour_editor.dart';
 import 'editors/image_picker_editor.dart';
 import 'editors/markdown_editor.dart';
 import 'editors/star_rating_editor.dart';
+import 'editors/svg_part_picker_editor.dart';
 import 'schema_field_editor.dart';
 
 class EditorRegistryData {
@@ -93,12 +94,30 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _svgPartPickerEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          SvgPartPickerEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
     'colour': _colourEditorBuilder,
     'color': _colourEditorBuilder,
     'image-url-picker': _imagePickerEditorBuilder,
     'markdown': _markdownEditorBuilder,
     'star-rating': _starRatingEditorBuilder,
+    'svg-part-picker': _svgPartPickerEditorBuilder,
   };
 
   /// Look up a builder by `x-format` value only. Used by [SchemaResolver] to
