@@ -216,9 +216,11 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
       }
     }
 
-    final cls = element.getAttribute('class');
     final id = element.getAttribute('id');
-    if (cls == 'region' && id != null) {
+    final dataState = element.getAttribute('data-state');
+    // Any element with both an id and a data-state attribute is a selectable
+    // region – regardless of the CSS class name used for styling.
+    if (id != null && dataState != null) {
       final bounds = _boundsOf(element, offset);
       if (bounds != null) {
         final label = element.getAttribute('data-region');
@@ -347,17 +349,15 @@ class _SvgPartPickerEditorState extends State<SvgPartPickerEditor> {
     List<_CssRule> rules, {
     required Map<String, String> inheritedProps,
   }) {
-    // Update data-state for region elements before matching rules, so that
-    // attribute selectors like [data-state="selected"] resolve correctly.
-    final cls = element.getAttribute('class');
-    if (cls == 'region') {
-      final id = element.getAttribute('id');
-      if (id != null) {
-        element.setAttribute(
-          'data-state',
-          _selectedIds.contains(id) ? 'selected' : 'default',
-        );
-      }
+    // Update data-state for selectable elements before matching rules, so
+    // that attribute selectors like [data-state="selected"] resolve correctly.
+    // Any element that carries a data-state attribute is considered selectable.
+    final id = element.getAttribute('id');
+    if (id != null && element.getAttribute('data-state') != null) {
+      element.setAttribute(
+        'data-state',
+        _selectedIds.contains(id) ? 'selected' : 'default',
+      );
     }
 
     // Collect all matching CSS properties (in rule order – later wins).

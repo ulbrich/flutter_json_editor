@@ -1,8 +1,7 @@
 <svg viewBox="0 0 780 520" xmlns="http://www.w3.org/2000/svg">
   <style>
-    /* Walls & structure */
     .wall { fill: none; stroke: #3a4a5a; stroke-width: 3; }
-    .wall-fill { fill: #151e28; stroke: #3a4a5a; stroke-width: 3; }
+    .wall-fill { fill: #fff; stroke: #3a4a5a; stroke-width: 3; }
     .inner-wall { stroke: #2a3a4a; stroke-width: 2; fill: none; }
     .door { stroke: #5a7a5a; stroke-width: 2; fill: none; stroke-dasharray: 6,3; }
     .window { stroke: #4a6a8a; stroke-width: 2.5; stroke-linecap: round; }
@@ -31,11 +30,11 @@
     .desk-group[data-state-ref="selected"] .chair { fill: #0d47a1; stroke: #42a5f5; }
 
     /* Labels */
-    .desk-label { fill: #4a5a6a; font-size: 9px; text-anchor: middle; pointer-events: none; font-weight: 600; }
+    .desk-label { fill: #eeeeee; font-family: Helvetica, Arial, sans-serif; font-size: 9px; text-anchor: middle; pointer-events: none; font-weight: 600; }
     .desk[data-state="selected"] + text.desk-label,
     .desk[data-state="selected"] ~ text.desk-label { fill: #90caf9; }
-    .room-label { fill: #3a4a5a; font-size: 11px; text-anchor: middle; pointer-events: none; font-weight: 600; letter-spacing: 1px; }
-    .zone-label { fill: #2a3a4a; font-size: 18px; text-anchor: middle; pointer-events: none; font-weight: 700; letter-spacing: 3px; }
+    .room-label { fill: #3a4a5a; font-family: Helvetica, Arial, sans-serif; font-size: 11px; text-anchor: middle; pointer-events: none; font-weight: 600; letter-spacing: 1px; }
+    .zone-label { fill: #2a3a4a; font-family: Helvetica, Arial, sans-serif; font-size: 18px; text-anchor: middle; pointer-events: none; font-weight: 700; letter-spacing: 3px; }
   </style>
 
   <!-- Outer Walls -->
@@ -55,12 +54,12 @@
   <line class="inner-wall" x1="300" y1="20" x2="300" y2="160" />
   <line class="inner-wall" x1="20" y1="160" x2="250" y2="160" />
   <path class="door" d="M250,160 A50,50 0 0,1 300,160" />
-  <text x="160" y="78" class="room-label">MEETING ROOM</text>
+  <text x="160" y="64" class="room-label">MEETING ROOM</text>
 
   <!-- Meeting table -->
   <rect id="meeting-table" data-region="Meeting Room Table" data-state="default" class="desk"
         x="80" y="85" width="160" height="55" rx="12" />
-  <text x="160" y="117" class="desk-label">MEETING</text>
+  <text x="125" y="117" class="desk-label">MEETING</text>
   <!-- Chairs around meeting table -->
   <circle class="chair" cx="110" cy="78" r="6" />
   <circle class="chair" cx="160" cy="78" r="6" />
@@ -80,101 +79,101 @@
   <rect class="fixture" x="30" y="380" width="30" height="40" rx="3" />
 
   <!-- ====== Open Office - Row A (top, near windows) ====== -->
-  <text x="540" y="52" class="zone-label" opacity="0.3">OPEN OFFICE</text>
+  <text x="540" y="48" class="zone-label" opacity="0.3">OPEN OFFICE</text>
 
   <!-- Desk pair A1/A2 -->
   <rect id="desk-a1" data-region="Desk A1" data-state="default" class="desk"
         x="340" y="70" width="80" height="45" rx="4" />
-  <text x="380" y="97" class="desk-label">A1</text>
+  <text x="370" y="97" class="desk-label">A1</text>
   <circle class="chair" cx="380" cy="60" r="6" />
 
   <rect id="desk-a2" data-region="Desk A2" data-state="default" class="desk"
         x="340" y="120" width="80" height="45" rx="4" />
-  <text x="380" y="147" class="desk-label">A2</text>
+  <text x="370" y="147" class="desk-label">A2</text>
   <circle class="chair" cx="380" cy="175" r="6" />
 
   <!-- Desk pair A3/A4 -->
   <rect id="desk-a3" data-region="Desk A3" data-state="default" class="desk"
         x="460" y="70" width="80" height="45" rx="4" />
-  <text x="500" y="97" class="desk-label">A3</text>
+  <text x="490" y="97" class="desk-label">A3</text>
   <circle class="chair" cx="500" cy="60" r="6" />
 
   <rect id="desk-a4" data-region="Desk A4" data-state="default" class="desk"
         x="460" y="120" width="80" height="45" rx="4" />
-  <text x="500" y="147" class="desk-label">A4</text>
+  <text x="490" y="147" class="desk-label">A4</text>
   <circle class="chair" cx="500" cy="175" r="6" />
 
   <!-- Desk pair A5/A6 -->
   <rect id="desk-a5" data-region="Desk A5" data-state="default" class="desk"
         x="580" y="70" width="80" height="45" rx="4" />
-  <text x="620" y="97" class="desk-label">A5</text>
+  <text x="610" y="97" class="desk-label">A5</text>
   <circle class="chair" cx="620" cy="60" r="6" />
 
   <rect id="desk-a6" data-region="Desk A6" data-state="default" class="desk"
         x="580" y="120" width="80" height="45" rx="4" />
-  <text x="620" y="147" class="desk-label">A6</text>
+  <text x="610" y="147" class="desk-label">A6</text>
   <circle class="chair" cx="620" cy="175" r="6" />
 
   <!-- ====== Open Office - Row B (middle) ====== -->
   <rect id="desk-b1" data-region="Desk B1" data-state="default" class="desk"
         x="340" y="215" width="80" height="45" rx="4" />
-  <text x="380" y="242" class="desk-label">B1</text>
+  <text x="370" y="242" class="desk-label">B1</text>
   <circle class="chair" cx="380" cy="205" r="6" />
 
   <rect id="desk-b2" data-region="Desk B2" data-state="default" class="desk"
         x="340" y="265" width="80" height="45" rx="4" />
-  <text x="380" y="292" class="desk-label">B2</text>
+  <text x="370" y="292" class="desk-label">B2</text>
   <circle class="chair" cx="380" cy="320" r="6" />
 
   <rect id="desk-b3" data-region="Desk B3" data-state="default" class="desk"
         x="460" y="215" width="80" height="45" rx="4" />
-  <text x="500" y="242" class="desk-label">B3</text>
+  <text x="490" y="242" class="desk-label">B3</text>
   <circle class="chair" cx="500" cy="205" r="6" />
 
   <rect id="desk-b4" data-region="Desk B4" data-state="default" class="desk"
         x="460" y="265" width="80" height="45" rx="4" />
-  <text x="500" y="292" class="desk-label">B4</text>
+  <text x="490" y="292" class="desk-label">B4</text>
   <circle class="chair" cx="500" cy="320" r="6" />
 
   <rect id="desk-b5" data-region="Desk B5" data-state="default" class="desk"
         x="580" y="215" width="80" height="45" rx="4" />
-  <text x="620" y="242" class="desk-label">B5</text>
+  <text x="610" y="242" class="desk-label">B5</text>
   <circle class="chair" cx="620" cy="205" r="6" />
 
   <rect id="desk-b6" data-region="Desk B6" data-state="default" class="desk"
         x="580" y="265" width="80" height="45" rx="4" />
-  <text x="620" y="292" class="desk-label">B6</text>
+  <text x="610" y="292" class="desk-label">B6</text>
   <circle class="chair" cx="620" cy="320" r="6" />
 
   <!-- ====== Open Office - Row C (bottom, near windows) ====== -->
   <rect id="desk-c1" data-region="Desk C1" data-state="default" class="desk"
         x="340" y="370" width="80" height="45" rx="4" />
-  <text x="380" y="397" class="desk-label">C1</text>
+  <text x="370" y="397" class="desk-label">C1</text>
   <circle class="chair" cx="380" cy="360" r="6" />
 
   <rect id="desk-c2" data-region="Desk C2" data-state="default" class="desk"
         x="340" y="420" width="80" height="45" rx="4" />
-  <text x="380" y="447" class="desk-label">C2</text>
+  <text x="370" y="447" class="desk-label">C2</text>
   <circle class="chair" cx="380" cy="475" r="6" />
 
   <rect id="desk-c3" data-region="Desk C3" data-state="default" class="desk"
         x="460" y="370" width="80" height="45" rx="4" />
-  <text x="500" y="397" class="desk-label">C3</text>
+  <text x="490" y="397" class="desk-label">C3</text>
   <circle class="chair" cx="500" cy="360" r="6" />
 
   <rect id="desk-c4" data-region="Desk C4" data-state="default" class="desk"
         x="460" y="420" width="80" height="45" rx="4" />
-  <text x="500" y="447" class="desk-label">C4</text>
+  <text x="490" y="447" class="desk-label">C4</text>
   <circle class="chair" cx="500" cy="475" r="6" />
 
   <rect id="desk-c5" data-region="Desk C5" data-state="default" class="desk"
         x="580" y="370" width="80" height="45" rx="4" />
-  <text x="620" y="397" class="desk-label">C5</text>
+  <text x="610" y="397" class="desk-label">C5</text>
   <circle class="chair" cx="620" cy="360" r="6" />
 
   <rect id="desk-c6" data-region="Desk C6" data-state="default" class="desk"
         x="580" y="420" width="80" height="45" rx="4" />
-  <text x="620" y="447" class="desk-label">C6</text>
+  <text x="610" y="447" class="desk-label">C6</text>
   <circle class="chair" cx="620" cy="475" r="6" />
 
   <!-- ====== Private Offices (left side, middle) ====== -->
@@ -187,7 +186,7 @@
 
   <rect id="desk-office1" data-region="Office 1 Desk" data-state="default" class="desk"
         x="40" y="205" width="70" height="40" rx="4" />
-  <text x="75" y="230" class="desk-label">P1</text>
+  <text x="65" y="230" class="desk-label">P1</text>
   <circle class="chair" cx="75" cy="254" r="6" />
 
   <!-- Office 2 -->
@@ -195,23 +194,23 @@
 
   <rect id="desk-office2" data-region="Office 2 Desk" data-state="default" class="desk"
         x="40" y="310" width="70" height="40" rx="4" />
-  <text x="75" y="335" class="desk-label">P2</text>
+  <text x="65" y="335" class="desk-label">P2</text>
   <circle class="chair" cx="75" cy="358" r="6" />
 
   <!-- ====== Standing Desks (right wall) ====== -->
   <rect id="desk-s1" data-region="Standing Desk S1" data-state="default" class="desk"
         x="700" y="100" width="40" height="60" rx="4" />
-  <text x="720" y="135" class="desk-label">S1</text>
+  <text x="710" y="135" class="desk-label">S1</text>
   <circle class="chair" cx="692" cy="130" r="5" />
 
   <rect id="desk-s2" data-region="Standing Desk S2" data-state="default" class="desk"
         x="700" y="190" width="40" height="60" rx="4" />
-  <text x="720" y="225" class="desk-label">S2</text>
+  <text x="710" y="225" class="desk-label">S2</text>
   <circle class="chair" cx="692" cy="220" r="5" />
 
   <rect id="desk-s3" data-region="Standing Desk S3" data-state="default" class="desk"
         x="700" y="360" width="40" height="60" rx="4" />
-  <text x="720" y="395" class="desk-label">S3</text>
+  <text x="710" y="395" class="desk-label">S3</text>
   <circle class="chair" cx="692" cy="390" r="5" />
 
   <!-- ====== Entrance ====== -->
