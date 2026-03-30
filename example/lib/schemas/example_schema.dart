@@ -1,4 +1,9 @@
 const exampleSchemaMap = {
+  'en': _exampleSchemaEnglish,
+  'de': _exampleSchemaGerman,
+};
+
+const _exampleSchemaEnglish = {
   "\$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Employee Record",
   "type": "object",
@@ -139,6 +144,151 @@ const exampleSchemaMap = {
   "else": {
     "properties": {
       "salary": {"type": "number", "title": "Annual Salary", "minimum": 0}
+    }
+  },
+};
+
+const _exampleSchemaGerman = {
+  "\$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mitarbeiterdaten",
+  "type": "object",
+  "required": ["firstName", "lastName", "employeeType"],
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "title": "Vorname",
+      "description": "Vorname des Mitarbeiters",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "lastName": {"type": "string", "title": "Nachname", "minLength": 1},
+    "age": {"type": "integer", "title": "Alter", "minimum": 18, "maximum": 120},
+    "email": {"type": "string", "title": "E-Mail", "format": "email"},
+    "address": {
+      "type": "object",
+      "title": "Adresse",
+      "description": "Privatadresse",
+      "required": ["street", "city"],
+      "properties": {
+        "street": {"type": "string", "title": "Straße"},
+        "city": {"type": "string", "title": "Stadt"},
+        "state": {"type": "string", "title": "Bundesland"},
+        "zipCode": {
+          "type": "string",
+          "title": "Postleitzahl",
+          "pattern": "^[0-9]{5}\$"
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "title": "Fähigkeiten",
+      "description": "Liste der Fähigkeiten",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "tags": {
+      "type": "object",
+      "title": "Eigene Tags",
+      "description": "Frei definierbare Schlüssel-Wert-Paare",
+      "additionalProperties": {"type": "string"}
+    },
+    "seating": {
+      "type": "string",
+      "x-format": "svg-part-picker",
+      "x-svg-asset": "assets/images/office-plan.svg",
+      "title": "Zugewiesener Schreibtisch",
+      "description":
+          "Wählen Sie den zugewiesenen Schreibtisch im Büro aus dem Raumplan"
+    },
+    "themeColour": {
+      "type": "string",
+      "x-format": "colour",
+      "title": "Designfarbe",
+      "description": "Wählen Sie Ihre Farbe für das UX-Design",
+      "default": "#ff0000"
+    },
+    "avatar": {
+      "type": "string",
+      "x-format": "image-url-picker",
+      "title": "Profilbild",
+      "description": "Wählen Sie ein Profilbild",
+      "\$ref": "https://example.com/api/avatars"
+    },
+    "hobby": {
+      "type": "string",
+      "title": "Hobby",
+      "\$ref": "https://example.com/api/hobbies"
+    },
+    "notes": {
+      "type": "string",
+      "x-format": "markdown",
+      "title": "Interne Notizen",
+      "readOnly": true
+    },
+    "department": {
+      "type": ["string", "null"],
+      "title": "Abteilung",
+      "description": "Optionales Abteilungsfeld"
+    },
+    "preferredMeetingTime": {
+      "type": "string",
+      "x-format": "time",
+      "title": "Bevorzugte Besprechungszeit",
+      "description": "Bevorzugte Uhrzeit für das tägliche Stand-up"
+    },
+    "isActive": {
+      "type": "boolean",
+      "title": "Aktiver Mitarbeiter",
+      "default": true
+    },
+    "lastCheckIn": {
+      "type": "string",
+      "x-format": "date-time",
+      "title": "Letzter Check-in",
+      "description": "Datum und Uhrzeit des letzten Check-ins"
+    },
+    "performance": {
+      "type": "integer",
+      "x-format": "star-rating",
+      "title": "Leistungsbewertung",
+      "description": "Leistung des Mitarbeiters bewerten (0–5 Sterne)",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
+    "employeeType": {
+      "type": "string",
+      "title": "Beschäftigungsart",
+      "enum": ["full-time", "part-time", "contractor", "intern"],
+    },
+    "contractStartDate": {
+      "type": "string",
+      "x-format": "date",
+      "title": "Vertragsbeginn",
+      "description": "Datum des Arbeitsbeginns"
+    },
+  },
+  "if": {
+    "properties": {
+      "employeeType": {"const": "contractor"}
+    }
+  },
+  "then": {
+    "properties": {
+      "contractEndDate": {
+        "type": "string",
+        "title": "Vertragsende",
+        "format": "date"
+      },
+      "hourlyRate": {"type": "number", "title": "Stundensatz", "minimum": 0}
+    },
+    "required": ["contractEndDate"]
+  },
+  "else": {
+    "properties": {
+      "salary": {"type": "number", "title": "Jahresgehalt", "minimum": 0}
     }
   },
 };

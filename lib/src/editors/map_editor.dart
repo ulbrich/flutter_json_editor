@@ -66,7 +66,7 @@ class _MapEditorState extends State<MapEditor> {
 
   void _addEntry() {
     setState(() {
-      var newKey = 'key_${_keys.length}';
+      var newKey = '#${_keys.length}';
       while (_keys.contains(newKey)) {
         newKey = '${newKey}_';
       }
@@ -145,7 +145,8 @@ class _MapEditorState extends State<MapEditor> {
                   flex: 2,
                   child: TextFormField(
                     initialValue: key,
-                    decoration: InputDecoration(labelText: JsonEditorL10n.of(context).keyLabel),
+                    decoration: InputDecoration(
+                        labelText: JsonEditorL10n.of(context).keyLabel),
                     onChanged: (newKey) => _onKeyChanged(index, newKey),
                   ),
                 ),

@@ -33,21 +33,33 @@ class EditorPage extends StatefulWidget {
 }
 
 class _EditorPageState extends State<EditorPage> {
-  late final JsonSchema _schema;
+  JsonSchema? _schema;
+  String? _schemaLocale;
   final _editorKey = GlobalKey<JsonEditorState>();
   dynamic _currentData = {};
   dynamic _lastDiff = {};
 
   @override
-  void initState() {
-    super.initState();
-    _schema = SchemaUtils.createSchema(
-      Map<String, dynamic>.from(exampleSchemaMap),
-    );
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale != _schemaLocale) {
+      _schemaLocale = locale;
+      final schemaData = exampleSchemaMap[locale] ?? exampleSchemaMap['en']!;
+      _schema = SchemaUtils.createSchema(
+        Map<String, dynamic>.from(schemaData),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_schema == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('JSON Editor Demo')),
       body: SingleChildScrollView(
@@ -60,7 +72,7 @@ class _EditorPageState extends State<EditorPage> {
             // registry, either globally or for specific paths and formats.
             JsonEditor(
               key: _editorKey,
-              schema: _schema,
+              schema: _schema!,
               // registry: EditorRegistryData(
               //   pathOverrides: {
               //     'someProperty': ({
