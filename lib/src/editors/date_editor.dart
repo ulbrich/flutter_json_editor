@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
@@ -151,13 +152,10 @@ class DateEditorState extends State<DateEditor> {
     return widget.isRequired ? '$base *' : base;
   }
 
-  String _formatDisplay() {
+  String _formatDisplay(BuildContext context) {
     if (_localDate == null) return '';
-    final d = _localDate!;
-    final y = d.year.toString().padLeft(4, '0');
-    final m = d.month.toString().padLeft(2, '0');
-    final day = d.day.toString().padLeft(2, '0');
-    return '$y-$m-$day';
+    final locale = Localizations.localeOf(context).toString();
+    return intl.DateFormat.yMd(locale).format(_localDate!);
   }
 
   /// Builds only the date picker portion (no label/description). Used by
@@ -187,7 +185,7 @@ class DateEditorState extends State<DateEditor> {
           ),
         ),
         child: Text(
-          _formatDisplay(),
+          _formatDisplay(context),
           style: theme.textTheme.bodyLarge,
         ),
       ),

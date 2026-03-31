@@ -34,6 +34,10 @@ class _MapEditorState extends State<MapEditor> {
   static const _uuid = Uuid();
   bool _selfUpdating = false;
 
+  /// Index of the most recently added entry, so its key field can be
+  /// auto-selected for immediate overwriting. Reset to -1 after build.
+  int _newEntryIndex = -1;
+
   @override
   void initState() {
     super.initState();
@@ -66,13 +70,14 @@ class _MapEditorState extends State<MapEditor> {
 
   void _addEntry() {
     setState(() {
-      var newKey = '#${_keys.length}';
+      var newKey = '#${_keys.length + 1}';
       while (_keys.contains(newKey)) {
         newKey = '${newKey}_';
       }
       _keys.add(newKey);
       _data[newKey] = '';
       _entryIds.add(_uuid.v4());
+      _newEntryIndex = _keys.length - 1;
       _notifyParent();
     });
   }
@@ -135,6 +140,8 @@ class _MapEditorState extends State<MapEditor> {
           ),
         ...List.generate(_keys.length, (index) {
           final key = _keys[index];
+          final isNew = index == _newEntryIndex;
+          if (isNew) _newEntryIndex = -1;
           return Padding(
             key: ValueKey(_entryIds[index]),
             padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -143,10 +150,10 @@ class _MapEditorState extends State<MapEditor> {
               children: [
                 Expanded(
                   flex: 2,
-                  child: TextFormField(
+                  child: _KeyField(
                     initialValue: key,
-                    decoration: InputDecoration(
-                        labelText: JsonEditorL10n.of(context).keyLabel),
+                    autoSelect: isNew,
+                    label: JsonEditorL10n.of(context).keyLabel,
                     onChanged: (newKey) => _onKeyChanged(index, newKey),
                   ),
                 ),
@@ -181,6 +188,64 @@ class _MapEditorState extends State<MapEditor> {
           );
         }),
       ],
+    );
+  }
+}
+
+/// A key text field that optionally auto-selects its content on first build
+/// so the user can immediately type a replacement.
+class _KeyField extends StatefulWidget {
+  final String initialValue;
+  final bool autoSelect;
+  final String label;
+  final ValueChanged<String> onChanged;
+
+  const _KeyField({
+    required this.initialValue,
+    required this.autoSelect,
+    required this.label,
+    required this.onChanged,
+  });
+
+  @override
+  State<_KeyField> createState() => _KeyFieldState();
+}
+
+class _KeyFieldState extends State<_KeyField> {
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+    _focusNode = FocusNode();
+    if (widget.autoSelect) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _focusNode.requestFocus();
+        _controller.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: _controller.text.length,
+        );
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: _controller,
+      focusNode: _focusNode,
+      decoration: InputDecoration(labelText: widget.label),
+      onChanged: widget.onChanged,
     );
   }
 }

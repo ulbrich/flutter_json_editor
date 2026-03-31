@@ -1,0 +1,11 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "JSON-Editor Demo",
+  "cancelButton": "Abbrechen",
+  "saveButton": "Speichern",
+  "cancelledMessage": "Abgebrochen",
+  "savedMessage": "Gespeichert: {count} Einträge",
+  "currentDataTitle": "Aktuelle Daten",
+  "lastDiffTitle": "Letzte Änderung"
+}

@@ -16,9 +16,23 @@ const _exampleSchemaEnglish = {
       "minLength": 1,
       "maxLength": 50
     },
-    "lastName": {"type": "string", "title": "Last Name", "minLength": 1},
-    "age": {"type": "integer", "title": "Age", "minimum": 18, "maximum": 120},
-    "email": {"type": "string", "title": "Email", "format": "email"},
+    "lastName": {
+      "type": "string",
+      "title": "Last Name",
+      "description": "Please update if changed, e.g. after marriage",
+      "minLength": 1,
+    },
+    "age": {
+      "type": "integer",
+      "title": "Age",
+      "minimum": 18,
+      "maximum": 120,
+    },
+    "email": {
+      "type": "string",
+      "title": "Email",
+      "format": "email",
+    },
     "address": {
       "type": "object",
       "title": "Address",
@@ -95,7 +109,7 @@ const _exampleSchemaEnglish = {
     },
     "isActive": {
       "type": "boolean",
-      "title": "Active Employee",
+      "title": "Active Contract",
       "default": true
     },
     "lastCheckIn": {
@@ -137,13 +151,21 @@ const _exampleSchemaEnglish = {
         "title": "Contract End Date",
         "format": "date"
       },
-      "hourlyRate": {"type": "number", "title": "Hourly Rate", "minimum": 0}
+      "hourlyRate": {
+        "type": "number",
+        "title": "Hourly Rate",
+        "minimum": 0,
+      }
     },
     "required": ["contractEndDate"]
   },
   "else": {
     "properties": {
-      "salary": {"type": "number", "title": "Annual Salary", "minimum": 0}
+      "salary": {
+        "type": "number",
+        "title": "Annual Salary",
+        "minimum": 0,
+      }
     }
   },
 };
@@ -157,13 +179,26 @@ const _exampleSchemaGerman = {
     "firstName": {
       "type": "string",
       "title": "Vorname",
-      "description": "Vorname des Mitarbeiters",
       "minLength": 1,
       "maxLength": 50
     },
-    "lastName": {"type": "string", "title": "Nachname", "minLength": 1},
-    "age": {"type": "integer", "title": "Alter", "minimum": 18, "maximum": 120},
-    "email": {"type": "string", "title": "E-Mail", "format": "email"},
+    "lastName": {
+      "type": "string",
+      "title": "Nachname",
+      "description": "Bitte nach z.B. Hochzeit unbedingt anpassen",
+      "minLength": 1,
+    },
+    "age": {
+      "type": "integer",
+      "title": "Alter",
+      "minimum": 18,
+      "maximum": 120,
+    },
+    "email": {
+      "type": "string",
+      "title": "E-Mail",
+      "format": "email",
+    },
     "address": {
       "type": "object",
       "title": "Adresse",
@@ -240,7 +275,7 @@ const _exampleSchemaGerman = {
     },
     "isActive": {
       "type": "boolean",
-      "title": "Aktiver Mitarbeiter",
+      "title": "Aktiver Vertrag",
       "default": true
     },
     "lastCheckIn": {
@@ -282,13 +317,21 @@ const _exampleSchemaGerman = {
         "title": "Vertragsende",
         "format": "date"
       },
-      "hourlyRate": {"type": "number", "title": "Stundensatz", "minimum": 0}
+      "hourlyRate": {
+        "type": "number",
+        "title": "Stundensatz",
+        "minimum": 0,
+      }
     },
     "required": ["contractEndDate"]
   },
   "else": {
     "properties": {
-      "salary": {"type": "number", "title": "Jahresgehalt", "minimum": 0}
+      "salary": {
+        "type": "number",
+        "title": "Jahresgehalt",
+        "minimum": 0,
+      }
     }
   },
 };
@@ -329,7 +372,7 @@ const exampleSchemaAvatarRefLookupResponse = {
   ]
 };
 
-const exampleSchemaHobbyRefLookupResponse = {
+const exampleSchemaHobbyRefLookupResponseEnglish = {
   "type": "string",
   "enumSource": [
     {
@@ -349,4 +392,39 @@ const exampleSchemaHobbyRefLookupResponse = {
       ]
     }
   ]
+};
+
+const exampleSchemaHobbyRefLookupResponseGerman = {
+  "type": "string",
+  "enumSource": [
+    {
+      "value": "{{item.value}}",
+      "title": "{{item.title}}",
+      "source": [
+        {"value": "53323990-f4c8-4a25-8d83-a9313a403331", "title": "Kochen"},
+        {"value": "3562eb73-a2be-ed86-26bd-28f18956c5b3", "title": "Tanzen"},
+        {"value": "607f1626-8766-43d6-9931-bdde327e0cf1", "title": "Filmen"},
+        {
+          "value": "750b209c-cce5-4dc7-a4fa-6c76019ba73f",
+          "title": "Gartenarbeit"
+        },
+        {"value": "98b21842-e696-401a-bb6e-b0afdad6ed24", "title": "Musik"},
+        {"value": "e9287e38-5e14-45ed-a026-3e37295c7828", "title": "Malen"},
+        {"value": "ba337609-a6af-875d-1282-b202be8c55ba", "title": "Lesen"},
+        {"value": "a248b9d7-fdfd-4bc8-bab0-73a11443bb0e", "title": "Sport"},
+        {"value": "50caf221-2ac9-4dda-aa7d-e8f9238ba86c", "title": "Reisen"},
+        {"value": "ddcbe404-f7e7-494c-b0de-e76689cff554", "title": "Schreiben"}
+      ]
+    }
+  ]
+};
+
+const exampleSchemaHobbyRefLookupResponse = {
+  'en': exampleSchemaHobbyRefLookupResponseEnglish,
+  'de': exampleSchemaHobbyRefLookupResponseGerman,
+};
+
+const availableLocales = {
+  'en': 'English',
+  'de': 'Deutsch',
 };

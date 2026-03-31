@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   flutter_json_editor:
     path: ../
+  intl: any
   json_schema: ^5.2.2
   http: ^1.6.0
 
@@ -22,6 +23,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/office-plan.svg

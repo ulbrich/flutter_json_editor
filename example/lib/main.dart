@@ -5,28 +5,56 @@ import 'package:flutter_json_editor/flutter_json_editor.dart';
 // import 'package:http/http.dart' as http;
 import 'package:json_schema/json_schema.dart';
 
+import 'l10n/generated/app_localizations.dart';
 import 'schemas/example_schema.dart';
+
+/// The locales available in this example app.
+const availableLocales = AppLocalizations.supportedLocales;
 
 void main() => runApp(const ExampleApp());
 
-class ExampleApp extends StatelessWidget {
+class ExampleApp extends StatefulWidget {
   const ExampleApp({super.key});
+
+  @override
+  State<ExampleApp> createState() => _ExampleAppState();
+}
+
+class _ExampleAppState extends State<ExampleApp> {
+  Locale _locale = availableLocales.first;
+
+  void _setLocale(Locale locale) {
+    setState(() => _locale = locale);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JSON Editor Demo',
       theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
-      locale: const Locale('de'),
-      localizationsDelegates: JsonEditorLocalizations.localizationsDelegates,
-      supportedLocales: JsonEditorLocalizations.supportedLocales,
-      home: const EditorPage(),
+      locale: _locale,
+      localizationsDelegates: const [
+        ...AppLocalizations.localizationsDelegates,
+        JsonEditorLocalizations.delegate,
+      ],
+      supportedLocales: availableLocales,
+      home: EditorPage(
+        locale: _locale,
+        onLocaleChanged: _setLocale,
+      ),
     );
   }
 }
 
 class EditorPage extends StatefulWidget {
-  const EditorPage({super.key});
+  final Locale locale;
+  final ValueChanged<Locale> onLocaleChanged;
+
+  const EditorPage({
+    super.key,
+    required this.locale,
+    required this.onLocaleChanged,
+  });
 
   @override
   State<EditorPage> createState() => _EditorPageState();
@@ -60,75 +88,42 @@ class _EditorPageState extends State<EditorPage> {
       );
     }
 
+    final locale = Localizations.localeOf(context).languageCode;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('JSON Editor Demo')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).appTitle),
+        actions: [
+          DropdownButton<Locale>(
+            value: widget.locale,
+            underline: const SizedBox.shrink(),
+            icon: const Icon(Icons.language),
+            items: [
+              for (final loc in availableLocales)
+                DropdownMenuItem(
+                  value: loc,
+                  child: Text(loc.languageCode.toUpperCase()),
+                ),
+            ],
+            onChanged: (loc) {
+              if (loc != null) widget.onLocaleChanged(loc);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Form editor with key bindinng and callbacks to process the data
-            // and e.g. $ref lookups. Custom editors can be injected via the
-            // registry, either globally or for specific paths and formats.
             JsonEditor(
               key: _editorKey,
               schema: _schema!,
-              // registry: EditorRegistryData(
-              //   pathOverrides: {
-              //     'someProperty': ({
-              //       required JsonSchema schema,
-              //       required String path,
-              //       required dynamic value,
-              //       required void Function(dynamic value) onChanged,
-              //       required bool isRequired,
-              //       bool isNullable = false,
-              //     }) =>
-              //         SomeEditor(
-              //           schema: schema,
-              //           path: path,
-              //           value: value,
-              //           onChanged: onChanged,
-              //           isRequired: isRequired,
-              //           isNullable: isNullable,
-              //         ),
-              //   },
-              //   formatOverrides: {
-              //     'someFormat': ({
-              //       required JsonSchema schema,
-              //       required String path,
-              //       required dynamic value,
-              //       required void Function(dynamic value) onChanged,
-              //       required bool isRequired,
-              //       bool isNullable = false,
-              //     }) =>
-              //         AnotherEditor(
-              //           schema: schema,
-              //           path: path,
-              //           value: value,
-              //           onChanged: onChanged,
-              //           isRequired: isRequired,
-              //           isNullable: isNullable,
-              //         ),
-              //   },
-              // ),
               onRefLookup: (refUrl, fieldPath, currentValue) async {
-                // Add your logic here to fetch data based on the `refUrl`. You
-                // might want to add headers for authentication or e.g. replace
-                // placeholders in the URL with other context information. For
-                // example you could replace `{postId}` in an URL like
-                // `https://example.com/api/posts/{postId}/comments`.
-                //
-                // final token = 'your_api_token_here';
-                // final postId = '21ed40f5-d8e6-4a9a-92b7-e5a3d4834447';
-                //
-                // final response = await http.get(
-                //   Uri.parse(refUrl.replaceAll('{postId }', postId)),
-                //   headers: {'Authorization': 'Bearer $token'},
-                // );
-                // final data = jsonDecode(response.body) as Map<String, dynamic>;
-
                 if (refUrl == 'https://example.com/api/hobbies') {
-                  return exampleSchemaHobbyRefLookupResponse;
+                  return exampleSchemaHobbyRefLookupResponse[locale] ??
+                      exampleSchemaHobbyRefLookupResponse['en']!;
                 }
 
                 if (refUrl == 'https://example.com/api/avatars') {
@@ -158,17 +153,19 @@ class _EditorPageState extends State<EditorPage> {
 
             const SizedBox(height: 16),
 
-            // Buttons — external, below the form
+            // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(const SnackBar(content: Text('Cancelled')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context).cancelledMessage)),
+                    );
                   },
-                  child: const Text('Cancel'),
+                  child: Text(AppLocalizations.of(context).cancelButton),
                 ),
                 const SizedBox(width: 16),
                 FilledButton(
@@ -180,10 +177,12 @@ class _EditorPageState extends State<EditorPage> {
                             ? data.length
                             : 0;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Saved: $count items')),
+                      SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .savedMessage(count))),
                     );
                   },
-                  child: const Text('Save'),
+                  child: Text(AppLocalizations.of(context).saveButton),
                 ),
               ],
             ),
@@ -192,9 +191,9 @@ class _EditorPageState extends State<EditorPage> {
             const Divider(),
             const SizedBox(height: 16),
 
-            // Data preview below the buttons
+            // Data preview
             ExpansionTile(
-              title: const Text('Current Data'),
+              title: Text(AppLocalizations.of(context).currentDataTitle),
               initiallyExpanded: false,
               children: [
                 Padding(
@@ -210,7 +209,7 @@ class _EditorPageState extends State<EditorPage> {
               ],
             ),
             ExpansionTile(
-              title: const Text('Last Diff'),
+              title: Text(AppLocalizations.of(context).lastDiffTitle),
               initiallyExpanded: false,
               children: [
                 Padding(

@@ -31,6 +31,10 @@ class _ArrayEditorState extends State<ArrayEditor> {
   late List<String> _itemIds;
   static const _uuid = Uuid();
 
+  /// ID of the most recently added item, so its input field can be
+  /// auto-focused. Reset to null after build.
+  String? _newItemId;
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +61,9 @@ class _ArrayEditorState extends State<ArrayEditor> {
   void _addItem() {
     setState(() {
       _data.add(_getDefaultValue());
-      _itemIds.add(_uuid.v4());
+      final id = _uuid.v4();
+      _itemIds.add(id);
+      _newItemId = id;
       widget.onChanged(List.from(_data));
     });
   }
@@ -158,11 +164,18 @@ class _ArrayEditorState extends State<ArrayEditor> {
           onReorder: _onReorder,
           itemBuilder: (context, index) {
             final itemSchema = _getItemSchema(index);
-            return ListTile(
-              titleAlignment: ListTileTitleAlignment.top,
-              contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+            final shouldFocus = _itemIds[index] == _newItemId;
+            if (shouldFocus) _newItemId = null;
+            return _ArrayItemTile(
               key: ValueKey(_itemIds[index]),
-              title: SchemaResolver.resolve(
+              autoFocus: shouldFocus,
+              trailing: canRemove
+                  ? IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _removeItem(index),
+                    )
+                  : null,
+              child: SchemaResolver.resolve(
                 schema: itemSchema,
                 path: '${widget.path}[$index]',
                 value: _data[index],
@@ -172,16 +185,66 @@ class _ArrayEditorState extends State<ArrayEditor> {
                 isNullable: SchemaUtils.isNullable(itemSchema),
                 refDepth: widget.refDepth,
               ),
-              trailing: canRemove
-                  ? IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _removeItem(index),
-                    )
-                  : null,
             );
           },
         ),
       ],
     );
   }
+}
+
+/// A list tile wrapper that optionally focuses the first focusable descendant
+/// after the frame is built.
+class _ArrayItemTile extends StatelessWidget {
+  final Widget child;
+  final Widget? trailing;
+  final bool autoFocus;
+
+  const _ArrayItemTile({
+    super.key,
+    required this.child,
+    this.trailing,
+    this.autoFocus = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget tile = ListTile(
+      titleAlignment: ListTileTitleAlignment.top,
+      contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+      title: child,
+      trailing: trailing,
+    );
+
+    if (autoFocus) {
+      tile = _AutoFocusWrapper(child: tile);
+    }
+
+    return tile;
+  }
+}
+
+class _AutoFocusWrapper extends StatefulWidget {
+  final Widget child;
+
+  const _AutoFocusWrapper({required this.child});
+
+  @override
+  State<_AutoFocusWrapper> createState() => _AutoFocusWrapperState();
+}
+
+class _AutoFocusWrapperState extends State<_AutoFocusWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // Find and focus the first focusable descendant (e.g. a TextFormField).
+      final scope = FocusScope.of(context);
+      scope.nextFocus();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

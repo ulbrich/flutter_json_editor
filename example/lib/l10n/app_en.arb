@@ -1,0 +1,29 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "JSON Editor Demo",
+  "@appTitle": { "description": "App bar title" },
+
+  "cancelButton": "Cancel",
+  "@cancelButton": { "description": "Cancel button label" },
+
+  "saveButton": "Save",
+  "@saveButton": { "description": "Save button label" },
+
+  "cancelledMessage": "Cancelled",
+  "@cancelledMessage": { "description": "Snackbar message when cancelled" },
+
+  "savedMessage": "Saved: {count} items",
+  "@savedMessage": {
+    "description": "Snackbar message after saving",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "currentDataTitle": "Current Data",
+  "@currentDataTitle": { "description": "Expansion tile title for current data preview" },
+
+  "lastDiffTitle": "Last Diff",
+  "@lastDiffTitle": { "description": "Expansion tile title for last diff preview" }
+}
