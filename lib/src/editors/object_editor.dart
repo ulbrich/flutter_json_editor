@@ -49,6 +49,8 @@ class _ObjectEditorState extends State<ObjectEditor> {
     if (widget.value != oldWidget.value) {
       final raw = widget.value;
       _data = raw is Map ? Map<String, dynamic>.from(raw) : <String, dynamic>{};
+    }
+    if (widget.value != oldWidget.value || widget.schema != oldWidget.schema) {
       _evaluateConditionals();
     }
   }
