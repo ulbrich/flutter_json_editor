@@ -88,7 +88,7 @@
   "svgNotAvailableError": "SVG not available.",
   "@svgNotAvailableError": { "description": "Shown when the SVG string is null or unavailable" },
 
-  "preservedIdsHint": "+ {count} not displayed ID(s) (preserved)",
+  "preservedIdsHint": "{count, plural, =0{} =1{+ one not displayed ID (preserved)} other{+ {count} not displayed IDs (preserved)}}",
   "@preservedIdsHint": {
     "description": "Hint about IDs preserved from other SVGs",
     "placeholders": {

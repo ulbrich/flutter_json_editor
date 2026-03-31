@@ -30,7 +30,7 @@
   "noSvgAssetPathError": "Kein SVG-Pfad angegeben (x-svg-asset).",
   "failedToLoadSvgError": "SVG konnte nicht geladen werden: {details}",
   "svgNotAvailableError": "SVG nicht verfügbar.",
-  "preservedIdsHint": "+ {count} nicht dargestellte ID(s) (beibehalten)",
+  "preservedIdsHint": "{count, plural, =0{} =1{+ eine nicht dargestellte ID (beibehalten)} other{+ {count} nicht dargestellte IDs (beibehalten)}}",
 
   "editorPlaceholder": "Editor für {type} bei {path}",
   "addNestedLabel": "{typeName} hinzufügen"

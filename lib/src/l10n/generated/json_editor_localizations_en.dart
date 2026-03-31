@@ -89,7 +89,14 @@ class JsonEditorLocalizationsEn extends JsonEditorLocalizations {
 
   @override
   String preservedIdsHint(int count) {
-    return '+ $count ID(s) not shown (preserved)';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+ $count not displayed IDs (preserved)',
+      one: '+ one not displayed ID (preserved)',
+      zero: '',
+    );
+    return '$_temp0';
   }
 
   @override

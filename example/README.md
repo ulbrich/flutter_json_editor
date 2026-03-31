@@ -30,6 +30,17 @@ $ cd example
 $ flutter run
 ```
 
+## Localization
+
+The example app has its own `.arb` files in `lib/l10n/` (English and German). To add a locale or change strings, edit the `.arb` files and run:
+
+```bash
+$ cd example
+$ flutter gen-l10n
+```
+
+See the [package README's Localization section](../README.md#localization) for full details on adding locales to the editor itself.
+
 ## Further Reading
 
 For full documentation on the widget API, theming, custom editors, and all supported schema features, see the [package README](../README.md).

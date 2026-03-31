@@ -246,7 +246,7 @@ abstract class JsonEditorLocalizations {
   /// Hint about IDs preserved from other SVGs
   ///
   /// In en, this message translates to:
-  /// **'+ {count} ID(s) not in this SVG (preserved)'**
+  /// **'{count, plural, =0{} =1{+ one not displayed ID (preserved)} other{+ {count} not displayed IDs (preserved)}}'**
   String preservedIdsHint(int count);
 
   /// Placeholder text for an unresolved editor

@@ -284,6 +284,56 @@ Results are cached per URL for the lifetime of the widget.
 | `default` values | Applied on field creation |
 | Reorderable arrays | Full (drag handles) |
 
+## Localization
+
+The editor is fully localized using Flutter's `gen-l10n` tooling. Out of the box it ships with English (`en`) and German (`de`).
+
+### Changing Strings
+
+Edit the `.arb` files in `lib/src/l10n/`:
+
+- `json_editor_en.arb` — English (template)
+- `json_editor_de.arb` — German
+
+Then regenerate the Dart localization classes:
+
+```bash
+$ flutter gen-l10n
+$ cd example; flutter gen-l10n
+```
+
+The generated files are written to `lib/src/l10n/generated/` as configured in `l10n.yaml`.
+
+### Adding a New Locale
+
+1. Copy the template file to a new `.arb` file with the target locale suffix, e.g. for French:
+   ```bash
+   cp lib/src/l10n/json_editor_en.arb lib/src/l10n/json_editor_fr.arb
+   ```
+2. Update `"@@locale": "fr"` at the top of the new file.
+3. Translate all the string values.
+4. Run `flutter gen-l10n` to regenerate.
+
+The new locale is automatically picked up — no additional registration is needed.
+
+### Using Localizations in Your App
+
+Make sure your `MaterialApp` includes the editor's localization delegate and supported locales:
+
+```dart
+import 'package:flutter_json_editor/flutter_json_editor.dart';
+
+MaterialApp(
+  localizationsDelegates: const [
+    JsonEditorLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ],
+  supportedLocales: JsonEditorLocalizations.supportedLocales,
+  // ...
+)
+```
+
 ## Example
 
 Check out the [example project](./example) to see the editor in action with an employee record schema that exercises most of these features — nested objects, arrays, maps, conditionals, remote refs, and more.
