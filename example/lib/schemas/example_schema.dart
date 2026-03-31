@@ -423,8 +423,3 @@ const exampleSchemaHobbyRefLookupResponse = {
   'en': exampleSchemaHobbyRefLookupResponseEnglish,
   'de': exampleSchemaHobbyRefLookupResponseGerman,
 };
-
-const availableLocales = {
-  'en': 'English',
-  'de': 'Deutsch',
-};

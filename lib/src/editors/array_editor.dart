@@ -31,8 +31,8 @@ class _ArrayEditorState extends State<ArrayEditor> {
   late List<String> _itemIds;
   static const _uuid = Uuid();
 
-  /// ID of the most recently added item, so its input field can be
-  /// auto-focused. Reset to null after build.
+  /// Stable ID of the most recently added item, used to focus its first
+  /// input field after the frame renders.
   String? _newItemId;
 
   @override
@@ -66,6 +66,40 @@ class _ArrayEditorState extends State<ArrayEditor> {
       _newItemId = id;
       widget.onChanged(List.from(_data));
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // Find the ListTile with the new item's ValueKey and focus its
+      // first EditableText descendant.
+      _focusNewItem(context as Element);
+    });
+  }
+
+  void _focusNewItem(Element root) {
+    final id = _newItemId;
+    _newItemId = null;
+    if (id == null) return;
+    final targetKey = ValueKey<String>(id);
+    bool found = false;
+
+    void visit(Element element) {
+      if (found) return;
+      if (element.widget.key == targetKey) {
+        _focusFirstEditable(element);
+        found = true;
+        return;
+      }
+      element.visitChildElements(visit);
+    }
+
+    root.visitChildElements(visit);
+  }
+
+  void _focusFirstEditable(Element element) {
+    if (element.widget is EditableText) {
+      (element.widget as EditableText).focusNode.requestFocus();
+      return;
+    }
+    element.visitChildElements(_focusFirstEditable);
   }
 
   void _removeItem(int index) {
@@ -164,18 +198,11 @@ class _ArrayEditorState extends State<ArrayEditor> {
           onReorder: _onReorder,
           itemBuilder: (context, index) {
             final itemSchema = _getItemSchema(index);
-            final shouldFocus = _itemIds[index] == _newItemId;
-            if (shouldFocus) _newItemId = null;
-            return _ArrayItemTile(
+            return ListTile(
               key: ValueKey(_itemIds[index]),
-              autoFocus: shouldFocus,
-              trailing: canRemove
-                  ? IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _removeItem(index),
-                    )
-                  : null,
-              child: SchemaResolver.resolve(
+              titleAlignment: ListTileTitleAlignment.top,
+              contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+              title: SchemaResolver.resolve(
                 schema: itemSchema,
                 path: '${widget.path}[$index]',
                 value: _data[index],
@@ -185,6 +212,12 @@ class _ArrayEditorState extends State<ArrayEditor> {
                 isNullable: SchemaUtils.isNullable(itemSchema),
                 refDepth: widget.refDepth,
               ),
+              trailing: canRemove
+                  ? IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _removeItem(index),
+                    )
+                  : null,
             );
           },
         ),
@@ -193,58 +226,3 @@ class _ArrayEditorState extends State<ArrayEditor> {
   }
 }
 
-/// A list tile wrapper that optionally focuses the first focusable descendant
-/// after the frame is built.
-class _ArrayItemTile extends StatelessWidget {
-  final Widget child;
-  final Widget? trailing;
-  final bool autoFocus;
-
-  const _ArrayItemTile({
-    super.key,
-    required this.child,
-    this.trailing,
-    this.autoFocus = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget tile = ListTile(
-      titleAlignment: ListTileTitleAlignment.top,
-      contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-      title: child,
-      trailing: trailing,
-    );
-
-    if (autoFocus) {
-      tile = _AutoFocusWrapper(child: tile);
-    }
-
-    return tile;
-  }
-}
-
-class _AutoFocusWrapper extends StatefulWidget {
-  final Widget child;
-
-  const _AutoFocusWrapper({required this.child});
-
-  @override
-  State<_AutoFocusWrapper> createState() => _AutoFocusWrapperState();
-}
-
-class _AutoFocusWrapperState extends State<_AutoFocusWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      // Find and focus the first focusable descendant (e.g. a TextFormField).
-      final scope = FocusScope.of(context);
-      scope.nextFocus();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.child;
-}

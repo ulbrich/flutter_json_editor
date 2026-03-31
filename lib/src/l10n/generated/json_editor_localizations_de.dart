@@ -88,7 +88,7 @@ class JsonEditorLocalizationsDe extends JsonEditorLocalizations {
 
   @override
   String preservedIdsHint(int count) {
-    return '+ $count ID(s) nicht in diesem SVG (beibehalten)';
+    return '+ $count ID(s) nicht dargestellt (beibehalten)';
   }
 
   @override

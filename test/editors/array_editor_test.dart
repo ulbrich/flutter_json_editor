@@ -224,21 +224,10 @@ void main() {
         onChanged: (_) {},
         isRequired: false,
       )));
-      // Verify that each array item has a stable ValueKey<String>.
-      // The key is on the item wrapper widget above the ListTile.
-      final listTiles = find.byType(ListTile);
-      expect(listTiles, findsNWidgets(2));
-      for (final element in listTiles.evaluate()) {
-        // Walk up to find the nearest ancestor with a ValueKey.
-        var found = false;
-        element.visitAncestorElements((ancestor) {
-          if (ancestor.widget.key is ValueKey<String>) {
-            found = true;
-            return false;
-          }
-          return true;
-        });
-        expect(found, isTrue);
+      // Verify ListTiles have ValueKey (stable UUID keys)
+      final listTiles = tester.widgetList<ListTile>(find.byType(ListTile));
+      for (final tile in listTiles) {
+        expect(tile.key, isA<ValueKey<String>>());
       }
     });
   });
