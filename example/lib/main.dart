@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_json_editor/flutter_json_editor.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 import 'package:json_schema/json_schema.dart';
 
 import 'l10n/generated/app_localizations.dart';
@@ -128,6 +128,22 @@ class _EditorPageState extends State<EditorPage> {
 
                 if (refUrl == 'https://example.com/api/avatars') {
                   return exampleSchemaAvatarRefLookupResponse;
+                }
+
+                // Generic fallback: fetch any real http(s) ref and return the
+                // decoded JSON body. The widget itself performs no networking —
+                // it relies on this callback to resolve $ref URLs.
+                if (refUrl.startsWith('http')) {
+                  try {
+                    final response = await http.get(Uri.parse(refUrl));
+                    if (response.statusCode == 200) {
+                      return jsonDecode(response.body) as Map<String, dynamic>;
+                    }
+                  } catch (_) {
+                    // Fall through to null so the editor shows its
+                    // "remote schema unavailable" state.
+                  }
+                  return null;
                 }
 
                 return null;
