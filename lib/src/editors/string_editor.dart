@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 
 import '../l10n/json_editor_l10n.dart';
+import '../l10n/validation_l10n.dart';
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
@@ -106,7 +107,10 @@ class _StringEditorState extends State<StringEditor> {
               decoration: InputDecoration(
                 labelText: _buildLabel(),
                 helperText: widget.schema.description,
-                errorText: _errors.isNotEmpty ? _errors.first : null,
+                errorText: localizeFirstValidationError(
+                  JsonEditorL10n.of(context),
+                  _errors,
+                ),
                 labelStyle: editorTheme.labelStyle,
                 helperStyle: editorTheme.helperStyle,
                 errorStyle: editorTheme.errorStyle,

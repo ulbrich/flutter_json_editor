@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:json_schema/json_schema.dart';
 
 import 'package:flutter_json_editor/src/editors/string_editor.dart';
+import 'package:flutter_json_editor/src/l10n/generated/json_editor_localizations.dart';
 
-Widget _wrap(Widget child) {
-  return MaterialApp(home: Scaffold(body: child));
+Widget _wrap(Widget child, {Locale? locale}) {
+  return MaterialApp(
+    locale: locale,
+    localizationsDelegates: const [
+      JsonEditorLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: JsonEditorLocalizations.supportedLocales,
+    home: Scaffold(body: child),
+  );
 }
 
 void main() {
@@ -165,6 +177,40 @@ void main() {
             (t) => t.data != null && t.data!.isNotEmpty && t.data != 'name',
           );
       expect(errorWidgets, isNotEmpty);
+    });
+
+    testWidgets('localizes the email format error in English by default',
+        (tester) async {
+      final schema =
+          JsonSchema.create({'type': 'string', 'format': 'email'});
+      await tester.pumpWidget(_wrap(StringEditor(
+        schema: schema,
+        path: 'email',
+        value: null,
+        onChanged: (_) {},
+        isRequired: false,
+      )));
+      await tester.enterText(find.byType(TextFormField), 'not-an-email');
+      await tester.pump();
+      expect(find.text('Invalid email address'), findsOneWidget);
+    });
+
+    testWidgets('localizes the email format error in German', (tester) async {
+      final schema =
+          JsonSchema.create({'type': 'string', 'format': 'email'});
+      await tester.pumpWidget(_wrap(
+        StringEditor(
+          schema: schema,
+          path: 'email',
+          value: null,
+          onChanged: (_) {},
+          isRequired: false,
+        ),
+        locale: const Locale('de'),
+      ));
+      await tester.enterText(find.byType(TextFormField), 'not-an-email');
+      await tester.pump();
+      expect(find.text('Ungültige E-Mail-Adresse'), findsOneWidget);
     });
   });
 }

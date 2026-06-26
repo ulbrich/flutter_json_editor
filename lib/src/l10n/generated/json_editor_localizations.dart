@@ -195,6 +195,42 @@ abstract class JsonEditorLocalizations {
   /// **'Invalid number format'**
   String get invalidNumberFormat;
 
+  /// Validation error when a value does not match the email/idn-email format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email address'**
+  String get invalidEmailFormat;
+
+  /// Validation error when a value does not match a uri/iri format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid URL'**
+  String get invalidUriFormat;
+
+  /// Validation error when a value does not match the date format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid date'**
+  String get invalidDateFormat;
+
+  /// Validation error when a value does not match the date-time format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid date and time'**
+  String get invalidDateTimeFormat;
+
+  /// Validation error when a value does not match the time format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid time'**
+  String get invalidTimeFormat;
+
+  /// Generic validation error when a value does not match a named format
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid format: {format}'**
+  String invalidFormatError(String format);
+
   /// Error when no onRefLookup callback was provided but a ref was found
   ///
   /// In en, this message translates to:

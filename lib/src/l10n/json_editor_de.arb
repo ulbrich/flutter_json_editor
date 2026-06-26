@@ -21,6 +21,13 @@
 
   "invalidNumberFormat": "Ungültiges Zahlenformat",
 
+  "invalidEmailFormat": "Ungültige E-Mail-Adresse",
+  "invalidUriFormat": "Ungültige URL",
+  "invalidDateFormat": "Ungültiges Datum",
+  "invalidDateTimeFormat": "Ungültiges Datum mit Uhrzeit",
+  "invalidTimeFormat": "Ungültige Uhrzeit",
+  "invalidFormatError": "Ungültiges Format: {format}",
+
   "noRefLookupCallbackError": "Kein onRefLookup-Callback angegeben",
   "remoteDataUnavailableError": "Remote-Daten nicht verfügbar",
   "remoteSchemaUnavailableError": "Remote-Schema nicht verfügbar",

@@ -54,6 +54,29 @@
   "invalidNumberFormat": "Invalid number format",
   "@invalidNumberFormat": { "description": "Error message when a number field contains non-numeric text" },
 
+  "invalidEmailFormat": "Invalid email address",
+  "@invalidEmailFormat": { "description": "Validation error when a value does not match the email/idn-email format" },
+
+  "invalidUriFormat": "Invalid URL",
+  "@invalidUriFormat": { "description": "Validation error when a value does not match a uri/iri format" },
+
+  "invalidDateFormat": "Invalid date",
+  "@invalidDateFormat": { "description": "Validation error when a value does not match the date format" },
+
+  "invalidDateTimeFormat": "Invalid date and time",
+  "@invalidDateTimeFormat": { "description": "Validation error when a value does not match the date-time format" },
+
+  "invalidTimeFormat": "Invalid time",
+  "@invalidTimeFormat": { "description": "Validation error when a value does not match the time format" },
+
+  "invalidFormatError": "Invalid format: {format}",
+  "@invalidFormatError": {
+    "description": "Generic validation error when a value does not match a named format",
+    "placeholders": {
+      "format": { "type": "String" }
+    }
+  },
+
   "noRefLookupCallbackError": "No onRefLookup callback provided",
   "@noRefLookupCallbackError": { "description": "Error when no onRefLookup callback was provided but a ref was found" },
 

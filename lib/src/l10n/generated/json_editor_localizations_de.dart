@@ -59,6 +59,26 @@ class JsonEditorLocalizationsDe extends JsonEditorLocalizations {
   String get invalidNumberFormat => 'Ungültiges Zahlenformat';
 
   @override
+  String get invalidEmailFormat => 'Ungültige E-Mail-Adresse';
+
+  @override
+  String get invalidUriFormat => 'Ungültige URL';
+
+  @override
+  String get invalidDateFormat => 'Ungültiges Datum';
+
+  @override
+  String get invalidDateTimeFormat => 'Ungültiges Datum mit Uhrzeit';
+
+  @override
+  String get invalidTimeFormat => 'Ungültige Uhrzeit';
+
+  @override
+  String invalidFormatError(String format) {
+    return 'Ungültiges Format: $format';
+  }
+
+  @override
   String get noRefLookupCallbackError => 'Kein onRefLookup-Callback angegeben';
 
   @override
