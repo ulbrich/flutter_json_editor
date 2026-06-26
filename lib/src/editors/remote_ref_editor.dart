@@ -184,6 +184,8 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
   Widget _buildDropdown(String labelText) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
+      // Match the dropdown text size to the text-input fields.
+      style: Theme.of(context).textTheme.bodyLarge,
       decoration: InputDecoration(
         labelText: labelText,
         helperText: widget.schema.description,

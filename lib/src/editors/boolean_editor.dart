@@ -45,7 +45,7 @@ class _BooleanEditorState extends State<BooleanEditor> {
     final isDisabled = widget.schema.readOnly == true;
 
     return Padding(
-      padding: editorTheme.fieldPadding,
+      padding: editorTheme.fieldPadding.copyWith(top: 0, bottom: 0),
       child: CheckboxListTile(
         title: Text(_buildTitle(), style: editorTheme.labelStyle),
         subtitle: widget.schema.description != null
@@ -56,6 +56,11 @@ class _BooleanEditorState extends State<BooleanEditor> {
         controlAffinity: ListTileControlAffinity.platform,
         activeColor: Theme.of(context).colorScheme.primary,
         contentPadding: EdgeInsets.zero,
+        // Condense vertical footprint so long multi-select checkbox lists
+        // don't take excessive space.
+        dense: true,
+        visualDensity: const VisualDensity(horizontal: -4.0, vertical: -4.0),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
   }

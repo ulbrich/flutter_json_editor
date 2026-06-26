@@ -77,6 +77,8 @@ class _EnumEditorState extends State<EnumEditor> {
       padding: editorTheme.fieldPadding,
       child: DropdownButtonFormField<dynamic>(
         isExpanded: true,
+        // Match the dropdown text size to the text-input fields.
+        style: Theme.of(context).textTheme.bodyLarge,
         value: currentValue,
         decoration: InputDecoration(
           labelText: _buildLabel(),

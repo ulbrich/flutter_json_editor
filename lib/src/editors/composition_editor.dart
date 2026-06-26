@@ -74,6 +74,8 @@ class _CompositionEditorState extends State<CompositionEditor> {
       children: [
         DropdownButtonFormField<int>(
           isExpanded: true,
+          // Match the dropdown text size to the text-input fields.
+          style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
             labelText: '$title (${isOneOf ? JsonEditorL10n.of(context).oneOfLabel : JsonEditorL10n.of(context).anyOfLabel})'
                 '${widget.isRequired ? " *" : ""}',
