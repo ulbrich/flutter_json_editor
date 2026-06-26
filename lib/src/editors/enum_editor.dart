@@ -60,7 +60,10 @@ class _EnumEditorState extends State<EnumEditor> {
       items.add(
         DropdownMenuItem<dynamic>(
           value: val,
-          child: Text(val?.toString() ?? 'null'),
+          child: Text(
+            val?.toString() ?? 'null',
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       );
     }
@@ -73,6 +76,7 @@ class _EnumEditorState extends State<EnumEditor> {
     return Padding(
       padding: editorTheme.fieldPadding,
       child: DropdownButtonFormField<dynamic>(
+        isExpanded: true,
         value: currentValue,
         decoration: InputDecoration(
           labelText: _buildLabel(),

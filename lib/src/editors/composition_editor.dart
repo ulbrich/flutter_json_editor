@@ -73,6 +73,7 @@ class _CompositionEditorState extends State<CompositionEditor> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DropdownButtonFormField<int>(
+          isExpanded: true,
           decoration: InputDecoration(
             labelText: '$title (${isOneOf ? JsonEditorL10n.of(context).oneOfLabel : JsonEditorL10n.of(context).anyOfLabel})'
                 '${widget.isRequired ? " *" : ""}',
@@ -84,7 +85,10 @@ class _CompositionEditorState extends State<CompositionEditor> {
               DropdownMenuItem<int>(value: null, child: Text(JsonEditorL10n.of(context).noneOptionLabel)),
             ...subSchemas.asMap().entries.map((entry) => DropdownMenuItem<int>(
                   value: entry.key,
-                  child: Text(_getSubSchemaLabel(entry.value, entry.key)),
+                  child: Text(
+                    _getSubSchemaLabel(entry.value, entry.key),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 )),
           ],
           onChanged: (newIndex) {

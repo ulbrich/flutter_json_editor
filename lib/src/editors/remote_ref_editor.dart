@@ -183,6 +183,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
 
   Widget _buildDropdown(String labelText) {
     return DropdownButtonFormField<String>(
+      isExpanded: true,
       decoration: InputDecoration(
         labelText: labelText,
         helperText: widget.schema.description,
@@ -197,7 +198,7 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
         ..._items!.map(
           (item) => DropdownMenuItem<String>(
             value: item.value,
-            child: Text(item.title),
+            child: Text(item.title, overflow: TextOverflow.ellipsis),
           ),
         ),
       ],
