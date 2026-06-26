@@ -31,9 +31,15 @@ class _ArrayEditorState extends State<ArrayEditor> {
   late List<String> _itemIds;
   static const _uuid = Uuid();
 
-  /// Stable ID of the most recently added item, used to focus its first
-  /// input field after the frame renders.
+  /// Stable ID of the most recently added item, used to scroll it into view
+  /// (and, for simple scalar items, focus its first input) after the frame
+  /// renders.
   String? _newItemId;
+
+  /// Whether the most recently added item is a complex type (object/array).
+  /// Complex items are scrolled to their top rather than having a nested
+  /// field focused, so the user starts at the beginning of the sub-form.
+  bool _newItemIsComplex = false;
 
   @override
   void initState() {
@@ -64,34 +70,59 @@ class _ArrayEditorState extends State<ArrayEditor> {
       final id = _uuid.v4();
       _itemIds.add(id);
       _newItemId = id;
+      final itemSchema = widget.schema.items;
+      final type =
+          itemSchema != null ? SchemaUtils.detectType(itemSchema) : null;
+      _newItemIsComplex =
+          type == SchemaType.object || type == SchemaType.array;
       widget.onChanged(List.from(_data));
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      // Find the ListTile with the new item's ValueKey and focus its
-      // first EditableText descendant.
-      _focusNewItem(context as Element);
+      _revealNewItem(context as Element);
     });
   }
 
-  void _focusNewItem(Element root) {
+  void _revealNewItem(Element root) {
     final id = _newItemId;
+    final isComplex = _newItemIsComplex;
     _newItemId = null;
     if (id == null) return;
     final targetKey = ValueKey<String>(id);
-    bool found = false;
+    Element? target;
 
     void visit(Element element) {
-      if (found) return;
+      if (target != null) return;
       if (element.widget.key == targetKey) {
-        _focusFirstEditable(element);
-        found = true;
+        target = element;
         return;
       }
       element.visitChildElements(visit);
     }
 
     root.visitChildElements(visit);
+    final found = target;
+    if (found == null) return;
+
+    // Simple scalar items: focus the input so it can be typed immediately.
+    // Complex items: don't steal focus into a nested field — that triggers an
+    // auto-scroll that can leave the sub-object's top off-screen.
+    if (!isComplex) {
+      _focusFirstEditable(found);
+    }
+
+    // Keep the *beginning* of the new item aligned to the top of the
+    // viewport, since forms are filled top to bottom. Run on the next frame so
+    // this scroll position wins over any focus-induced auto-scroll above.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!found.mounted) return;
+      Scrollable.ensureVisible(
+        found,
+        alignment: 0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   void _focusFirstEditable(Element element) {
