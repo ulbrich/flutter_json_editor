@@ -229,26 +229,74 @@ class _ArrayEditorState extends State<ArrayEditor> {
           onReorder: _onReorder,
           itemBuilder: (context, index) {
             final itemSchema = _getItemSchema(index);
+            final itemType = SchemaUtils.detectType(itemSchema);
+            final isObject = itemType == SchemaType.object;
+            final isArray = itemType == SchemaType.array;
+
+            final content = SchemaResolver.resolve(
+              schema: itemSchema,
+              path: '${widget.path}[$index]',
+              value: _data[index],
+              onChanged: (newVal) => _onItemChanged(index, newVal),
+              registry: registry,
+              isRequired: false,
+              isNullable: SchemaUtils.isNullable(itemSchema),
+              refDepth: widget.refDepth,
+            );
+
+            final deleteButton = canRemove
+                ? IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _removeItem(index),
+                    visualDensity: VisualDensity.compact,
+                  )
+                : null;
+
+            // Object sub-forms render a short, left-aligned title row, so the
+            // delete button can sit on that same line (overlaid top-right)
+            // without stealing its own row — leaving the sub-form the full
+            // width below.
+            if (isObject) {
+              return Padding(
+                key: ValueKey(_itemIds[index]),
+                padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+                child: Stack(
+                  children: [
+                    content,
+                    if (deleteButton != null)
+                      Positioned(top: 0, right: 0, child: deleteButton),
+                  ],
+                ),
+              );
+            }
+
+            // Nested arrays render their own right-aligned add button, so an
+            // overlay would collide; keep the delete button in a slim top row
+            // and let the sub-form use the full width below.
+            if (isArray) {
+              return Padding(
+                key: ValueKey(_itemIds[index]),
+                padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (deleteButton != null)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: deleteButton,
+                      ),
+                    content,
+                  ],
+                ),
+              );
+            }
+
             return ListTile(
               key: ValueKey(_itemIds[index]),
               titleAlignment: ListTileTitleAlignment.top,
               contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-              title: SchemaResolver.resolve(
-                schema: itemSchema,
-                path: '${widget.path}[$index]',
-                value: _data[index],
-                onChanged: (newVal) => _onItemChanged(index, newVal),
-                registry: registry,
-                isRequired: false,
-                isNullable: SchemaUtils.isNullable(itemSchema),
-                refDepth: widget.refDepth,
-              ),
-              trailing: canRemove
-                  ? IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _removeItem(index),
-                    )
-                  : null,
+              title: content,
+              trailing: deleteButton,
             );
           },
         ),
