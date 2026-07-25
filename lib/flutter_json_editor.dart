@@ -22,3 +22,4 @@ export 'src/editors/string_editor.dart';
 export 'src/editors/svg_part_picker_editor.dart';
 export 'src/editors/time_editor.dart';
 export 'src/editors/remote_ref_editor.dart' show EnumSourceItem;
+export 'src/editors/enum_source_editor.dart' show EnumSourceEditor;

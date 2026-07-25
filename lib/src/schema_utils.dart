@@ -74,7 +74,6 @@ class SchemaUtils {
     'watch',
     'headerTemplate',
     'links',
-    'enumSource',
   };
 
   /// Creates a [JsonSchema] from a raw schema map, sanitizing non-standard
@@ -106,8 +105,19 @@ class SchemaUtils {
         continue;
       }
 
-      // Normalize $defs → definitions (Draft 4/6/7 compatibility)
-      final outputKey = key == r'$defs' ? 'definitions' : key;
+      // Normalize $defs → definitions (Draft 4/6/7 compatibility).
+      // Rename `enumSource` → `x-enum-source`: an `x-` prefixed custom keyword
+      // survives JsonSchema.create() (kept in schemaMap), whereas the bare
+      // `enumSource` keyword would otherwise be stripped. This preserves the
+      // value/title list so a local $ref to a def can render a labeled select.
+      final String outputKey;
+      if (key == r'$defs') {
+        outputKey = 'definitions';
+      } else if (key == 'enumSource') {
+        outputKey = 'x-enum-source';
+      } else {
+        outputKey = key;
+      }
 
       var value = rawValue;
 

@@ -24,6 +24,43 @@ void main() {
     });
   });
 
+  group('SchemaUtils.createSchema enumSource handling', () {
+    test('renames enumSource to x-enum-source inside \$defs (not stripped)', () {
+      final schema = SchemaUtils.createSchema({
+        r'$schema': 'http://json-schema.org/draft-07/schema#',
+        'type': 'object',
+        'properties': {
+          'transfer': {r'$ref': r'#/$defs/transfer'},
+        },
+        r'$defs': {
+          'transfer': {
+            'type': 'string',
+            'title': 'Übergabe an',
+            'default': 'ktw',
+            'enumSource': [
+              {
+                'source': [
+                  {'value': 'ktw', 'title': 'Krankenwagen'},
+                  {'value': 'rth', 'title': 'Hubschrauber'},
+                ],
+              }
+            ],
+          },
+        },
+      });
+
+      // $defs is normalized to definitions; the renamed key must survive.
+      final definitions = schema.schemaMap?['definitions'] as Map?;
+      final transfer = definitions?['transfer'] as Map?;
+      expect(transfer, isNotNull);
+      expect(transfer!.containsKey('enumSource'), isFalse);
+      expect(transfer['x-enum-source'], isA<List>());
+      final source =
+          (transfer['x-enum-source'] as List).first as Map;
+      expect((source['source'] as List).length, 2);
+    });
+  });
+
   group('SchemaUtils.detectType with typeList', () {
     test('returns non-null type from union [string, null]', () {
       final schema = JsonSchema.create({

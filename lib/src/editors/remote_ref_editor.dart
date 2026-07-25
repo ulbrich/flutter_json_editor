@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 
 import '../l10n/json_editor_l10n.dart';
 import '../ref_lookup_provider.dart';
+import 'enum_source_editor.dart';
 
 class EnumSourceItem {
   final String value;
@@ -88,48 +89,10 @@ class _RemoteRefEditorState extends State<RemoteRefEditor> {
       return;
     }
 
-    final items = <EnumSourceItem>[];
-    for (final source in enumSources) {
-      if (source is! Map) continue;
-      final valueTemplate =
-          source['value'] as String? ?? '{{item.value}}';
-      final titleTemplate =
-          source['title'] as String? ?? '{{item.title}}';
-      final sourceList = source['source'] as List? ?? [];
-
-      for (final item in sourceList) {
-        if (item is Map) {
-          final resolvedValue = _resolveTemplate(valueTemplate, item);
-          final resolvedTitle = _resolveTemplate(titleTemplate, item);
-          items.add(EnumSourceItem(value: resolvedValue, title: resolvedTitle));
-        }
-      }
-    }
-
     setState(() {
-      _items = items;
+      _items = EnumSourceEditor.parseEnumSource(enumSources);
       _loading = false;
     });
-  }
-
-  /// Resolve templates like `{{item.value}}` or `{{item.nested.field}}`
-  /// against a data map. Supports arbitrary dot-separated paths.
-  String _resolveTemplate(String template, Map item) {
-    return template.replaceAllMapped(
-      RegExp(r'\{\{item\.([^}]+)\}\}'),
-      (match) {
-        final path = match.group(1)!;
-        dynamic current = item;
-        for (final segment in path.split('.')) {
-          if (current is Map) {
-            current = current[segment];
-          } else {
-            return match.group(0)!; // unresolved — return template as-is
-          }
-        }
-        return current?.toString() ?? '';
-      },
-    );
   }
 
   String _buildLabel() {

@@ -7,6 +7,7 @@ import 'l10n/json_editor_l10n.dart';
 import 'editors/boolean_editor.dart';
 import 'editors/composition_editor.dart';
 import 'editors/enum_editor.dart';
+import 'editors/enum_source_editor.dart';
 import 'editors/map_editor.dart';
 import 'editors/number_editor.dart';
 import 'editors/object_editor.dart';
@@ -65,6 +66,27 @@ class SchemaResolver {
       if (refDepth > SchemaUtils.maxRefDepth) {
         final typeName = schema.title ?? path.split('.').last;
         return _CircularRefWidget(path: path, typeName: typeName);
+      }
+    }
+
+    // 0d. Labeled select via local $ref → def carrying an enumSource list.
+    //     `enumSource` is renamed to `x-enum-source` during sanitization so it
+    //     survives JsonSchema.create(). When present on the resolved schema,
+    //     render a labeled dropdown (title shown, value stored) instead of a
+    //     plain string/enum editor. Checked before enumValues/type routing.
+    final enumSourceRaw = schema.schemaMap?['x-enum-source'];
+    if (enumSourceRaw is List) {
+      final items = EnumSourceEditor.parseEnumSource(enumSourceRaw);
+      if (items.isNotEmpty) {
+        return EnumSourceEditor(
+          items: items,
+          schema: schema,
+          path: path,
+          value: value,
+          onChanged: onChanged,
+          isRequired: isRequired,
+          isNullable: isNullable,
+        );
       }
     }
 
