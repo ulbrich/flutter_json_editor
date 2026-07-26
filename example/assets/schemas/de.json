@@ -115,7 +115,13 @@
     "employeeType": {
       "type": "string",
       "title": "Beschäftigungsart",
-      "enum": ["full-time", "part-time", "contractor", "intern"]
+      "default": "full-time",
+      "oneOf": [
+        {"const": "full-time", "title": "Vollzeit"},
+        {"const": "part-time", "title": "Teilzeit"},
+        {"const": "contractor", "title": "Auftragnehmer"},
+        {"const": "intern", "title": "Praktikant"}
+      ]
     },
     "contractStartDate": {
       "type": "string",

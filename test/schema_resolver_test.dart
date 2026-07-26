@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:json_schema/json_schema.dart';
 
 import 'package:flutter_json_editor/src/schema_resolver.dart';
+import 'package:flutter_json_editor/src/editors/composition_editor.dart';
+import 'package:flutter_json_editor/src/editors/const_choice_editor.dart';
+import 'package:flutter_json_editor/src/editors/const_editor.dart';
 import 'package:flutter_json_editor/src/editors/object_editor.dart';
 import 'package:flutter_json_editor/src/editors/string_editor.dart';
 
@@ -30,6 +33,56 @@ void main() {
         onChanged: (_) {},
       )));
       expect(find.byType(ObjectEditor), findsOneWidget);
+    });
+  });
+
+  group('SchemaResolver composition / const routing', () {
+    Future<void> pumpResolved(WidgetTester tester, Map<String, dynamic> map) {
+      return tester.pumpWidget(_wrap(SchemaResolver.resolve(
+        schema: JsonSchema.create(map),
+        path: 'field',
+        value: null,
+        onChanged: (_) {},
+      )));
+    }
+
+    testWidgets('oneOf of const+title routes to ConstChoiceEditor',
+        (tester) async {
+      await pumpResolved(tester, {
+        'oneOf': [
+          {'const': 'a', 'title': 'A'},
+          {'const': 'b', 'title': 'B'},
+        ],
+      });
+      expect(find.byType(ConstChoiceEditor), findsOneWidget);
+      expect(find.byType(CompositionEditor), findsNothing);
+    });
+
+    testWidgets('anyOf of const routes to ConstChoiceEditor', (tester) async {
+      await pumpResolved(tester, {
+        'anyOf': [
+          {'const': 'a', 'title': 'A'},
+          {'const': 'b', 'title': 'B'},
+        ],
+      });
+      expect(find.byType(ConstChoiceEditor), findsOneWidget);
+    });
+
+    testWidgets('heterogeneous oneOf falls back to CompositionEditor',
+        (tester) async {
+      await pumpResolved(tester, {
+        'oneOf': [
+          {'type': 'string', 'title': 'Text'},
+          {'type': 'integer', 'title': 'Number'},
+        ],
+      });
+      expect(find.byType(CompositionEditor), findsOneWidget);
+      expect(find.byType(ConstChoiceEditor), findsNothing);
+    });
+
+    testWidgets('standalone const routes to ConstEditor', (tester) async {
+      await pumpResolved(tester, {'const': 'x', 'title': 'X'});
+      expect(find.byType(ConstEditor), findsOneWidget);
     });
   });
 

@@ -116,7 +116,13 @@
     "employeeType": {
       "type": "string",
       "title": "Employee Type",
-      "enum": ["full-time", "part-time", "contractor", "intern"]
+      "default": "full-time",
+      "oneOf": [
+        {"const": "full-time", "title": "Full-time"},
+        {"const": "part-time", "title": "Part-time"},
+        {"const": "contractor", "title": "Contractor"},
+        {"const": "intern", "title": "Intern"}
+      ]
     },
     "contractStartDate": {
       "type": "string",

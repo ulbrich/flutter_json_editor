@@ -6,6 +6,8 @@ import 'editors/array_editor.dart';
 import 'l10n/json_editor_l10n.dart';
 import 'editors/boolean_editor.dart';
 import 'editors/composition_editor.dart';
+import 'editors/const_choice_editor.dart';
+import 'editors/const_editor.dart';
 import 'editors/enum_editor.dart';
 import 'editors/enum_source_editor.dart';
 import 'editors/map_editor.dart';
@@ -105,6 +107,20 @@ class SchemaResolver {
       }
     }
 
+    // 1b. Standalone `const` (no composition/enum) -> read-only fixed value.
+    if (schema.schemaMap?.containsKey('const') == true &&
+        schema.oneOf.isEmpty &&
+        schema.anyOf.isEmpty) {
+      return ConstEditor(
+        schema: schema,
+        path: path,
+        value: value,
+        onChanged: onChanged,
+        isRequired: isRequired,
+        isNullable: isNullable,
+      );
+    }
+
     // 2. enumValues -> EnumEditor
     if (schema.enumValues != null && schema.enumValues!.isNotEmpty) {
       return EnumEditor(
@@ -117,8 +133,23 @@ class SchemaResolver {
       );
     }
 
-    // 3. oneOf/anyOf -> CompositionEditor
+    // 3. oneOf/anyOf. A composition whose branches are all scalar `const`s is
+    //    a standards-compliant labeled enum -> render a labeled dropdown
+    //    (title shown, typed const stored). Heterogeneous compositions fall
+    //    back to the variant CompositionEditor.
     if (schema.oneOf.isNotEmpty || schema.anyOf.isNotEmpty) {
+      final choices = ConstChoiceEditor.tryExtract(schema);
+      if (choices != null && choices.isNotEmpty) {
+        return ConstChoiceEditor(
+          choices: choices,
+          schema: schema,
+          path: path,
+          value: value,
+          onChanged: onChanged,
+          isRequired: isRequired,
+          isNullable: isNullable,
+        );
+      }
       return CompositionEditor(
         schema: schema,
         path: path,

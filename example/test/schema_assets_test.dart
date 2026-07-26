@@ -30,6 +30,15 @@ void main() {
         'https://example.com/api/avatars',
       );
 
+      // employeeType is a standards-compliant labeled oneOf (const + title).
+      final oneOf = raw['properties']['employeeType']['oneOf'] as List;
+      expect(oneOf, hasLength(4));
+      expect(
+        oneOf.every((b) =>
+            (b as Map).containsKey('const') && b.containsKey('title')),
+        isTrue,
+      );
+
       // The whole schema is accepted by the package without throwing.
       expect(SchemaUtils.createSchema(Map<String, dynamic>.from(raw)), isNotNull);
     });
