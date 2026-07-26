@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_json_editor/flutter_json_editor.dart';
 import 'package:http/http.dart' as http;
 import 'package:json_schema/json_schema.dart';
 
 import 'l10n/generated/app_localizations.dart';
-import 'schemas/example_schema.dart';
 
 /// The locales available in this example app.
 const availableLocales = AppLocalizations.supportedLocales;
@@ -67,17 +67,51 @@ class _EditorPageState extends State<EditorPage> {
   dynamic _currentData = {};
   dynamic _lastDiff = {};
 
+  /// Locale-keyed raw schema maps, loaded from JSON assets at startup.
+  final Map<String, Map<String, dynamic>> _rawSchemas = {};
+
+  /// The avatar `$ref` lookup response, loaded from a JSON asset. Avatar is a
+  /// remote-style `$ref`; hobby now resolves locally via `#/$defs/hobby`.
+  Map<String, dynamic>? _avatarLookup;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSchemas();
+  }
+
+  Future<void> _loadSchemas() async {
+    Future<Map<String, dynamic>> load(String path) async =>
+        jsonDecode(await rootBundle.loadString(path)) as Map<String, dynamic>;
+
+    final en = await load('assets/schemas/en.json');
+    final de = await load('assets/schemas/de.json');
+    final avatar = await load('assets/schemas/avatar_lookup.json');
+
+    if (!mounted) return;
+    setState(() {
+      _rawSchemas
+        ..['en'] = en
+        ..['de'] = de;
+      _avatarLookup = avatar;
+      _rebuildSchema();
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _rebuildSchema();
+  }
+
+  /// (Re)builds [_schema] for the active locale once the assets are loaded.
+  void _rebuildSchema() {
+    if (_rawSchemas.isEmpty) return;
     final locale = Localizations.localeOf(context).languageCode;
-    if (locale != _schemaLocale) {
-      _schemaLocale = locale;
-      final schemaData = exampleSchemaMap[locale] ?? exampleSchemaMap['en']!;
-      _schema = SchemaUtils.createSchema(
-        Map<String, dynamic>.from(schemaData),
-      );
-    }
+    if (locale == _schemaLocale && _schema != null) return;
+    _schemaLocale = locale;
+    final schemaData = _rawSchemas[locale] ?? _rawSchemas['en']!;
+    _schema = SchemaUtils.createSchema(Map<String, dynamic>.from(schemaData));
   }
 
   @override
@@ -87,8 +121,6 @@ class _EditorPageState extends State<EditorPage> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-
-    final locale = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
       appBar: AppBar(
@@ -121,13 +153,12 @@ class _EditorPageState extends State<EditorPage> {
               key: _editorKey,
               schema: _schema!,
               onRefLookup: (refUrl, fieldPath, currentValue) async {
-                if (refUrl == 'https://example.com/api/hobbies') {
-                  return exampleSchemaHobbyRefLookupResponse[locale] ??
-                      exampleSchemaHobbyRefLookupResponse['en']!;
-                }
-
+                // Avatar is served from a bundled JSON asset (a static list of
+                // dicebear avatars); in a real app you would fetch this from
+                // your own API. Hobby no longer uses onRefLookup — it resolves
+                // locally via `#/$defs/hobby`.
                 if (refUrl == 'https://example.com/api/avatars') {
-                  return exampleSchemaAvatarRefLookupResponse;
+                  return _avatarLookup;
                 }
 
                 // Generic fallback: fetch any real http(s) ref and return the

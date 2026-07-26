@@ -28,3 +28,6 @@ flutter:
   assets:
     - assets/images/office-plan.svg
     - assets/images/body-parts.svg
+    - assets/schemas/en.json
+    - assets/schemas/de.json
+    - assets/schemas/avatar_lookup.json
