@@ -2,8 +2,7 @@
 
 A Flutter widget that dynamically generates interactive forms from [JSON Schema (Draft 7)](https://json-schema.org/draft-07). Drop in a schema, get a fully functional form — with validation, nested objects, arrays, conditional fields, and more.
 
-**Warning:** This sideproject was implemented mainly using AI tools. Use it with a grain
-of more salt than with any other open source project you're using.
+**Warning:** This sideproject was implemented mainly using AI tools. Use it with a bigger grain of salt than with other open source projects you're using.
 
 ## The Idea
 

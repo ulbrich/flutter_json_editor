@@ -86,6 +86,7 @@ class _EditorPageState extends State<EditorPage> {
 
     final en = await load('assets/schemas/en.json');
     final de = await load('assets/schemas/de.json');
+
     final avatar = await load('assets/schemas/avatar_lookup.json');
 
     if (!mounted) return;
@@ -153,10 +154,9 @@ class _EditorPageState extends State<EditorPage> {
               key: _editorKey,
               schema: _schema!,
               onRefLookup: (refUrl, fieldPath, currentValue) async {
-                // Avatar is served from a bundled JSON asset (a static list of
-                // dicebear avatars); in a real app you would fetch this from
-                // your own API. Hobby no longer uses onRefLookup — it resolves
-                // locally via `#/$defs/hobby`.
+                // Avatar is served from a bundled JSON asset (a static list
+                // of dicebear avatars). A real app would fetch this data from
+                // your own API.
                 if (refUrl == 'https://example.com/api/avatars') {
                   return _avatarLookup;
                 }
