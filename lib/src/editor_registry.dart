@@ -207,9 +207,19 @@ class EditorRegistryData {
       }
     }
 
-    // 4. Check type overrides
-    if (schema.type != null && _typeOverrides.containsKey(schema.type)) {
-      return _typeOverrides[schema.type];
+    // 4. Check type overrides. Reading `schema.type` THROWS for a schema with
+    //    no single scalar type — a bare anyOf/oneOf/allOf/$ref, or a multi-type
+    //    like ["string","null"] — so guard it and treat those as untyped
+    //    (they are handled later by the composition/type branches of the
+    //    resolver). Without this guard, any such property crashes rendering.
+    SchemaType? type;
+    try {
+      type = schema.type;
+    } catch (_) {
+      type = null;
+    }
+    if (type != null && _typeOverrides.containsKey(type)) {
+      return _typeOverrides[type];
     }
 
     return null;
