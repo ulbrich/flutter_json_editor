@@ -55,54 +55,43 @@ class _ObjectEditorState extends State<ObjectEditor> {
     }
   }
 
-  /// Evaluate if/then/else, update tracked sets and clean up stale data.
-  /// Must be called inside setState (or before first build in initState).
+  /// Evaluate if/then/else — the top-level one AND any nested inside `allOf`
+  /// (standard JSON Schema, e.g. one conditional per category) — update the
+  /// tracked sets, and drop data left over from branches that are no longer
+  /// active. Must be called inside setState (or before first build).
   void _evaluateConditionals() {
-    if (widget.schema.ifSchema == null) {
-      _conditionalProperties = {};
-      _conditionalRequired = {};
-      _thenKeys = {};
-      _elseKeys = {};
-      return;
-    }
+    final conditionals = <JsonSchema>[
+      if (widget.schema.ifSchema != null) widget.schema,
+      ...widget.schema.allOf.where((s) => s.ifSchema != null),
+    ];
 
-    final ifResult = widget.schema.ifSchema!.validate(_data);
     final newConditionalProperties = <String, JsonSchema>{};
     final newConditionalRequired = <String>{};
     final newThenKeys = <String>{};
     final newElseKeys = <String>{};
 
-    if (ifResult.isValid && widget.schema.thenSchema != null) {
-      newThenKeys.addAll(widget.schema.thenSchema!.properties.keys);
-      newConditionalProperties.addAll(widget.schema.thenSchema!.properties);
-      if (widget.schema.thenSchema!.requiredProperties != null) {
-        newConditionalRequired
-            .addAll(widget.schema.thenSchema!.requiredProperties!);
+    for (final cond in conditionals) {
+      final ifResult = cond.ifSchema!.validate(_data);
+      if (ifResult.isValid && cond.thenSchema != null) {
+        newThenKeys.addAll(cond.thenSchema!.properties.keys);
+        newConditionalProperties.addAll(cond.thenSchema!.properties);
+        final req = cond.thenSchema!.requiredProperties;
+        if (req != null) newConditionalRequired.addAll(req);
+      } else if (!ifResult.isValid && cond.elseSchema != null) {
+        newElseKeys.addAll(cond.elseSchema!.properties.keys);
+        newConditionalProperties.addAll(cond.elseSchema!.properties);
+        final req = cond.elseSchema!.requiredProperties;
+        if (req != null) newConditionalRequired.addAll(req);
       }
-      // Remove stale else-only keys from data
-      for (final key in _elseKeys) {
-        final thenHasKey =
-            widget.schema.thenSchema!.properties.containsKey(key);
-        final baseHasKey = widget.schema.properties.containsKey(key);
-        if (!thenHasKey && !baseHasKey) {
-          _data.remove(key);
-        }
-      }
-    } else if (!ifResult.isValid && widget.schema.elseSchema != null) {
-      newElseKeys.addAll(widget.schema.elseSchema!.properties.keys);
-      newConditionalProperties.addAll(widget.schema.elseSchema!.properties);
-      if (widget.schema.elseSchema!.requiredProperties != null) {
-        newConditionalRequired
-            .addAll(widget.schema.elseSchema!.requiredProperties!);
-      }
-      // Remove stale then-only keys from data
-      for (final key in _thenKeys) {
-        final elseHasKey =
-            widget.schema.elseSchema!.properties.containsKey(key);
-        final baseHasKey = widget.schema.properties.containsKey(key);
-        if (!elseHasKey && !baseHasKey) {
-          _data.remove(key);
-        }
+    }
+
+    // Drop data for keys that fell out of every active branch and aren't base
+    // properties, so a deactivated conditional field doesn't linger.
+    final base = widget.schema.properties.keys.toSet();
+    final active = newConditionalProperties.keys.toSet();
+    for (final key in {..._thenKeys, ..._elseKeys}) {
+      if (!active.contains(key) && !base.contains(key)) {
+        _data.remove(key);
       }
     }
 

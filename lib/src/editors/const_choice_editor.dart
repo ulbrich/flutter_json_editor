@@ -80,7 +80,17 @@ class ConstChoiceEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // If the stored value is no longer among the options — e.g. a conditional
+    // (if/then) parent field changed the allowed set — clear it after this
+    // frame so an invalid value can't be silently kept.
+    if (value != null && !choices.any((c) => c.value == value)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => onChanged(null));
+    }
     return DropdownButtonFormField<Object?>(
+      // Reset the form-field state when the option set changes, so a value from
+      // the previous set doesn't linger (and doesn't trip the dropdown's
+      // "value must match exactly one item" assertion).
+      key: ValueKey(choices.map((c) => c.value).join('')),
       isExpanded: true,
       style: Theme.of(context).textTheme.bodyLarge,
       initialValue: _selected,
