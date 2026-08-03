@@ -8,6 +8,8 @@ export 'src/schema_resolver.dart';
 export 'src/schema_utils.dart';
 export 'src/diff_calculator.dart';
 export 'src/validation_helper.dart';
+export 'src/required_validation.dart';
+export 'src/display_labels.dart';
 export 'src/theme/editor_theme.dart';
 export 'src/theme/editor_theme_defaults.dart';
 export 'src/l10n/generated/json_editor_localizations.dart';
