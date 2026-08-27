@@ -24,6 +24,7 @@ Take the example project for s spin and judge for yourself. Feel free to suggest
 - **Composition** — `oneOf` and `anyOf` with automatic variant detection
 - **Inline validation** — Field-level error messages derived from schema constraints
 - **Remote `$ref` resolution** — Async lookup for external schema references with caching, dropdown or typeahead based on result count
+- **Partial forms** — `visiblePaths` whitelists which fields render; hidden data is still returned in full
 - **Diff tracking** — `DiffCalculator` reports only the paths that changed between updates
 - **Theming** — `JsonEditorTheme` extension integrates with your Material 3 theme
 - **Custom editors** — `EditorRegistry` lets you override any field by path, `x-format`, type, or predicate
@@ -111,6 +112,87 @@ final editorKey = GlobalKey<JsonEditorState>();
 // Later…
 final currentData = editorKey.currentState?.currentData;
 ```
+
+## Partial Forms
+
+Pass `visiblePaths` to render only a slice of a large schema. The whitelist
+affects **rendering only** — the editor keeps the object it was handed and
+returns it in full from `onUpdate`, so values behind hidden fields survive the
+round-trip untouched.
+
+```dart
+JsonEditor(
+  schema: bigSchema,
+  initialData: partiallyFilledObject,
+  // Only these three fields are shown; everything else is kept, not rendered.
+  visiblePaths: const ['name', 'address.zip', 'contacts[*].email'],
+  onUpdate: (fullData, diff) => save(fullData), // fullData is the whole object
+)
+```
+
+This is built for agentic flows: an LLM inspects a large input object, works out
+which fields are still missing, and shows the user just those — a short form
+instead of a wall of inputs — then writes the complete object back.
+
+```dart
+final missing = findMissingRequired(schemaMap, data); // returns keys + titles
+JsonEditor(
+  schema: schema,
+  initialData: data,
+  visiblePaths: missing.map((f) => f.key).toList(),
+  onUpdate: (fullData, _) => save(fullData),
+);
+```
+
+### Path Syntax
+
+| Path | Matches |
+|---|---|
+| `name` | top-level property |
+| `address.zip` | nested property |
+| `contacts[0].email` | that property on one specific array item |
+| `contacts[*].email` | that property on every array item |
+| `tags[*]` | every item of a scalar array |
+| `address.*` | every direct child of `address` |
+
+JSON Pointer is accepted too and normalized on the way in, so `/address/zip`
+and `/contacts/0/email` work — validator output can be passed straight through.
+
+### Matching Rules
+
+A node renders when its path **is** a whitelist entry, is a **descendant** of
+one, or is an **ancestor** of one:
+
+- **Descendant-or-self** — the whole subtree renders, unfiltered. `'address'`
+  shows every field of the address object.
+- **Ancestor** — the container renders as a shell for its whitelisted
+  descendants only. `'address.zip'` shows the address section containing just
+  the zip field.
+
+Two consequences worth knowing:
+
+- A container whose every field was filtered out renders nothing — no empty
+  header or border is left behind.
+- An array or map reached only through a **concrete** index or key
+  (`contacts[0].email`, `meta.author`) hides its add, delete, and reorder
+  controls, and map keys become read-only: those edits would slide fields out
+  from under the whitelist. A **wildcard** whitelist (`contacts[*].email`,
+  `meta.*`) applies equally to every item, so editing stays enabled.
+
+For full control, build the whitelist yourself and pass it as `visibility`
+(which takes precedence over `visiblePaths`):
+
+```dart
+JsonEditor(
+  schema: schema,
+  visibility: FieldVisibility.whitelist(['name', 'address.zip']),
+)
+```
+
+`FieldVisibility.all()` is the explicit "no filtering" value, and the same
+predicates the editors use — `isVisible`, `isSubtreeVisible`,
+`allowsStructuralEdits` — are public if you need to reason about a whitelist
+outside the widget tree.
 
 ## Theming
 

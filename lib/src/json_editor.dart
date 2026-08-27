@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 
 import 'diff_calculator.dart';
 import 'editor_registry.dart';
+import 'field_visibility.dart';
 import 'l10n/generated/json_editor_localizations.dart';
 import 'ref_lookup_provider.dart';
 import 'schema_resolver.dart';
@@ -26,6 +27,21 @@ class JsonEditor extends StatefulWidget {
   /// to typeahead/autocomplete. Default: 10.
   final int minTypeAhead;
 
+  /// Whitelist of field paths to render, e.g.
+  /// `['name', 'address.zip', 'contacts[*].email']`. When null (the default)
+  /// the whole schema is rendered.
+  ///
+  /// Only *rendering* is affected — [initialData] is kept in full and handed
+  /// back unchanged by [onUpdate], so values behind hidden fields survive the
+  /// round-trip. See [FieldVisibility] for the path syntax and matching rules.
+  ///
+  /// Ignored when [visibility] is given.
+  final List<String>? visiblePaths;
+
+  /// The visibility whitelist, for callers that want to build or reuse a
+  /// [FieldVisibility] directly. Takes precedence over [visiblePaths].
+  final FieldVisibility? visibility;
+
   const JsonEditor({
     super.key,
     required this.schema,
@@ -34,6 +50,8 @@ class JsonEditor extends StatefulWidget {
     this.registry,
     this.onRefLookup,
     this.minTypeAhead = 10,
+    this.visiblePaths,
+    this.visibility,
   });
 
   @override
@@ -52,6 +70,16 @@ class JsonEditorState extends State<JsonEditor> {
       return List.unmodifiable(_currentData as List);
     }
     return _currentData;
+  }
+
+  /// The effective whitelist: an explicit [JsonEditor.visibility] wins, then
+  /// [JsonEditor.visiblePaths], else no filtering.
+  FieldVisibility get _visibility {
+    final explicit = widget.visibility;
+    if (explicit != null) return explicit;
+    final paths = widget.visiblePaths;
+    if (paths == null) return const FieldVisibility.all();
+    return FieldVisibility.whitelist(paths);
   }
 
   bool get _isArrayRoot =>
@@ -112,6 +140,8 @@ class JsonEditorState extends State<JsonEditor> {
     );
 
     child = EditorRegistry(data: registry, child: child);
+
+    child = FieldVisibilityScope(visibility: _visibility, child: child);
 
     child = RefLookupProvider(
       onRefLookup: widget.onRefLookup,

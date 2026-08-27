@@ -2,6 +2,7 @@ library flutter_json_editor;
 
 export 'src/json_editor.dart';
 export 'src/editor_registry.dart';
+export 'src/field_visibility.dart';
 export 'src/ref_lookup_provider.dart';
 export 'src/schema_field_editor.dart';
 export 'src/schema_resolver.dart';

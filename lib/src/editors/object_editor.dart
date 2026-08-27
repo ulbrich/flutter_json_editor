@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_schema/json_schema.dart';
 
 import '../editor_registry.dart';
+import '../field_visibility.dart';
 import '../schema_field_editor.dart';
 import '../schema_resolver.dart';
 import '../schema_utils.dart';
@@ -116,6 +117,11 @@ class _ObjectEditorState extends State<ObjectEditor> {
   @override
   Widget build(BuildContext context) {
     final registry = EditorRegistry.of(context);
+    final visibility = FieldVisibilityScope.of(context);
+    // Inside a fully-whitelisted subtree nothing needs filtering; otherwise
+    // each property is checked against the whitelist below.
+    final filterChildren =
+        visibility.isFiltering && !visibility.isSubtreeVisible(widget.path);
 
     // Collect properties from base schema + allOf (last-one-wins on conflict)
     final Map<String, JsonSchema> allProperties = {};
@@ -162,6 +168,10 @@ class _ObjectEditorState extends State<ObjectEditor> {
     for (final entry in allProperties.entries) {
       final key = entry.key;
       final childSchema = entry.value;
+      final childPath = widget.path.isEmpty ? key : '${widget.path}.$key';
+      // Hidden properties are skipped at render time only — their values stay
+      // in `_data` and are passed back up unchanged.
+      if (filterChildren && !visibility.isVisible(childPath)) continue;
       final childValue = _data[key];
       final childRequired = allRequired.contains(key);
       final childNullable = SchemaUtils.isNullable(childSchema);
@@ -169,7 +179,7 @@ class _ObjectEditorState extends State<ObjectEditor> {
       children.add(
         SchemaResolver.resolve(
           schema: childSchema,
-          path: widget.path.isEmpty ? key : '${widget.path}.$key',
+          path: childPath,
           value: childValue,
           onChanged: (newVal) => _onChildChanged(key, newVal),
           registry: registry,
@@ -178,6 +188,12 @@ class _ObjectEditorState extends State<ObjectEditor> {
           refDepth: widget.refDepth,
         ),
       );
+    }
+
+    // A nested section whose every field was filtered out has nothing to show —
+    // drop its header and border rather than leaving an empty shell behind.
+    if (children.isEmpty && filterChildren && widget.path.isNotEmpty) {
+      return const SizedBox.shrink();
     }
 
     // Add spacing between children

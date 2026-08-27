@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 import 'package:uuid/uuid.dart';
 
 import '../editor_registry.dart';
+import '../field_visibility.dart';
 import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../schema_resolver.dart';
@@ -113,8 +114,26 @@ class _MapEditorState extends State<MapEditor> {
   @override
   Widget build(BuildContext context) {
     final registry = EditorRegistry.of(context);
+    final visibility = FieldVisibilityScope.of(context);
     final title = widget.schema.title ?? widget.path.split('.').last;
     final valueSchema = _getValueSchema();
+
+    // A whitelist naming concrete keys (`meta.author`) freezes the map: adding,
+    // deleting, or renaming keys would move entries out from under it. A
+    // wildcard whitelist (`meta.*`) leaves editing intact.
+    final structuralEdits = visibility.allowsStructuralEdits(widget.path);
+    final filterEntries =
+        visibility.isFiltering && !visibility.isSubtreeVisible(widget.path);
+    final visibleIndices = <int>[];
+    for (var i = 0; i < _keys.length; i++) {
+      if (!filterEntries || visibility.isVisible('${widget.path}.${_keys[i]}')) {
+        visibleIndices.add(i);
+      }
+    }
+
+    if (filterEntries && visibleIndices.isEmpty && !structuralEdits) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,11 +145,12 @@ class _MapEditorState extends State<MapEditor> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _addEntry,
-              tooltip: JsonEditorL10n.of(context).addEntryTooltip,
-            ),
+            if (structuralEdits)
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: _addEntry,
+                tooltip: JsonEditorL10n.of(context).addEntryTooltip,
+              ),
           ],
         ),
         if (widget.schema.description != null)
@@ -138,7 +158,7 @@ class _MapEditorState extends State<MapEditor> {
             widget.schema.description!,
             style: Theme.of(context).textTheme.bodySmall,
           ),
-        ...List.generate(_keys.length, (index) {
+        ...visibleIndices.map((index) {
           final key = _keys[index];
           final isNew = index == _newEntryIndex;
           if (isNew) _newEntryIndex = -1;
@@ -153,6 +173,7 @@ class _MapEditorState extends State<MapEditor> {
                   child: _KeyField(
                     initialValue: key,
                     autoSelect: isNew,
+                    readOnly: !structuralEdits,
                     label: JsonEditorL10n.of(context).keyLabel,
                     onChanged: (newKey) => _onKeyChanged(index, newKey),
                   ),
@@ -179,10 +200,11 @@ class _MapEditorState extends State<MapEditor> {
                           isRequired: false,
                         ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _removeEntry(index),
-                ),
+                if (structuralEdits)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _removeEntry(index),
+                  ),
               ],
             ),
           );
@@ -197,6 +219,7 @@ class _MapEditorState extends State<MapEditor> {
 class _KeyField extends StatefulWidget {
   final String initialValue;
   final bool autoSelect;
+  final bool readOnly;
   final String label;
   final ValueChanged<String> onChanged;
 
@@ -205,6 +228,7 @@ class _KeyField extends StatefulWidget {
     required this.autoSelect,
     required this.label,
     required this.onChanged,
+    this.readOnly = false,
   });
 
   @override
@@ -244,6 +268,7 @@ class _KeyFieldState extends State<_KeyField> {
     return TextFormField(
       controller: _controller,
       focusNode: _focusNode,
+      readOnly: widget.readOnly,
       decoration: InputDecoration(labelText: widget.label),
       onChanged: widget.onChanged,
     );

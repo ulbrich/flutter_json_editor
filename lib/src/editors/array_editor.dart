@@ -3,6 +3,7 @@ import 'package:json_schema/json_schema.dart';
 import 'package:uuid/uuid.dart';
 
 import '../editor_registry.dart';
+import '../field_visibility.dart';
 import '../l10n/json_editor_l10n.dart';
 import '../schema_field_editor.dart';
 import '../schema_resolver.dart';
@@ -192,11 +193,32 @@ class _ArrayEditorState extends State<ArrayEditor> {
   @override
   Widget build(BuildContext context) {
     final registry = EditorRegistry.of(context);
+    final visibility = FieldVisibilityScope.of(context);
     final title = widget.schema.title ?? widget.path.split('.').last;
-    final canAdd = widget.schema.maxItems == null ||
-        _data.length < widget.schema.maxItems!;
-    final canRemove = widget.schema.minItems == null ||
-        _data.length > widget.schema.minItems!;
+
+    // A whitelist pinned to concrete indices (`items[0].name`) freezes the
+    // list: adding, deleting, or reordering would slide fields out from under
+    // it. A wildcard whitelist (`items[*].name`) leaves editing intact.
+    final structuralEdits = visibility.allowsStructuralEdits(widget.path);
+    final filterItems =
+        visibility.isFiltering && !visibility.isSubtreeVisible(widget.path);
+    final visibleIndices = <int>[];
+    for (var i = 0; i < _data.length; i++) {
+      if (!filterItems || visibility.isVisible('${widget.path}[$i]')) {
+        visibleIndices.add(i);
+      }
+    }
+
+    if (filterItems && visibleIndices.isEmpty && !structuralEdits) {
+      return const SizedBox.shrink();
+    }
+
+    final canAdd = structuralEdits &&
+        (widget.schema.maxItems == null ||
+            _data.length < widget.schema.maxItems!);
+    final canRemove = structuralEdits &&
+        (widget.schema.minItems == null ||
+            _data.length > widget.schema.minItems!);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -222,85 +244,101 @@ class _ArrayEditorState extends State<ArrayEditor> {
             widget.schema.description!,
             style: Theme.of(context).textTheme.bodySmall,
           ),
-        ReorderableListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _data.length,
-          onReorder: _onReorder,
-          itemBuilder: (context, index) {
-            final itemSchema = _getItemSchema(index);
-            final itemType = SchemaUtils.detectType(itemSchema);
-            final isObject = itemType == SchemaType.object;
-            final isArray = itemType == SchemaType.array;
-
-            final content = SchemaResolver.resolve(
-              schema: itemSchema,
-              path: '${widget.path}[$index]',
-              value: _data[index],
-              onChanged: (newVal) => _onItemChanged(index, newVal),
-              registry: registry,
-              isRequired: false,
-              isNullable: SchemaUtils.isNullable(itemSchema),
-              refDepth: widget.refDepth,
-            );
-
-            final deleteButton = canRemove
-                ? IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _removeItem(index),
-                    visualDensity: VisualDensity.compact,
-                  )
-                : null;
-
-            // Object sub-forms render a short, left-aligned title row, so the
-            // delete button can sit on that same line (overlaid top-right)
-            // without stealing its own row — leaving the sub-form the full
-            // width below.
-            if (isObject) {
-              return Padding(
-                key: ValueKey(_itemIds[index]),
-                padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-                child: Stack(
-                  children: [
-                    content,
-                    if (deleteButton != null)
-                      Positioned(top: 0, right: 0, child: deleteButton),
-                  ],
-                ),
-              );
-            }
-
-            // Nested arrays render their own right-aligned add button, so an
-            // overlay would collide; keep the delete button in a slim top row
-            // and let the sub-form use the full width below.
-            if (isArray) {
-              return Padding(
-                key: ValueKey(_itemIds[index]),
-                padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (deleteButton != null)
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: deleteButton,
-                      ),
-                    content,
-                  ],
-                ),
-              );
-            }
-
-            return ListTile(
-              key: ValueKey(_itemIds[index]),
-              titleAlignment: ListTileTitleAlignment.top,
-              contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
-              title: content,
-              trailing: deleteButton,
-            );
-          },
-        ),
+        // Reordering maps drag positions onto data indices, which only holds
+        // while every item is rendered — a filtered list falls back to a
+        // plain, non-reorderable column.
+        if (structuralEdits)
+          ReorderableListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _data.length,
+            onReorder: _onReorder,
+            itemBuilder: (context, index) =>
+                _buildItem(context, index, registry, canRemove),
+          )
+        else
+          ...visibleIndices.map(
+            (index) => _buildItem(context, index, registry, canRemove),
+          ),
       ],
+    );
+  }
+
+  Widget _buildItem(
+    BuildContext context,
+    int index,
+    EditorRegistryData? registry,
+    bool canRemove,
+  ) {
+    final itemSchema = _getItemSchema(index);
+    final itemType = SchemaUtils.detectType(itemSchema);
+    final isObject = itemType == SchemaType.object;
+    final isArray = itemType == SchemaType.array;
+
+    final content = SchemaResolver.resolve(
+      schema: itemSchema,
+      path: '${widget.path}[$index]',
+      value: _data[index],
+      onChanged: (newVal) => _onItemChanged(index, newVal),
+      registry: registry,
+      isRequired: false,
+      isNullable: SchemaUtils.isNullable(itemSchema),
+      refDepth: widget.refDepth,
+    );
+
+    final deleteButton = canRemove
+        ? IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () => _removeItem(index),
+            visualDensity: VisualDensity.compact,
+          )
+        : null;
+
+    // Object sub-forms render a short, left-aligned title row, so the
+    // delete button can sit on that same line (overlaid top-right)
+    // without stealing its own row — leaving the sub-form the full
+    // width below.
+    if (isObject) {
+      return Padding(
+        key: ValueKey(_itemIds[index]),
+        padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+        child: Stack(
+          children: [
+            content,
+            if (deleteButton != null)
+              Positioned(top: 0, right: 0, child: deleteButton),
+          ],
+        ),
+      );
+    }
+
+    // Nested arrays render their own right-aligned add button, so an
+    // overlay would collide; keep the delete button in a slim top row
+    // and let the sub-form use the full width below.
+    if (isArray) {
+      return Padding(
+        key: ValueKey(_itemIds[index]),
+        padding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (deleteButton != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: deleteButton,
+              ),
+            content,
+          ],
+        ),
+      );
+    }
+
+    return ListTile(
+      key: ValueKey(_itemIds[index]),
+      titleAlignment: ListTileTitleAlignment.top,
+      contentPadding: const EdgeInsets.fromLTRB(2.0, 0.0, 0.0, 0.0),
+      title: content,
+      trailing: deleteButton,
     );
   }
 }
