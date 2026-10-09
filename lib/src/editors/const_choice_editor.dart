@@ -4,12 +4,20 @@ import 'package:json_schema/json_schema.dart';
 import '../l10n/json_editor_l10n.dart';
 
 /// A single labeled choice extracted from a `const` sub-schema of a
-/// `oneOf`/`anyOf` composition.
+/// `oneOf`/`anyOf` composition, with the branch's optional `description` and
+/// `x-image` (a picture URL, shown by the `image-choice` editor).
 class ConstChoice {
   final dynamic value;
   final String title;
+  final String? description;
+  final String? imageUrl;
 
-  const ConstChoice({required this.value, required this.title});
+  const ConstChoice({
+    required this.value,
+    required this.title,
+    this.description,
+    this.imageUrl,
+  });
 }
 
 /// Renders a labeled single-choice dropdown from a `oneOf`/`anyOf` whose
@@ -60,7 +68,18 @@ class ConstChoiceEditor extends StatelessWidget {
       if (constValue is Map || constValue is List) return null;
       final title =
           (map['title'] as String?) ?? branch.title ?? constValue.toString();
-      result.add(ConstChoice(value: constValue, title: title));
+      final description = map['description'];
+      final image = map['x-image'];
+      result.add(
+        ConstChoice(
+          value: constValue,
+          title: title,
+          description: description is String && description.isNotEmpty
+              ? description
+              : null,
+          imageUrl: image is String && image.isNotEmpty ? image : null,
+        ),
+      );
     }
     return result;
   }

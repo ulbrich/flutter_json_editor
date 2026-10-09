@@ -39,6 +39,9 @@ class JsonEditorLocalizationsDe extends JsonEditorLocalizations {
   String get clearSelectionLabel => 'Auswahl aufheben';
 
   @override
+  String get selectOptionLabel => 'Auswählen…';
+
+  @override
   String get noImagesAvailableLabel => 'Keine Bilder verfügbar';
 
   @override

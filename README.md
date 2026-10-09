@@ -28,7 +28,7 @@ Take the example project for s spin and judge for yourself. Feel free to suggest
 - **Diff tracking** — `DiffCalculator` reports only the paths that changed between updates
 - **Theming** — `JsonEditorTheme` extension integrates with your Material 3 theme
 - **Custom editors** — `EditorRegistry` lets you override any field by path, `x-format`, type, or predicate
-- **Built-in format editors** — `x-format` or standard `format` activates colour wheel, star rating, image picker, date/time pickers, SVG part picker, and Markdown renderer
+- **Built-in format editors** — `x-format` or standard `format` activates colour wheel, star rating, image picker, picture choice, date/time pickers, SVG part picker, and Markdown renderer
 - **Circular reference protection** — Self-referential schemas are safely capped at a configurable depth
 
 ## Getting Started
@@ -252,6 +252,7 @@ The library ships with built-in editors activated via the `x-format` schema exte
 | `"colour"` or `"color"` | Interactive HSV colour wheel with brightness slider | `#rrggbb` hex string (e.g. `"#ff0000"`) |
 | `"star-rating"` | Clickable 0–5 star rating | `int` or `String` depending on schema type |
 | `"image-url-picker"` | Selectable image thumbnail grid | Selected value (URL or ID) |
+| `"image-choice"` | Chosen option with picture and description; tap opens a picture grid (`oneOf` of `const`s, picture URL in each branch's `x-image`) | The branch's `const` |
 | `"date"` | Date picker dialog | `"yyyy-MM-dd"` string or seconds-since-epoch `int` |
 | `"time"` | Hour/minute dropdown selectors | `"HH:mm:ss"` string or seconds-since-midnight `int` |
 | `"date-time"` | Combined date picker + time dropdowns | ISO 8601 string or seconds-since-epoch `int` |
@@ -296,6 +297,36 @@ These editors activate via `x-format` or the standard JSON Schema `format` field
 ```
 
 **Date/time editors** accept both string and numeric schema types. String values use ISO 8601 format; numeric values use seconds since epoch (UTC). Values are always stored as UTC but displayed in the user's local timezone with a timezone indicator.
+
+**Picture choice editor** (`image-choice`) is the picture counterpart to the labelled `oneOf`/`const` dropdown: each branch keeps its `const` (stored) and `title`, and may add a `description` and a picture URL in `x-image`. Options without a picture show a placeholder; a schema that isn't such a `const` list renders with its usual editor. Pictures load with `Image.network`; to load them your own way (a disk cache, auth headers), register `ImageChoiceEditor.builderWith(...)`:
+
+```json
+{
+  "dish": {
+    "type": "string",
+    "title": "Dish",
+    "x-format": "image-choice",
+    "oneOf": [
+      {"const": "margherita", "title": "Margherita", "description": "Tomato and mozzarella",
+       "x-image": "https://example.com/margherita.jpg"},
+      {"const": "diavola", "title": "Diavola", "x-image": "https://example.com/diavola.jpg"}
+    ]
+  }
+}
+```
+
+```dart
+EditorRegistryData(formatOverrides: {
+  'image-choice': ImageChoiceEditor.builderWith(
+    (context, url, placeholder) => CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      placeholder: (_, __) => placeholder,
+      errorWidget: (_, __, ___) => placeholder,
+    ),
+  ),
+})
+```
 
 **Star rating editor** works with both `"type": "integer"` (stores `int`) and `"type": "string"` (stores `String`). Clicking a star sets the rating; clicking the same star again resets to 0.
 
@@ -357,6 +388,7 @@ Results are cached per URL for the lifetime of the widget.
 | `format` / `x-format` (colour/color) | Built-in colour wheel editor |
 | `format` / `x-format` (star-rating) | Built-in star rating editor |
 | `format` / `x-format` (image-url-picker) | Built-in image picker editor |
+| `x-format` (image-choice) | Built-in picture choice editor (`oneOf` of `const`s with `x-image`) |
 | `format` / `x-format` (date) | Built-in date picker |
 | `format` / `x-format` (time) | Built-in time picker (dropdowns) |
 | `format` / `x-format` (date-time) | Built-in combined date-time picker |

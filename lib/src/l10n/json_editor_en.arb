@@ -31,6 +31,9 @@
   "clearSelectionLabel": "Clear selection",
   "@clearSelectionLabel": { "description": "Label for the clear-selection button in image pickers" },
 
+  "selectOptionLabel": "Select…",
+  "@selectOptionLabel": { "description": "Placeholder of a picture choice field while nothing is chosen" },
+
   "noImagesAvailableLabel": "No images available",
   "@noImagesAvailableLabel": { "description": "Shown when an image picker has no images to display" },
 

@@ -4,6 +4,7 @@ import 'package:json_schema/json_schema.dart';
 import 'editors/colour_editor.dart';
 import 'editors/date_editor.dart';
 import 'editors/date_time_editor.dart';
+import 'editors/image_choice_editor.dart';
 import 'editors/image_picker_editor.dart';
 import 'editors/markdown_editor.dart';
 import 'editors/star_rating_editor.dart';
@@ -170,6 +171,7 @@ class EditorRegistryData {
     'color': _colourEditorBuilder,
     'date': _dateEditorBuilder,
     'date-time': _dateTimeEditorBuilder,
+    'image-choice': ImageChoiceEditor.builderWith(null),
     'image-url-picker': _imagePickerEditorBuilder,
     'markdown': _markdownEditorBuilder,
     'star-rating': _starRatingEditorBuilder,

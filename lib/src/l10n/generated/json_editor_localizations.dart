@@ -159,6 +159,12 @@ abstract class JsonEditorLocalizations {
   /// **'Clear selection'**
   String get clearSelectionLabel;
 
+  /// Placeholder of a picture choice field while nothing is chosen
+  ///
+  /// In en, this message translates to:
+  /// **'Select…'**
+  String get selectOptionLabel;
+
   /// Shown when an image picker has no images to display
   ///
   /// In en, this message translates to:

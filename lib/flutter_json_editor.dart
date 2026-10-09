@@ -18,6 +18,7 @@ export 'src/l10n/json_editor_l10n.dart';
 export 'src/editors/colour_editor.dart';
 export 'src/editors/date_editor.dart';
 export 'src/editors/date_time_editor.dart';
+export 'src/editors/image_choice_editor.dart';
 export 'src/editors/image_picker_editor.dart';
 export 'src/editors/markdown_editor.dart';
 export 'src/editors/star_rating_editor.dart';
