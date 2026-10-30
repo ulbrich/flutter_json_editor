@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';

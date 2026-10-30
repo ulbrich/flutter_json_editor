@@ -1,11 +1,11 @@
 name: flutter_json_editor
 description: A Flutter widget that dynamically generates forms from JSON Schema (Draft 7) with full CRUD support, inline validation, and customizable field editors.
-version: 0.6.0
+version: 0.7.0
 homepage: https://github.com/safenow/flutter_json_editor
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.10.0'
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
 
 dependencies:
   flutter:
@@ -16,6 +16,7 @@ dependencies:
   flutter_svg: ^2.0.17
   intl: any
   json_schema: ^5.2.2
+  material_ui: ^1.6.0
   uuid: ^4.0.0
   xml: ^6.5.0
 

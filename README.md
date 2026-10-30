@@ -42,6 +42,16 @@ dependencies:
       url: https://github.com/safenow/flutter_json_editor.git
 ```
 
+The editor is built on [`material_ui`](https://pub.dev/packages/material_ui), the Material library decoupled from the Flutter framework, so your app has to use `package:material_ui/material_ui.dart` as well. Apps still on the framework's `package:flutter/material.dart` can use the `renderer/material` branch (version 0.6.x):
+
+```yaml
+dependencies:
+  flutter_json_editor:
+    git:
+      url: https://github.com/safenow/flutter_json_editor.git
+      ref: renderer/material
+```
+
 ## Basic Usage
 
 ```dart
@@ -439,8 +449,8 @@ import 'package:flutter_json_editor/flutter_json_editor.dart';
 MaterialApp(
   localizationsDelegates: const [
     JsonEditorLocalizations.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
+    // From material_ui, including the widgets and Cupertino delegates.
+    ...GlobalMaterialLocalizations.delegates,
   ],
   supportedLocales: JsonEditorLocalizations.supportedLocales,
   // ...
@@ -453,8 +463,9 @@ Check out the [example project](./example) to see the editor in action with an e
 
 ## Requirements
 
-- Flutter >= 3.10.0
-- Dart SDK >= 3.0.0
+- Flutter >= 3.47.0
+- Dart SDK >= 3.13.0
+- [`material_ui`](https://pub.dev/packages/material_ui) >= 1.6.0
 
 ## License
 

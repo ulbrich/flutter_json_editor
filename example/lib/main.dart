@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_json_editor/flutter_json_editor.dart';
 import 'package:http/http.dart' as http;
@@ -36,6 +36,8 @@ class _ExampleAppState extends State<ExampleApp> {
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
         JsonEditorLocalizations.delegate,
+        // The generated delegates are those of flutter/material.
+        ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: availableLocales,
       home: EditorPage(

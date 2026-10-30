@@ -4,7 +4,8 @@ description: Example app demonstrating flutter_json_editor
 publish_to: 'none'
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
 
 dependencies:
   flutter:
@@ -15,6 +16,7 @@ dependencies:
     path: ../
   intl: any
   json_schema: ^5.2.2
+  material_ui: ^1.6.0
   http: ^1.6.0
 
 dev_dependencies:
