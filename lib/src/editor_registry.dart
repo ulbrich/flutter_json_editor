@@ -1,15 +1,31 @@
 import 'package:flutter/widgets.dart';
 import 'package:json_schema/json_schema.dart';
 
+import 'editors/chips_editor.dart';
 import 'editors/colour_editor.dart';
 import 'editors/date_editor.dart';
 import 'editors/date_time_editor.dart';
+import 'editors/duration_editor.dart';
+import 'editors/image_data_editor.dart';
 import 'editors/image_choice_editor.dart';
 import 'editors/image_picker_editor.dart';
 import 'editors/markdown_editor.dart';
+import 'editors/segmented_editor.dart';
+import 'editors/signature_editor.dart';
+import 'editors/slider_editor.dart';
 import 'editors/star_rating_editor.dart';
+import 'editors/stepper_editor.dart';
 import 'editors/svg_part_picker_editor.dart';
 import 'editors/time_editor.dart';
+import 'editors/consent_editor.dart';
+import 'editors/date_range_editor.dart';
+import 'editors/file_data_editor.dart';
+import 'editors/image_gallery_editor.dart';
+import 'editors/matrix_editor.dart';
+import 'editors/phone_editor.dart';
+import 'editors/ranking_editor.dart';
+import 'editors/scale_editor.dart';
+import 'editors/textarea_editor.dart';
 import 'schema_field_editor.dart';
 
 class EditorRegistryData {
@@ -166,16 +182,337 @@ class EditorRegistryData {
             isNullable: isNullable,
           );
 
+  static SchemaFieldEditorBuilder get _sliderEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          SliderEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _stepperEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          StepperEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _segmentedEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          SegmentedEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _chipsEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ChipsEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _imageDataEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          schema.schemaMap?['type'] == 'array'
+              ? ImageGalleryEditor(
+                  schema: schema,
+                  path: path,
+                  value: value,
+                  onChanged: onChanged,
+                  isRequired: isRequired,
+                  isNullable: isNullable,
+                )
+              : ImageDataEditor(
+                  schema: schema,
+                  path: path,
+                  value: value,
+                  onChanged: onChanged,
+                  isRequired: isRequired,
+                  isNullable: isNullable,
+                );
+
+  static SchemaFieldEditorBuilder get _durationEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          DurationEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _signatureEditorBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          SignatureEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _linearScaleBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ScaleEditor(
+            variant: ScaleVariant.linear,
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _npsScaleBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ScaleEditor(
+            variant: ScaleVariant.nps,
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _emojiScaleBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ScaleEditor(
+            variant: ScaleVariant.emoji,
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _matrixBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          MatrixEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _rankingBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          RankingEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _dateRangeBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          DateRangeEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _phoneBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          PhoneEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _fileDataBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          FileDataEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _consentBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          ConsentEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  static SchemaFieldEditorBuilder get _textareaBuilder => ({
+        required JsonSchema schema,
+        required String path,
+        required dynamic value,
+        required void Function(dynamic value) onChanged,
+        required bool isRequired,
+        bool isNullable = false,
+      }) =>
+          TextareaEditor(
+            schema: schema,
+            path: path,
+            value: value,
+            onChanged: onChanged,
+            isRequired: isRequired,
+            isNullable: isNullable,
+          );
+
+  /// The `x-format` values the package has editors for.
+  static Iterable<String> get builtInFormats => _builtInFormatOverrides.keys;
+
   static final Map<String, SchemaFieldEditorBuilder> _builtInFormatOverrides = {
-    'colour': _colourEditorBuilder,
+    'chips': _chipsEditorBuilder,
     'color': _colourEditorBuilder,
+    'colour': _colourEditorBuilder,
+    'consent': _consentBuilder,
     'date': _dateEditorBuilder,
+    'date-range': _dateRangeBuilder,
     'date-time': _dateTimeEditorBuilder,
+    'duration': _durationEditorBuilder,
+    'emoji-scale': _emojiScaleBuilder,
+    'file-data': _fileDataBuilder,
     'image-choice': ImageChoiceEditor.builderWith(null),
+    'image-data': _imageDataEditorBuilder,
     'image-url-picker': _imagePickerEditorBuilder,
+    'linear-scale': _linearScaleBuilder,
     'markdown': _markdownEditorBuilder,
+    'matrix': _matrixBuilder,
+    'nps': _npsScaleBuilder,
+    'phone': _phoneBuilder,
+    'ranking': _rankingBuilder,
+    'segmented': _segmentedEditorBuilder,
+    'signature': _signatureEditorBuilder,
+    'slider': _sliderEditorBuilder,
     'star-rating': _starRatingEditorBuilder,
+    'stepper': _stepperEditorBuilder,
     'svg-part-picker': _svgPartPickerEditorBuilder,
+    'textarea': _textareaBuilder,
     'time': _timeEditorBuilder,
   };
 
@@ -229,18 +566,9 @@ class EditorRegistryData {
 
   EditorRegistryData merge(EditorRegistryData other) {
     return EditorRegistryData(
-      pathOverrides: {
-        ..._pathOverrides,
-        ...other._pathOverrides,
-      },
-      formatOverrides: {
-        ..._formatOverrides,
-        ...other._formatOverrides,
-      },
-      typeOverrides: {
-        ..._typeOverrides,
-        ...other._typeOverrides,
-      },
+      pathOverrides: {..._pathOverrides, ...other._pathOverrides},
+      formatOverrides: {..._formatOverrides, ...other._formatOverrides},
+      typeOverrides: {..._typeOverrides, ...other._typeOverrides},
       predicateOverrides: [
         ..._predicateOverrides,
         ...other._predicateOverrides,
@@ -252,11 +580,7 @@ class EditorRegistryData {
 class EditorRegistry extends InheritedWidget {
   final EditorRegistryData data;
 
-  const EditorRegistry({
-    super.key,
-    required this.data,
-    required super.child,
-  });
+  const EditorRegistry({super.key, required this.data, required super.child});
 
   static EditorRegistryData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<EditorRegistry>()?.data;

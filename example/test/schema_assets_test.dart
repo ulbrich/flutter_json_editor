@@ -39,6 +39,50 @@ void main() {
         isTrue,
       );
 
+      // One sample per built-in input editor, plus a variant each.
+      final props = raw['properties'] as Map<String, dynamic>;
+      String? format(String key) =>
+          (props[key]['x-format'] ?? props[key]['format']) as String?;
+      expect(format('workload'), 'slider');
+      expect(format('deskCount'), 'stepper');
+      expect(format('officeDays'), 'stepper');
+      expect(props['officeDays']['multipleOf'], 0.5);
+      expect(format('workMode'), 'segmented');
+      expect(format('shirtSize'), 'segmented');
+      expect(props['shirtSize']['enum'], ['S', 'M', 'L', 'XL']);
+      expect(format('languages'), 'chips');
+      expect(props['languages']['items']['oneOf'], hasLength(4));
+      expect(format('weeklyHours'), 'duration');
+      expect(props['weeklyHours']['type'], 'string');
+      expect(format('dailyBreak'), 'duration');
+      expect(props['dailyBreak']['type'], 'integer');
+      expect(format('signature'), 'signature');
+      expect(format('photo'), 'image-data');
+      expect(format('satisfaction'), 'linear-scale');
+      expect(format('recommend'), 'nps');
+      expect(format('mood'), 'emoji-scale');
+      expect(format('engagement'), 'matrix');
+      expect(format('priorities'), 'ranking');
+      expect(format('vacation'), 'date-range');
+      expect(format('mobile'), 'phone');
+      expect(format('documents'), 'file-data');
+      expect(format('teamPhotos'), 'image-data');
+      expect(props['teamPhotos']['type'], 'array');
+      expect(format('feedback'), 'textarea');
+      expect(props['commute']['x-unit'], 'km');
+      expect(props['salary']['x-currency'], 'EUR');
+      expect(props['commuteYearly']['x-calc'], isA<Map>());
+      expect(props['source']['x-hidden'], isTrue);
+      expect(props['bank']['properties']['iban']['x-mask'], isA<String>());
+      expect(props['emergencyContact']['x-layout'], 'card');
+      expect(props['bank']['x-layout'], 'collapsible');
+      expect(props['onboarding']['x-layout'], 'wizard');
+      expect(props['workplace']['x-layout'], 'tabs');
+      expect(
+        props['onboarding']['properties']['privacy']['x-format'],
+        'consent',
+      );
+
       // The whole schema is accepted by the package without throwing.
       expect(SchemaUtils.createSchema(Map<String, dynamic>.from(raw)), isNotNull);
     });

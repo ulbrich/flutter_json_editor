@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Vehicle inspection",
+  "required": ["plate", "inspected", "signature"],
+  "properties": {
+    "plate": {"type": "string", "title": "Licence plate", "x-mask": "AA-AA 0000"},
+    "inspected": {"type": "string", "title": "Inspected at", "format": "date-time"},
+    "mileage": {"type": "integer", "title": "Mileage", "x-unit": "km", "minimum": 0},
+    "condition": {
+      "type": "string",
+      "title": "Overall condition",
+      "x-format": "segmented",
+      "oneOf": [
+        {"const": "good", "title": "Good"},
+        {"const": "worn", "title": "Worn"},
+        {"const": "damaged", "title": "Damaged"}
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "title": "Checks",
+      "x-format": "matrix",
+      "properties": {
+        "brakes": {"type": "string", "title": "Brakes", "enum": ["OK", "Check", "Fail"]},
+        "lights": {"type": "string", "title": "Lights", "enum": ["OK", "Check", "Fail"]},
+        "tyres": {"type": "string", "title": "Tyres", "enum": ["OK", "Check", "Fail"]}
+      }
+    },
+    "damage": {
+      "type": "object",
+      "title": "Damage",
+      "x-layout": "collapsible",
+      "x-collapsed": true,
+      "properties": {
+        "notes": {"type": "string", "title": "Description", "x-format": "textarea"},
+        "photos": {
+          "type": "array",
+          "title": "Photos",
+          "x-format": "image-data",
+          "maxItems": 4,
+          "x-max-width": 1024,
+          "x-max-height": 1024,
+          "x-image-quality": 80,
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "inspector": {"type": "string", "title": "Inspector"},
+    "signature": {"type": "string", "title": "Signature of {{inspector}}", "x-format": "signature"}
+  }
+}

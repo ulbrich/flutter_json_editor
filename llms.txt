@@ -1,0 +1,52 @@
+# flutter_json_editor
+
+> A Flutter widget that renders JSON Schema (draft-07) as forms. The schema's `type` picks a default editor per field, `x-format` a special one (26 editors: scales, chips, photos, signatures, …), `x-layout` lays out objects (cards, tabs, wizards), `x-calc` computes values.
+
+To generate a form: read the guide, write a schema, check it with `SchemaLint.check(schema)` (or validate it against the meta-schema) and fix every error.
+
+## Docs
+
+- [Guide for writing forms](doc/llm-guide.md): rules, which editor for which question, every editor with keys, stored value and example
+- [Meta-schema](schema/flutter_json_editor.schema.json): validates form schemas; `x-catalog` holds the lint rules as data
+- [README](README.md): the widget's API for app developers
+
+## Editors
+
+- `x-format: chips` — Choice chips: Several answers out of a short list (checkboxes)
+- `x-format: colour` — Colour wheel: Picking a colour
+- `x-format: consent` — Consent checkbox: Accepting terms or a privacy notice: a checkbox with the `description` (Markdown, links work) as its text
+- `x-format: date` — Date picker: A day
+- `x-format: date-range` — Date range: A period from one day to another, picked in one calendar
+- `x-format: date-time` — Date and time: A moment: a date and a time side by side
+- `x-format: duration` — Duration: A length of time in hours and minutes
+- `x-format: emoji-scale` — Emoji scale: A mood or satisfaction question: two to five faces
+- `x-format: file-data` — File upload: Attaching documents
+- `x-format: image-choice` — Picture choice: A single choice where each option has a picture (`x-image` URL) and an optional `description`
+- `x-format: image-data` — Photo: Taking or choosing photos, stored in the data itself as base64 (scaled down while picking)
+- `x-format: image-url-picker` — Image URL picker: Choosing one of several pictures whose URLs are the stored values (`enum` of URLs, or a remote `$ref` resolved by the app)
+- `x-format: linear-scale` — Linear scale: A rating on numbered buttons, `1` to `5` or `0` to `10`, with optional end labels
+- `x-format: markdown` — Markdown: Rich text: rendered as Markdown when read-only, a multi-line field when editable
+- `x-format: matrix` — Matrix: The same choices for several rows (a grid of radio buttons, or checkboxes where a row is an array)
+- `x-format: nps` — Net Promoter Score: The "How likely are you to recommend us?" question, 0 to 10 with localized end labels
+- `x-format: phone` — Phone number: A phone number with a country picker, checked as typed
+- `x-format: ranking` — Ranking: Putting choices in order by dragging
+- `x-format: segmented` — Segmented buttons: A single choice out of two to five short options
+- `x-format: signature` — Signature: Signing or sketching with a finger, pen or mouse
+- `x-format: slider` — Slider: A number in a range where the exact value matters little
+- `x-format: star-rating` — Star rating: Zero to five stars
+- `x-format: stepper` — Stepper: A small count changed with − and + buttons
+- `x-format: svg-part-picker` — SVG part picker: Selecting regions of a picture, e.g
+- `x-format: textarea` — Text area: Longer free text
+- `x-format: time` — Time picker: A time of day
+- `x-layout: card` — Card: The default: a nested object in a card with its title
+- `x-layout: collapsible` — Collapsible section: An optional or rarely needed group that can be folded away
+- `x-layout: plain` — Plain: A group without a card, its fields inline with the parent's
+- `x-layout: wizard` — Wizard: A long form one step at a time: each property is a step, with Back/Next and a progress bar
+- `x-layout: tabs` — Tabs: Groups of a form that can be filled in any order: each property is a tab
+
+## Examples
+
+- [Survey](example/assets/forms/survey.json)
+- [Onboarding wizard](example/assets/forms/onboarding.json)
+- [Order with calculations](example/assets/forms/order.json)
+- [Inspection with photos and signature](example/assets/forms/inspection.json)

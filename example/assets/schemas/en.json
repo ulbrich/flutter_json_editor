@@ -113,6 +113,503 @@
       "maximum": 5,
       "default": 0
     },
+    "workload": {
+      "type": "integer",
+      "x-format": "slider",
+      "title": "Workload",
+      "description": "Share of a full-time position in percent",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 10
+    },
+    "deskCount": {
+      "type": "integer",
+      "x-format": "stepper",
+      "title": "Desks",
+      "description": "Number of desks needed",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "officeDays": {
+      "type": "number",
+      "x-format": "stepper",
+      "title": "Office Days",
+      "description": "Days per week in the office, in half days",
+      "minimum": 0,
+      "maximum": 5,
+      "multipleOf": 0.5
+    },
+    "workMode": {
+      "type": "string",
+      "x-format": "segmented",
+      "title": "Work Mode",
+      "oneOf": [
+        {"const": "office", "title": "Office"},
+        {"const": "hybrid", "title": "Hybrid"},
+        {"const": "remote", "title": "Remote"}
+      ]
+    },
+    "shirtSize": {
+      "type": "string",
+      "x-format": "segmented",
+      "title": "Shirt Size",
+      "enum": ["S", "M", "L", "XL"]
+    },
+    "languages": {
+      "type": "array",
+      "x-format": "chips",
+      "title": "Languages",
+      "description": "Pick up to three",
+      "uniqueItems": true,
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {"const": "en", "title": "English"},
+          {"const": "de", "title": "German"},
+          {"const": "fr", "title": "French"},
+          {"const": "es", "title": "Spanish"}
+        ]
+      }
+    },
+    "weeklyHours": {
+      "type": "string",
+      "format": "duration",
+      "title": "Weekly Hours",
+      "description": "Agreed working time per week"
+    },
+    "dailyBreak": {
+      "type": "integer",
+      "x-format": "duration",
+      "title": "Daily Break",
+      "description": "Stored in seconds"
+    },
+    "signature": {
+      "type": "string",
+      "x-format": "signature",
+      "title": "Signature"
+    },
+    "photo": {
+      "type": "string",
+      "x-format": "image-data",
+      "title": "Photo",
+      "description": "Taken or chosen on the device, stored as base64 in the data",
+      "x-max-width": 800,
+      "x-max-height": 800,
+      "x-image-quality": 80
+    },
+    "satisfaction": {
+      "type": "integer",
+      "x-format": "linear-scale",
+      "title": "How happy are you with your workplace?",
+      "minimum": 1,
+      "maximum": 5,
+      "x-min-label": "Not at all",
+      "x-max-label": "Very",
+      "x-labels": [
+        "Poor",
+        "Fair",
+        "Good",
+        "Very good",
+        "Excellent"
+      ]
+    },
+    "recommend": {
+      "type": "integer",
+      "x-format": "nps",
+      "title": "How likely are you to recommend us as an employer?"
+    },
+    "mood": {
+      "type": "integer",
+      "x-format": "emoji-scale",
+      "title": "How was your week?",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "engagement": {
+      "type": "object",
+      "x-format": "matrix",
+      "title": "How much do you agree?",
+      "required": [
+        "tools"
+      ],
+      "properties": {
+        "tools": {
+          "title": "I have the tools I need",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Disagree"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Agree"
+            }
+          ]
+        },
+        "team": {
+          "title": "My team supports me",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Disagree"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Agree"
+            }
+          ]
+        },
+        "growth": {
+          "title": "I can learn and grow",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Disagree"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Agree"
+            }
+          ]
+        }
+      }
+    },
+    "priorities": {
+      "type": "array",
+      "x-format": "ranking",
+      "uniqueItems": true,
+      "title": "What matters most to you?",
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "salary",
+            "title": "Salary"
+          },
+          {
+            "const": "team",
+            "title": "Team"
+          },
+          {
+            "const": "remote",
+            "title": "Remote work"
+          },
+          {
+            "const": "growth",
+            "title": "Growth"
+          }
+        ]
+      }
+    },
+    "vacation": {
+      "type": "object",
+      "x-format": "date-range",
+      "title": "Next vacation",
+      "x-min-date": "2026-01-01",
+      "x-max-date": "2027-12-31",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "mobile": {
+      "type": "string",
+      "x-format": "phone",
+      "title": "Mobile",
+      "x-default-country": "DE",
+      "x-countries": [
+        "AT",
+        "CH",
+        "DE",
+        "FR",
+        "GB",
+        "NL",
+        "US"
+      ]
+    },
+    "documents": {
+      "type": "array",
+      "x-format": "file-data",
+      "title": "Documents",
+      "description": "CV and certificates, stored as base64 in the data",
+      "maxItems": 3,
+      "x-accept": [
+        "pdf",
+        "docx",
+        "png",
+        "jpg"
+      ],
+      "x-max-file-size": 2000000,
+      "items": {
+        "type": "object"
+      }
+    },
+    "teamPhotos": {
+      "type": "array",
+      "x-format": "image-data",
+      "title": "Team photos",
+      "maxItems": 4,
+      "x-max-width": 800,
+      "items": {
+        "type": "string"
+      }
+    },
+    "commute": {
+      "type": "number",
+      "title": "Commute (one way)",
+      "x-unit": "km",
+      "minimum": 0
+    },
+    "commuteYearly": {
+      "type": "number",
+      "title": "Commute per year",
+      "x-unit": "km",
+      "readOnly": true,
+      "description": "Calculated: 2 × commute × office days × 46 weeks",
+      "x-calc": {
+        "round": [
+          {
+            "*": [
+              2,
+              {
+                "var": [
+                  "commute",
+                  0
+                ]
+              },
+              {
+                "var": [
+                  "officeDays",
+                  0
+                ]
+              },
+              46
+            ]
+          },
+          0
+        ]
+      }
+    },
+    "salary": {
+      "type": "number",
+      "title": "Expected salary",
+      "x-currency": "EUR",
+      "minimum": 0
+    },
+    "bonusRate": {
+      "type": "number",
+      "title": "Bonus",
+      "x-unit": "%",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "feedback": {
+      "type": "string",
+      "x-format": "textarea",
+      "title": "Anything else, {{firstName}}?",
+      "x-rows": 3,
+      "maxLength": 280
+    },
+    "source": {
+      "type": "string",
+      "title": "Source",
+      "x-hidden": true
+    },
+    "emergencyContact": {
+      "type": "object",
+      "x-layout": "card",
+      "title": "Emergency contact",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "phone": {
+          "type": "string",
+          "x-format": "phone",
+          "title": "Phone",
+          "x-default-country": "DE"
+        }
+      }
+    },
+    "bank": {
+      "type": "object",
+      "x-layout": "collapsible",
+      "title": "Bank details",
+      "description": "For the payroll",
+      "properties": {
+        "holder": {
+          "type": "string",
+          "title": "Account holder"
+        },
+        "iban": {
+          "type": "string",
+          "title": "IBAN",
+          "x-mask": "AA00 0000 0000 0000 0000 00"
+        }
+      }
+    },
+    "onboarding": {
+      "type": "object",
+      "x-layout": "wizard",
+      "title": "Onboarding",
+      "required": [
+        "you",
+        "privacy"
+      ],
+      "properties": {
+        "you": {
+          "type": "object",
+          "title": "About you",
+          "required": [
+            "team"
+          ],
+          "properties": {
+            "team": {
+              "type": "string",
+              "title": "Team",
+              "enum": [
+                "Design",
+                "Engineering",
+                "Sales"
+              ]
+            },
+            "buddy": {
+              "type": "string",
+              "title": "Onboarding buddy"
+            }
+          }
+        },
+        "setup": {
+          "type": "object",
+          "title": "Your setup",
+          "properties": {
+            "laptop": {
+              "type": "string",
+              "x-format": "segmented",
+              "title": "Laptop",
+              "enum": [
+                "Mac",
+                "Windows",
+                "Linux"
+              ]
+            },
+            "monitors": {
+              "type": "integer",
+              "x-format": "stepper",
+              "title": "Monitors",
+              "minimum": 0,
+              "maximum": 3
+            }
+          }
+        },
+        "privacy": {
+          "type": "boolean",
+          "const": true,
+          "x-format": "consent",
+          "title": "I have read the [privacy policy](https://example.com/privacy) and agree to it"
+        }
+      }
+    },
+    "workplace": {
+      "type": "object",
+      "x-layout": "tabs",
+      "title": "Workplace",
+      "description": "Where and how you work",
+      "required": [
+        "office"
+      ],
+      "properties": {
+        "office": {
+          "type": "object",
+          "title": "Office",
+          "required": [
+            "building"
+          ],
+          "properties": {
+            "building": {
+              "type": "string",
+              "title": "Building",
+              "enum": [
+                "HQ",
+                "Campus",
+                "Downtown"
+              ]
+            },
+            "floor": {
+              "type": "integer",
+              "title": "Floor",
+              "x-format": "stepper",
+              "minimum": 0,
+              "maximum": 12
+            },
+            "desk": {
+              "type": "string",
+              "title": "Desk number",
+              "x-mask": "A-000"
+            }
+          }
+        },
+        "equipment": {
+          "type": "object",
+          "title": "Equipment",
+          "properties": {
+            "items": {
+              "type": "array",
+              "title": "Items",
+              "x-format": "chips",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Headset",
+                  "Webcam",
+                  "Standing desk",
+                  "Second monitor"
+                ]
+              }
+            }
+          }
+        },
+        "access": {
+          "type": "object",
+          "title": "Access",
+          "properties": {
+            "badge": {
+              "type": "string",
+              "title": "Badge number",
+              "x-mask": "0000-0000"
+            },
+            "parking": {
+              "type": "boolean",
+              "title": "Parking spot"
+            }
+          }
+        }
+      }
+    },
     "employeeType": {
       "type": "string",
       "title": "Employee Type",

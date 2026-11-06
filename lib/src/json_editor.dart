@@ -4,6 +4,7 @@ import 'package:json_schema/json_schema.dart';
 import 'diff_calculator.dart';
 import 'editor_registry.dart';
 import 'field_visibility.dart';
+import 'form_logic.dart';
 import 'l10n/generated/json_editor_localizations.dart';
 import 'ref_lookup_provider.dart';
 import 'schema_resolver.dart';
@@ -42,6 +43,11 @@ class JsonEditor extends StatefulWidget {
   /// [FieldVisibility] directly. Takes precedence over [visiblePaths].
   final FieldVisibility? visibility;
 
+  /// Called with the data when the user finishes a form laid out as a
+  /// wizard (`"x-layout": "wizard"`); without it the last step shows no
+  /// finish button.
+  final void Function(dynamic data)? onSubmit;
+
   const JsonEditor({
     super.key,
     required this.schema,
@@ -52,6 +58,7 @@ class JsonEditor extends StatefulWidget {
     this.minTypeAhead = 10,
     this.visiblePaths,
     this.visibility,
+    this.onSubmit,
   });
 
   @override
@@ -61,6 +68,12 @@ class JsonEditor extends StatefulWidget {
 class JsonEditorState extends State<JsonEditor> {
   late dynamic _currentData;
   dynamic _previousData;
+
+  /// Whether the schema has `x-calc` fields to keep up to date.
+  bool _calculates = false;
+
+  /// Calculated fields whose rules depend on each other in a circle.
+  Set<String> _cyclic = const {};
 
   dynamic get currentData {
     if (_currentData is Map) {
@@ -90,7 +103,25 @@ class JsonEditorState extends State<JsonEditor> {
   @override
   void initState() {
     super.initState();
-    _currentData = _initData(widget.initialData);
+    _calculates = FormCalculator.hasCalculations(widget.schema);
+    _currentData = _calculate(_initData(widget.initialData));
+  }
+
+  @override
+  void didUpdateWidget(JsonEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.schema != oldWidget.schema) {
+      _calculates = FormCalculator.hasCalculations(widget.schema);
+      _currentData = _calculate(_currentData);
+    }
+  }
+
+  /// [data] with the calculated (`x-calc`) fields filled in.
+  dynamic _calculate(dynamic data) {
+    if (!_calculates) return data;
+    final result = FormCalculator.apply(widget.schema, data);
+    _cyclic = result.cyclic;
+    return result.data;
   }
 
   dynamic _initData(dynamic source) {
@@ -121,6 +152,7 @@ class JsonEditorState extends State<JsonEditor> {
       } else {
         _currentData = value;
       }
+      _currentData = _calculate(_currentData);
       final diff = DiffCalculator.computeDiff(_previousData, _currentData);
       widget.onUpdate?.call(_currentData, diff);
     });
@@ -128,7 +160,8 @@ class JsonEditorState extends State<JsonEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final registry = widget.registry ?? EditorRegistry.of(context) ?? EditorRegistryData();
+    final registry =
+        widget.registry ?? EditorRegistry.of(context) ?? EditorRegistryData();
 
     Widget child = SchemaResolver.resolve(
       schema: widget.schema,
@@ -143,6 +176,14 @@ class JsonEditorState extends State<JsonEditor> {
 
     child = FieldVisibilityScope(visibility: _visibility, child: child);
 
+    final onSubmit = widget.onSubmit;
+    child = FormScope(
+      data: _currentData,
+      cyclicPaths: _cyclic,
+      onSubmit: onSubmit == null ? null : () => onSubmit(currentData),
+      child: child,
+    );
+
     child = RefLookupProvider(
       onRefLookup: widget.onRefLookup,
       minTypeAhead: widget.minTypeAhead,
@@ -151,7 +192,8 @@ class JsonEditorState extends State<JsonEditor> {
 
     // Ensure JsonEditorLocalizations is always available — even when the
     // consuming app does not register the delegate itself.
-    final hasL10n = Localizations.of<JsonEditorLocalizations>(
+    final hasL10n =
+        Localizations.of<JsonEditorLocalizations>(
           context,
           JsonEditorLocalizations,
         ) !=

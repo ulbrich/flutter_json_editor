@@ -1,0 +1,657 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/safenow/flutter_json_editor/schema/flutter_json_editor.schema.json",
+  "title": "flutter_json_editor form schema",
+  "description": "A JSON Schema (draft-07) that flutter_json_editor renders as a form. The root is an object; `type` and `x-format` pick each field's editor, `x-layout` lays out objects. See doc/llm-guide.md. Validating against this schema checks keyword types; SchemaLint also checks that editors fit their fields.",
+  "allOf": [
+    {
+      "$ref": "#/definitions/node"
+    }
+  ],
+  "definitions": {
+    "node": {
+      "type": [
+        "object",
+        "boolean"
+      ],
+      "properties": {
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/typeName"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/typeName"
+              }
+            }
+          ]
+        },
+        "title": {
+          "type": "string",
+          "description": "The label. `{{path}}` shows an answer (piping)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Help text under the field. Piping works."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/node"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/node"
+              }
+            }
+          ]
+        },
+        "enum": {
+          "type": "array"
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "oneOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "not": {
+          "$ref": "#/definitions/node"
+        },
+        "if": {
+          "$ref": "#/definitions/node"
+        },
+        "then": {
+          "$ref": "#/definitions/node"
+        },
+        "else": {
+          "$ref": "#/definitions/node"
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/node"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "additionalProperties": {
+          "$ref": "#/definitions/node"
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "$defs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/node"
+          }
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "x-format": {
+          "description": "Picks the editor of a field. Unknown values fall back to the default editor of the type.",
+          "type": "string",
+          "enum": [
+            "chips",
+            "color",
+            "colour",
+            "consent",
+            "date",
+            "date-range",
+            "date-time",
+            "duration",
+            "emoji-scale",
+            "file-data",
+            "image-choice",
+            "image-data",
+            "image-url-picker",
+            "linear-scale",
+            "markdown",
+            "matrix",
+            "nps",
+            "phone",
+            "ranking",
+            "segmented",
+            "signature",
+            "slider",
+            "star-rating",
+            "stepper",
+            "svg-part-picker",
+            "textarea",
+            "time"
+          ]
+        },
+        "x-layout": {
+          "description": "How an object is laid out: card (default), collapsible, plain, wizard, tabs.",
+          "enum": [
+            "card",
+            "collapsible",
+            "plain",
+            "wizard",
+            "tabs"
+          ]
+        },
+        "x-collapsed": {
+          "description": "A collapsible object starts folded.",
+          "type": "boolean"
+        },
+        "x-hidden": {
+          "description": "Kept in the data but never shown: ids, sources, calculated values nobody needs to see.",
+          "type": "boolean"
+        },
+        "x-calc": {
+          "description": "A JSON Logic rule whose result is the field's value, read-only. `{\"var\": \"a.b\"}` reads from the form's root, `{\"var\": \".b\"}` from the object holding the field (array items)."
+        },
+        "x-mask": {
+          "description": "An input pattern for a text field: `0` a digit, `A` a letter, `*` either; other characters are literal. `AA00 0000 0000`.",
+          "type": "string"
+        },
+        "x-mask-raw": {
+          "description": "Store only the typed characters, without the literals.",
+          "type": "boolean"
+        },
+        "x-unit": {
+          "description": "A unit after a number field, `kg`, `%`.",
+          "type": "string"
+        },
+        "x-currency": {
+          "description": "An ISO 4217 code; its symbol goes before a number field.",
+          "type": "string"
+        },
+        "x-rows": {
+          "description": "Visible lines of a textarea.",
+          "type": "integer"
+        },
+        "x-labels": {
+          "description": "A name per step of a scale.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "x-min-label": {
+          "description": "A label under the first step of a scale.",
+          "type": "string"
+        },
+        "x-max-label": {
+          "description": "A label under the last step of a scale.",
+          "type": "string"
+        },
+        "x-min-date": {
+          "description": "First selectable day of a date range, `yyyy-MM-dd`.",
+          "type": "string"
+        },
+        "x-max-date": {
+          "description": "Last selectable day of a date range, `yyyy-MM-dd`.",
+          "type": "string"
+        },
+        "x-accept": {
+          "description": "File extensions a file upload accepts, without dots.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "x-max-file-size": {
+          "description": "Largest file of a file upload, in bytes.",
+          "type": "integer"
+        },
+        "x-max-width": {
+          "description": "Photos are scaled down to this width, in pixels.",
+          "type": "number"
+        },
+        "x-max-height": {
+          "description": "Photos are scaled down to this height, in pixels.",
+          "type": "number"
+        },
+        "x-image-quality": {
+          "description": "JPEG quality of photos, 0–100.",
+          "type": "integer"
+        },
+        "x-default-country": {
+          "description": "The country a phone field starts with, `DE`.",
+          "type": "string"
+        },
+        "x-countries": {
+          "description": "The countries a phone field offers.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "x-svg-asset": {
+          "description": "The SVG asset of an svg-part-picker.",
+          "type": "string"
+        },
+        "x-image": {
+          "description": "The picture URL of an image-choice option (on a branch).",
+          "type": "string"
+        }
+      }
+    },
+    "typeName": {
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "object",
+        "array",
+        "null"
+      ]
+    }
+  },
+  "x-catalog": {
+    "version": 1,
+    "formats": {
+      "chips": {
+        "types": [
+          "array"
+        ],
+        "requires": "itemChoices"
+      },
+      "colour": {
+        "types": [
+          "string"
+        ]
+      },
+      "color": {
+        "types": [
+          "string"
+        ]
+      },
+      "consent": {
+        "types": [
+          "boolean"
+        ]
+      },
+      "date": {
+        "types": [
+          "string",
+          "integer",
+          "number"
+        ]
+      },
+      "date-range": {
+        "types": [
+          "object",
+          "string"
+        ]
+      },
+      "date-time": {
+        "types": [
+          "string",
+          "integer",
+          "number"
+        ]
+      },
+      "duration": {
+        "types": [
+          "string",
+          "integer",
+          "number"
+        ]
+      },
+      "emoji-scale": {
+        "types": [
+          "integer"
+        ],
+        "steps": {
+          "min": 2,
+          "max": 5,
+          "default": [
+            1,
+            5
+          ]
+        }
+      },
+      "file-data": {
+        "types": [
+          "string",
+          "object",
+          "array"
+        ],
+        "largeData": true
+      },
+      "image-choice": {
+        "requires": "constChoices"
+      },
+      "image-data": {
+        "types": [
+          "string",
+          "array"
+        ],
+        "largeData": true
+      },
+      "image-url-picker": {
+        "types": [
+          "string"
+        ]
+      },
+      "linear-scale": {
+        "types": [
+          "integer"
+        ],
+        "steps": {
+          "min": 2,
+          "max": 11,
+          "default": [
+            1,
+            5
+          ]
+        }
+      },
+      "markdown": {
+        "types": [
+          "string"
+        ]
+      },
+      "matrix": {
+        "types": [
+          "object"
+        ],
+        "requires": "rowChoices"
+      },
+      "nps": {
+        "types": [
+          "integer"
+        ],
+        "steps": {
+          "min": 2,
+          "max": 11,
+          "default": [
+            0,
+            10
+          ]
+        }
+      },
+      "phone": {
+        "types": [
+          "string"
+        ]
+      },
+      "ranking": {
+        "types": [
+          "array"
+        ],
+        "requires": "itemChoices"
+      },
+      "segmented": {
+        "requires": "choices"
+      },
+      "signature": {
+        "types": [
+          "string"
+        ]
+      },
+      "slider": {
+        "types": [
+          "number",
+          "integer"
+        ]
+      },
+      "star-rating": {
+        "types": [
+          "integer",
+          "string"
+        ]
+      },
+      "stepper": {
+        "types": [
+          "number",
+          "integer"
+        ]
+      },
+      "svg-part-picker": {
+        "types": [
+          "array",
+          "string"
+        ],
+        "requires": "svgAsset"
+      },
+      "textarea": {
+        "types": [
+          "string"
+        ]
+      },
+      "time": {
+        "types": [
+          "string",
+          "integer",
+          "number"
+        ]
+      }
+    },
+    "layouts": [
+      "card",
+      "collapsible",
+      "plain",
+      "wizard",
+      "tabs"
+    ],
+    "multiPageLayouts": [
+      "wizard",
+      "tabs"
+    ],
+    "keywords": {
+      "x-format": {
+        "value": "string"
+      },
+      "x-layout": {
+        "value": "string",
+        "on": [
+          "object"
+        ]
+      },
+      "x-collapsed": {
+        "value": "boolean",
+        "layouts": [
+          "collapsible"
+        ]
+      },
+      "x-hidden": {
+        "value": "boolean"
+      },
+      "x-calc": {
+        "value": "any"
+      },
+      "x-mask": {
+        "value": "string",
+        "on": [
+          "text"
+        ]
+      },
+      "x-mask-raw": {
+        "value": "boolean",
+        "on": [
+          "text"
+        ],
+        "needs": "x-mask"
+      },
+      "x-unit": {
+        "value": "string",
+        "on": [
+          "number"
+        ]
+      },
+      "x-currency": {
+        "value": "string",
+        "on": [
+          "number"
+        ]
+      },
+      "x-rows": {
+        "value": "integer",
+        "on": [
+          "textarea"
+        ]
+      },
+      "x-labels": {
+        "value": "string[]",
+        "on": [
+          "linear-scale",
+          "nps",
+          "emoji-scale"
+        ]
+      },
+      "x-min-label": {
+        "value": "string",
+        "on": [
+          "linear-scale",
+          "nps",
+          "emoji-scale"
+        ]
+      },
+      "x-max-label": {
+        "value": "string",
+        "on": [
+          "linear-scale",
+          "nps",
+          "emoji-scale"
+        ]
+      },
+      "x-min-date": {
+        "value": "string",
+        "on": [
+          "date-range"
+        ]
+      },
+      "x-max-date": {
+        "value": "string",
+        "on": [
+          "date-range"
+        ]
+      },
+      "x-accept": {
+        "value": "string[]",
+        "on": [
+          "file-data"
+        ]
+      },
+      "x-max-file-size": {
+        "value": "integer",
+        "on": [
+          "file-data"
+        ]
+      },
+      "x-max-width": {
+        "value": "number",
+        "on": [
+          "image-data"
+        ]
+      },
+      "x-max-height": {
+        "value": "number",
+        "on": [
+          "image-data"
+        ]
+      },
+      "x-image-quality": {
+        "value": "integer",
+        "on": [
+          "image-data"
+        ]
+      },
+      "x-default-country": {
+        "value": "string",
+        "on": [
+          "phone"
+        ]
+      },
+      "x-countries": {
+        "value": "string[]",
+        "on": [
+          "phone"
+        ]
+      },
+      "x-svg-asset": {
+        "value": "string",
+        "on": [
+          "svg-part-picker"
+        ]
+      },
+      "x-image": {
+        "value": "string"
+      }
+    },
+    "calcOperators": [
+      "var",
+      "missing",
+      "missing_some",
+      "if",
+      "?:",
+      "and",
+      "or",
+      "!",
+      "!!",
+      "==",
+      "!=",
+      "===",
+      "!==",
+      "<",
+      "<=",
+      ">",
+      ">=",
+      "+",
+      "-",
+      "*",
+      "/",
+      "%",
+      "min",
+      "max",
+      "round",
+      "map",
+      "filter",
+      "reduce",
+      "all",
+      "none",
+      "some",
+      "merge",
+      "in",
+      "count",
+      "cat",
+      "substr",
+      "log"
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Employee onboarding",
+  "x-layout": "wizard",
+  "properties": {
+    "person": {
+      "type": "object",
+      "title": "About you",
+      "required": ["name", "start"],
+      "properties": {
+        "name": {"type": "string", "title": "Full name"},
+        "phone": {"type": "string", "title": "Mobile", "x-format": "phone", "x-default-country": "DE"},
+        "start": {"type": "string", "title": "First day", "format": "date"},
+        "iban": {"type": "string", "title": "IBAN", "x-mask": "AA00 0000 0000 0000 0000 00", "x-mask-raw": true}
+      }
+    },
+    "workplace": {
+      "type": "object",
+      "title": "Workplace",
+      "x-layout": "tabs",
+      "properties": {
+        "office": {
+          "type": "object",
+          "title": "Office",
+          "properties": {
+            "building": {"type": "string", "title": "Building", "enum": ["North", "South"]},
+            "floor": {"type": "integer", "title": "Floor", "x-format": "stepper", "minimum": 0, "maximum": 12}
+          }
+        },
+        "equipment": {
+          "type": "object",
+          "title": "Equipment",
+          "properties": {
+            "devices": {
+              "type": "array",
+              "title": "Devices",
+              "x-format": "chips",
+              "uniqueItems": true,
+              "items": {"type": "string", "enum": ["Laptop", "Monitor", "Headset", "Phone"]}
+            }
+          }
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "title": "Documents",
+      "properties": {
+        "contract": {
+          "type": "string",
+          "title": "Signed contract",
+          "x-format": "file-data",
+          "x-accept": ["pdf"],
+          "x-max-file-size": 2000000
+        },
+        "terms": {
+          "type": "boolean",
+          "title": "Privacy",
+          "x-format": "consent",
+          "description": "I have read the [privacy notice](https://example.com/privacy).",
+          "const": true
+        }
+      },
+      "required": ["terms"]
+    }
+  }
+}
