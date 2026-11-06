@@ -27,6 +27,7 @@ flutter analyze                                # baseline: 14 issues on develop,
 flutter gen-l10n                               # after editing an ARB file
 UPDATE_LLM_DOCS=1 flutter test test/llm_docs_test.dart   # regenerate guide, llms.txt, meta-schema, lint fixtures
 cd example && flutter test && flutter test screenshots   # example tests; screenshots → doc/images
+make next-version / make release           # tag v<x.y.z> (master) or material-v<x.y.z> (renderer/material): tests, bump pubspec, tag, push
 ```
 
 Flutter commands need to run outside the command sandbox.
