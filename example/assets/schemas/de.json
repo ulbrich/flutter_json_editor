@@ -112,6 +112,503 @@
       "maximum": 5,
       "default": 0
     },
+    "workload": {
+      "type": "integer",
+      "x-format": "slider",
+      "title": "Arbeitsumfang",
+      "description": "Anteil einer Vollzeitstelle in Prozent",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 10
+    },
+    "deskCount": {
+      "type": "integer",
+      "x-format": "stepper",
+      "title": "Arbeitsplätze",
+      "description": "Anzahl benötigter Arbeitsplätze",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "officeDays": {
+      "type": "number",
+      "x-format": "stepper",
+      "title": "Bürotage",
+      "description": "Tage pro Woche im Büro, in halben Tagen",
+      "minimum": 0,
+      "maximum": 5,
+      "multipleOf": 0.5
+    },
+    "workMode": {
+      "type": "string",
+      "x-format": "segmented",
+      "title": "Arbeitsort",
+      "oneOf": [
+        {"const": "office", "title": "Büro"},
+        {"const": "hybrid", "title": "Hybrid"},
+        {"const": "remote", "title": "Remote"}
+      ]
+    },
+    "shirtSize": {
+      "type": "string",
+      "x-format": "segmented",
+      "title": "T-Shirt-Größe",
+      "enum": ["S", "M", "L", "XL"]
+    },
+    "languages": {
+      "type": "array",
+      "x-format": "chips",
+      "title": "Sprachen",
+      "description": "Bis zu drei auswählen",
+      "uniqueItems": true,
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {"const": "en", "title": "Englisch"},
+          {"const": "de", "title": "Deutsch"},
+          {"const": "fr", "title": "Französisch"},
+          {"const": "es", "title": "Spanisch"}
+        ]
+      }
+    },
+    "weeklyHours": {
+      "type": "string",
+      "format": "duration",
+      "title": "Wochenarbeitszeit",
+      "description": "Vereinbarte Arbeitszeit pro Woche"
+    },
+    "dailyBreak": {
+      "type": "integer",
+      "x-format": "duration",
+      "title": "Tägliche Pause",
+      "description": "Wird in Sekunden gespeichert"
+    },
+    "signature": {
+      "type": "string",
+      "x-format": "signature",
+      "title": "Unterschrift"
+    },
+    "photo": {
+      "type": "string",
+      "x-format": "image-data",
+      "title": "Foto",
+      "description": "Auf dem Gerät aufgenommen oder ausgewählt, als Base64 in den Daten gespeichert",
+      "x-max-width": 800,
+      "x-max-height": 800,
+      "x-image-quality": 80
+    },
+    "satisfaction": {
+      "type": "integer",
+      "x-format": "linear-scale",
+      "title": "Wie zufrieden bist du mit deinem Arbeitsplatz?",
+      "minimum": 1,
+      "maximum": 5,
+      "x-min-label": "Gar nicht",
+      "x-max-label": "Sehr",
+      "x-labels": [
+        "Schlecht",
+        "Mäßig",
+        "Gut",
+        "Sehr gut",
+        "Hervorragend"
+      ]
+    },
+    "recommend": {
+      "type": "integer",
+      "x-format": "nps",
+      "title": "Wie wahrscheinlich empfiehlst du uns als Arbeitgeber?"
+    },
+    "mood": {
+      "type": "integer",
+      "x-format": "emoji-scale",
+      "title": "Wie war deine Woche?",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "engagement": {
+      "type": "object",
+      "x-format": "matrix",
+      "title": "Wie sehr stimmst du zu?",
+      "required": [
+        "tools"
+      ],
+      "properties": {
+        "tools": {
+          "title": "Ich habe die Werkzeuge, die ich brauche",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Stimme nicht zu"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Stimme zu"
+            }
+          ]
+        },
+        "team": {
+          "title": "Mein Team unterstützt mich",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Stimme nicht zu"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Stimme zu"
+            }
+          ]
+        },
+        "growth": {
+          "title": "Ich kann lernen und wachsen",
+          "type": "string",
+          "oneOf": [
+            {
+              "const": "disagree",
+              "title": "Stimme nicht zu"
+            },
+            {
+              "const": "neutral",
+              "title": "Neutral"
+            },
+            {
+              "const": "agree",
+              "title": "Stimme zu"
+            }
+          ]
+        }
+      }
+    },
+    "priorities": {
+      "type": "array",
+      "x-format": "ranking",
+      "uniqueItems": true,
+      "title": "Was ist dir am wichtigsten?",
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {
+            "const": "salary",
+            "title": "Gehalt"
+          },
+          {
+            "const": "team",
+            "title": "Team"
+          },
+          {
+            "const": "remote",
+            "title": "Homeoffice"
+          },
+          {
+            "const": "growth",
+            "title": "Weiterentwicklung"
+          }
+        ]
+      }
+    },
+    "vacation": {
+      "type": "object",
+      "x-format": "date-range",
+      "title": "Nächster Urlaub",
+      "x-min-date": "2026-01-01",
+      "x-max-date": "2027-12-31",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "mobile": {
+      "type": "string",
+      "x-format": "phone",
+      "title": "Mobilnummer",
+      "x-default-country": "DE",
+      "x-countries": [
+        "AT",
+        "CH",
+        "DE",
+        "FR",
+        "GB",
+        "NL",
+        "US"
+      ]
+    },
+    "documents": {
+      "type": "array",
+      "x-format": "file-data",
+      "title": "Dokumente",
+      "description": "Lebenslauf und Zeugnisse, als base64 in den Daten gespeichert",
+      "maxItems": 3,
+      "x-accept": [
+        "pdf",
+        "docx",
+        "png",
+        "jpg"
+      ],
+      "x-max-file-size": 2000000,
+      "items": {
+        "type": "object"
+      }
+    },
+    "teamPhotos": {
+      "type": "array",
+      "x-format": "image-data",
+      "title": "Teamfotos",
+      "maxItems": 4,
+      "x-max-width": 800,
+      "items": {
+        "type": "string"
+      }
+    },
+    "commute": {
+      "type": "number",
+      "title": "Arbeitsweg (einfach)",
+      "x-unit": "km",
+      "minimum": 0
+    },
+    "commuteYearly": {
+      "type": "number",
+      "title": "Arbeitsweg pro Jahr",
+      "x-unit": "km",
+      "readOnly": true,
+      "description": "Berechnet: 2 × Arbeitsweg × Bürotage × 46 Wochen",
+      "x-calc": {
+        "round": [
+          {
+            "*": [
+              2,
+              {
+                "var": [
+                  "commute",
+                  0
+                ]
+              },
+              {
+                "var": [
+                  "officeDays",
+                  0
+                ]
+              },
+              46
+            ]
+          },
+          0
+        ]
+      }
+    },
+    "salary": {
+      "type": "number",
+      "title": "Gehaltswunsch",
+      "x-currency": "EUR",
+      "minimum": 0
+    },
+    "bonusRate": {
+      "type": "number",
+      "title": "Bonus",
+      "x-unit": "%",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "feedback": {
+      "type": "string",
+      "x-format": "textarea",
+      "title": "Sonst noch etwas, {{firstName}}?",
+      "x-rows": 3,
+      "maxLength": 280
+    },
+    "source": {
+      "type": "string",
+      "title": "Quelle",
+      "x-hidden": true
+    },
+    "emergencyContact": {
+      "type": "object",
+      "x-layout": "card",
+      "title": "Notfallkontakt",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "phone": {
+          "type": "string",
+          "x-format": "phone",
+          "title": "Telefon",
+          "x-default-country": "DE"
+        }
+      }
+    },
+    "bank": {
+      "type": "object",
+      "x-layout": "collapsible",
+      "title": "Bankverbindung",
+      "description": "Für die Gehaltsabrechnung",
+      "properties": {
+        "holder": {
+          "type": "string",
+          "title": "Kontoinhaber"
+        },
+        "iban": {
+          "type": "string",
+          "title": "IBAN",
+          "x-mask": "AA00 0000 0000 0000 0000 00"
+        }
+      }
+    },
+    "onboarding": {
+      "type": "object",
+      "x-layout": "wizard",
+      "title": "Onboarding",
+      "required": [
+        "you",
+        "privacy"
+      ],
+      "properties": {
+        "you": {
+          "type": "object",
+          "title": "Über dich",
+          "required": [
+            "team"
+          ],
+          "properties": {
+            "team": {
+              "type": "string",
+              "title": "Team",
+              "enum": [
+                "Design",
+                "Engineering",
+                "Sales"
+              ]
+            },
+            "buddy": {
+              "type": "string",
+              "title": "Onboarding-Buddy"
+            }
+          }
+        },
+        "setup": {
+          "type": "object",
+          "title": "Deine Ausstattung",
+          "properties": {
+            "laptop": {
+              "type": "string",
+              "x-format": "segmented",
+              "title": "Laptop",
+              "enum": [
+                "Mac",
+                "Windows",
+                "Linux"
+              ]
+            },
+            "monitors": {
+              "type": "integer",
+              "x-format": "stepper",
+              "title": "Monitore",
+              "minimum": 0,
+              "maximum": 3
+            }
+          }
+        },
+        "privacy": {
+          "type": "boolean",
+          "const": true,
+          "x-format": "consent",
+          "title": "Ich habe die [Datenschutzerklärung](https://example.com/privacy) gelesen und stimme ihr zu"
+        }
+      }
+    },
+    "workplace": {
+      "type": "object",
+      "x-layout": "tabs",
+      "title": "Arbeitsplatz",
+      "description": "Wo und wie du arbeitest",
+      "required": [
+        "office"
+      ],
+      "properties": {
+        "office": {
+          "type": "object",
+          "title": "Büro",
+          "required": [
+            "building"
+          ],
+          "properties": {
+            "building": {
+              "type": "string",
+              "title": "Gebäude",
+              "enum": [
+                "HQ",
+                "Campus",
+                "Downtown"
+              ]
+            },
+            "floor": {
+              "type": "integer",
+              "title": "Etage",
+              "x-format": "stepper",
+              "minimum": 0,
+              "maximum": 12
+            },
+            "desk": {
+              "type": "string",
+              "title": "Platznummer",
+              "x-mask": "A-000"
+            }
+          }
+        },
+        "equipment": {
+          "type": "object",
+          "title": "Ausstattung",
+          "properties": {
+            "items": {
+              "type": "array",
+              "title": "Gegenstände",
+              "x-format": "chips",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Headset",
+                  "Webcam",
+                  "Stehtisch",
+                  "Zweiter Monitor"
+                ]
+              }
+            }
+          }
+        },
+        "access": {
+          "type": "object",
+          "title": "Zugang",
+          "properties": {
+            "badge": {
+              "type": "string",
+              "title": "Ausweisnummer",
+              "x-mask": "0000-0000"
+            },
+            "parking": {
+              "type": "boolean",
+              "title": "Parkplatz"
+            }
+          }
+        }
+      }
+    },
     "employeeType": {
       "type": "string",
       "title": "Beschäftigungsart",

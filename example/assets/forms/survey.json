@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Customer survey",
+  "required": ["name", "satisfaction", "recommend"],
+  "properties": {
+    "name": {"type": "string", "title": "Your name"},
+    "satisfaction": {
+      "type": "integer",
+      "title": "How happy are you with us, {{name}}?",
+      "x-format": "emoji-scale",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "ease": {
+      "type": "integer",
+      "title": "How easy was ordering?",
+      "x-format": "linear-scale",
+      "minimum": 1,
+      "maximum": 7,
+      "x-min-label": "Hard",
+      "x-max-label": "Easy"
+    },
+    "recommend": {
+      "type": "integer",
+      "title": "How likely are you to recommend us?",
+      "x-format": "nps"
+    },
+    "liked": {
+      "type": "array",
+      "title": "What did you like?",
+      "x-format": "chips",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {"const": "price", "title": "Price"},
+          {"const": "delivery", "title": "Delivery"},
+          {"const": "support", "title": "Support"},
+          {"const": "quality", "title": "Quality"}
+        ]
+      }
+    },
+    "priorities": {
+      "type": "array",
+      "title": "Put these in order of importance",
+      "x-format": "ranking",
+      "items": {"type": "string", "enum": ["Price", "Speed", "Quality"]}
+    },
+    "service": {
+      "type": "object",
+      "title": "Rate our service",
+      "x-format": "matrix",
+      "properties": {
+        "shop": {"type": "string", "title": "Shop", "enum": ["Poor", "Fair", "Good"]},
+        "hotline": {"type": "string", "title": "Hotline", "enum": ["Poor", "Fair", "Good"]}
+      }
+    },
+    "contact": {
+      "type": "string",
+      "title": "May we contact you?",
+      "x-format": "segmented",
+      "oneOf": [
+        {"const": "no", "title": "No"},
+        {"const": "email", "title": "Email"},
+        {"const": "phone", "title": "Phone"}
+      ]
+    },
+    "comments": {"type": "string", "title": "Anything else?", "x-format": "textarea", "x-rows": 4},
+    "source": {"type": "string", "x-hidden": true, "default": "survey-2026"}
+  }
+}

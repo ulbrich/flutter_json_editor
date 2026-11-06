@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../l10n/json_editor_l10n.dart';
 import '../l10n/validation_l10n.dart';
@@ -8,6 +9,9 @@ import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
 import '../validation_helper.dart';
 
+/// A number typed in a text field. `x-unit` puts a unit after it
+/// (`"x-unit": "kg"`, `"%"`), `x-currency` an ISO 4217 code's symbol before
+/// it (`"x-currency": "EUR"` shows `€`). A decimal comma is read as a point.
 class NumberEditor extends SchemaFieldEditor {
   const NumberEditor({
     super.key,
@@ -63,10 +67,15 @@ class _NumberEditorState extends State<NumberEditor> {
       return;
     }
 
-    final parsed = _isDecimal ? double.tryParse(text) : int.tryParse(text);
+    final normalized = text.trim().replaceAll(',', '.');
+    final parsed = _isDecimal
+        ? double.tryParse(normalized)
+        : int.tryParse(normalized);
 
     if (parsed == null) {
-      setState(() => _errors = [JsonEditorL10n.of(context).invalidNumberFormat]);
+      setState(
+        () => _errors = [JsonEditorL10n.of(context).invalidNumberFormat],
+      );
       return;
     }
 
@@ -94,6 +103,19 @@ class _NumberEditorState extends State<NumberEditor> {
 
     final isConstValue = widget.schema.constValue != null;
     final isDisabled = isConstValue || widget.schema.readOnly == true;
+    final unit = widget.schema.schemaMap?['x-unit'];
+    final currency = widget.schema.schemaMap?['x-currency'];
+    String? symbol;
+    if (currency is String && currency.isNotEmpty) {
+      try {
+        symbol = intl.NumberFormat.simpleCurrency(
+          locale: Localizations.maybeLocaleOf(context)?.toString(),
+          name: currency.toUpperCase(),
+        ).currencySymbol;
+      } catch (_) {
+        symbol = currency.toUpperCase();
+      }
+    }
 
     return Padding(
       padding: editorTheme.fieldPadding,
@@ -109,6 +131,8 @@ class _NumberEditorState extends State<NumberEditor> {
               ),
               decoration: InputDecoration(
                 labelText: _buildLabel(),
+                prefixText: symbol == null ? null : '$symbol ',
+                suffixText: unit is String && unit.isNotEmpty ? unit : null,
                 helperText: widget.schema.description,
                 errorText: localizeFirstValidationError(
                   JsonEditorL10n.of(context),

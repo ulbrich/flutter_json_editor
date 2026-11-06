@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Order",
+  "required": [
+    "customer",
+    "items"
+  ],
+  "properties": {
+    "customer": {
+      "type": "string",
+      "title": "Customer"
+    },
+    "delivery": {
+      "type": "string",
+      "title": "Delivery",
+      "format": "date"
+    },
+    "items": {
+      "type": "array",
+      "title": "Items",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "product",
+          "qty",
+          "price"
+        ],
+        "properties": {
+          "product": {
+            "type": "string",
+            "title": "Product"
+          },
+          "qty": {
+            "type": "integer",
+            "title": "Quantity",
+            "minimum": 1,
+            "default": 1
+          },
+          "price": {
+            "type": "number",
+            "title": "Unit price",
+            "x-currency": "EUR",
+            "minimum": 0
+          },
+          "sum": {
+            "type": "number",
+            "title": "Line total",
+            "x-currency": "EUR",
+            "x-calc": {
+              "round": [
+                {
+                  "*": [
+                    {
+                      "var": ".qty"
+                    },
+                    {
+                      "var": ".price"
+                    }
+                  ]
+                },
+                2
+              ]
+            }
+          }
+        }
+      }
+    },
+    "discount": {
+      "type": "number",
+      "title": "Discount",
+      "x-unit": "%",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "net": {
+      "type": "number",
+      "title": "Net",
+      "x-currency": "EUR",
+      "x-calc": {
+        "round": [
+          {
+            "*": [
+              {
+                "reduce": [
+                  {
+                    "var": "items"
+                  },
+                  {
+                    "+": [
+                      {
+                        "var": "accumulator"
+                      },
+                      {
+                        "var": "current.sum"
+                      }
+                    ]
+                  },
+                  0
+                ]
+              },
+              {
+                "-": [
+                  1,
+                  {
+                    "/": [
+                      {
+                        "var": "discount"
+                      },
+                      100
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          2
+        ]
+      }
+    },
+    "vat": {
+      "type": "number",
+      "title": "VAT 19 %",
+      "x-currency": "EUR",
+      "x-calc": {
+        "round": [
+          {
+            "*": [
+              {
+                "var": "net"
+              },
+              0.19
+            ]
+          },
+          2
+        ]
+      }
+    },
+    "gross": {
+      "type": "number",
+      "title": "Total",
+      "x-currency": "EUR",
+      "x-calc": {
+        "round": [
+          {
+            "+": [
+              {
+                "var": "net"
+              },
+              {
+                "var": "vat"
+              }
+            ]
+          },
+          2
+        ]
+      }
+    },
+    "summary": {
+      "type": "string",
+      "x-hidden": true,
+      "x-calc": {
+        "cat": [
+          {
+            "count": [
+              {
+                "var": "items"
+              }
+            ]
+          },
+          " items for ",
+          {
+            "var": "customer"
+          }
+        ]
+      }
+    }
+  }
+}

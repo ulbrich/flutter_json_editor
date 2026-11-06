@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'json_editor_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -40,6 +41,42 @@ class JsonEditorLocalizationsDe extends JsonEditorLocalizations {
 
   @override
   String get selectOptionLabel => 'Auswählen…';
+
+  @override
+  String get increaseTooltip => 'Erhöhen';
+
+  @override
+  String get decreaseTooltip => 'Verringern';
+
+  @override
+  String get undoTooltip => 'Rückgängig';
+
+  @override
+  String get signatureHint => 'Hier unterschreiben';
+
+  @override
+  String get hoursLabel => 'Stunden';
+
+  @override
+  String get minutesLabel => 'Minuten';
+
+  @override
+  String get invalidDurationFormat => 'Ungültige Dauer';
+
+  @override
+  String get choosePictureLabel => 'Bild auswählen';
+
+  @override
+  String get takePhotoLabel => 'Foto aufnehmen';
+
+  @override
+  String get removeImageTooltip => 'Bild entfernen';
+
+  @override
+  String get invalidImageData => 'Ungültige Bilddaten';
+
+  @override
+  String get imagePickFailed => 'Das Bild konnte nicht geladen werden';
 
   @override
   String get noImagesAvailableLabel => 'Keine Bilder verfügbar';
@@ -129,5 +166,110 @@ class JsonEditorLocalizationsDe extends JsonEditorLocalizations {
   @override
   String addNestedLabel(String typeName) {
     return '$typeName hinzufügen';
+  }
+
+  @override
+  String get npsLowLabel => 'Sehr unwahrscheinlich';
+
+  @override
+  String get npsHighLabel => 'Sehr wahrscheinlich';
+
+  @override
+  String get moveUpTooltip => 'Nach oben';
+
+  @override
+  String get moveDownTooltip => 'Nach unten';
+
+  @override
+  String get rankingHint => 'Zum Sortieren ziehen oder die Pfeile nutzen';
+
+  @override
+  String get dateRangeLabel => 'Von – bis';
+
+  @override
+  String get phoneCountryLabel => 'Land';
+
+  @override
+  String get phoneNumberLabel => 'Nummer';
+
+  @override
+  String get invalidPhoneNumber =>
+      'Keine gültige Telefonnummer für dieses Land';
+
+  @override
+  String get wizardBack => 'Zurück';
+
+  @override
+  String get wizardNext => 'Weiter';
+
+  @override
+  String get wizardFinish => 'Fertig';
+
+  @override
+  String get wizardStepIncomplete =>
+      'Bitte fülle die Pflichtfelder auf dieser Seite aus';
+
+  @override
+  String get tabIncomplete =>
+      'Auf diesem Tab fehlen Angaben oder sind ungültig';
+
+  @override
+  String get calcCycleError => 'Diese Berechnung hängt von sich selbst ab';
+
+  @override
+  String get chooseFileLabel => 'Datei wählen';
+
+  @override
+  String get replaceFileLabel => 'Datei ersetzen';
+
+  @override
+  String get removeFileTooltip => 'Datei entfernen';
+
+  @override
+  String get unnamedFile => 'Unbenannte Datei';
+
+  @override
+  String get filePickFailed => 'Die Datei konnte nicht gelesen werden';
+
+  @override
+  String get invalidFileData => 'Die gespeicherte Datei ist nicht lesbar';
+
+  @override
+  String get consentRequired => 'Bitte stimme zu, um fortzufahren';
+
+  @override
+  String dayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage',
+      one: '1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wizardStep(int current, int total) {
+    return 'Schritt $current von $total';
+  }
+
+  @override
+  String fileTooLarge(String size) {
+    return 'Die Datei ist größer als $size';
+  }
+
+  @override
+  String fileTypeNotAllowed(String types) {
+    return 'Erlaubt sind nur: $types';
+  }
+
+  @override
+  String maxFileSizeHint(String size) {
+    return 'Höchstens $size';
+  }
+
+  @override
+  String maskIncomplete(String pattern) {
+    return 'Bitte im Format $pattern eingeben';
   }
 }

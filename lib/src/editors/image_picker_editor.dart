@@ -93,13 +93,10 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
     // Plain enum values — each value is an image URL
     final enumValues = widget.schema.enumValues;
     if (enumValues != null) {
-      return enumValues
-          .where((v) => v != null)
-          .map((v) {
-            final url = v.toString();
-            return _ImageItem(value: url, imageUrl: url);
-          })
-          .toList();
+      return enumValues.where((v) => v != null).map((v) {
+        final url = v.toString();
+        return _ImageItem(value: url, imageUrl: url);
+      }).toList();
     }
     return [];
   }
@@ -167,21 +164,18 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
   }
 
   String _resolveTemplate(String template, Map item) {
-    return template.replaceAllMapped(
-      RegExp(r'\{\{item\.([^}]+)\}\}'),
-      (match) {
-        final path = match.group(1)!;
-        dynamic current = item;
-        for (final segment in path.split('.')) {
-          if (current is Map) {
-            current = current[segment];
-          } else {
-            return match.group(0)!;
-          }
+    return template.replaceAllMapped(RegExp(r'\{\{item\.([^}]+)\}\}'), (match) {
+      final path = match.group(1)!;
+      dynamic current = item;
+      for (final segment in path.split('.')) {
+        if (current is Map) {
+          current = current[segment];
+        } else {
+          return match.group(0)!;
         }
-        return current?.toString() ?? '';
-      },
-    );
+      }
+      return current?.toString() ?? '';
+    });
   }
 
   void _onItemTapped(String itemValue) {
@@ -201,8 +195,7 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final editorTheme =
-        Theme.of(context).extension<JsonEditorTheme>() ??
+    final editorTheme = Theme.of(context).extension<JsonEditorTheme>() ??
         EditorThemeDefaults.fromContext(context);
     final colorScheme = Theme.of(context).colorScheme;
     final labelText = _buildLabel();
@@ -213,7 +206,11 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(labelText, style: editorTheme.labelStyle ?? Theme.of(context).textTheme.bodyMedium),
+            Text(
+              labelText,
+              style: editorTheme.labelStyle ??
+                  Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 8),
             const LinearProgressIndicator(),
           ],
@@ -227,9 +224,17 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(labelText, style: editorTheme.labelStyle ?? Theme.of(context).textTheme.bodyMedium),
+            Text(
+              labelText,
+              style: editorTheme.labelStyle ??
+                  Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 4),
-            Text(_error!, style: editorTheme.errorStyle ?? TextStyle(color: colorScheme.error, fontSize: 12)),
+            Text(
+              _error!,
+              style: editorTheme.errorStyle ??
+                  TextStyle(color: colorScheme.error, fontSize: 12),
+            ),
           ],
         ),
       );
@@ -258,9 +263,10 @@ class _ImagePickerEditorState extends State<ImagePickerEditor> {
           if (_items.isEmpty)
             Text(
               JsonEditorL10n.of(context).noImagesAvailableLabel,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             )
           else
             Wrap(

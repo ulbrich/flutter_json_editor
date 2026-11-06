@@ -7,7 +7,13 @@ import '../schema_field_editor.dart';
 import '../theme/editor_theme.dart';
 import '../theme/editor_theme_defaults.dart';
 import '../validation_helper.dart';
+import '../input_mask.dart';
 
+/// A one-line text field. With `x-mask` (see [InputMask]) the text keeps a
+/// fixed pattern while typing, `"x-mask": "AA00 0000 0000 0000 0000 00"`;
+/// the value is the text as shown, or only the typed characters with
+/// `"x-mask-raw": true`. A text that doesn't fill the pattern shows an
+/// error.
 class StringEditor extends SchemaFieldEditor {
   const StringEditor({
     super.key,
@@ -27,13 +33,27 @@ class _StringEditorState extends State<StringEditor> {
   late TextEditingController _controller;
   List<String> _errors = [];
 
+  InputMask? get _mask {
+    final pattern = widget.schema.schemaMap?['x-mask'];
+    return pattern is String && pattern.isNotEmpty ? InputMask(pattern) : null;
+  }
+
+  bool get _storesRaw => widget.schema.schemaMap?['x-mask-raw'] == true;
+
+  /// [value] as the field shows it: laid out by the mask, when there is one.
+  String _display(dynamic value) {
+    final text = value?.toString() ?? '';
+    final mask = _mask;
+    return mask == null || text.isEmpty ? text : mask.apply(text);
+  }
+
   @override
   void initState() {
     super.initState();
     final isConstValue = widget.schema.constValue != null;
     final initialText = isConstValue
         ? widget.schema.constValue?.toString() ?? ''
-        : widget.value?.toString() ?? '';
+        : _display(widget.value);
     _controller = TextEditingController(text: initialText);
   }
 
@@ -47,7 +67,7 @@ class _StringEditorState extends State<StringEditor> {
   void didUpdateWidget(StringEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
-      final newText = widget.value?.toString() ?? '';
+      final newText = _display(widget.value);
       if (_controller.text != newText) {
         _controller.text = newText;
       }
@@ -55,12 +75,15 @@ class _StringEditorState extends State<StringEditor> {
   }
 
   void _handleChanged(String text) {
-    final errors = ValidationHelper.validateField(
-      widget.schema,
-      text.isEmpty ? null : text,
-    );
+    final mask = _mask;
+    final stored = mask != null && _storesRaw ? mask.raw(text) : text;
+    final value = stored.isEmpty ? null : stored;
+    final errors = [...ValidationHelper.validateField(widget.schema, value)];
+    if (mask != null && text.isNotEmpty && !mask.isComplete(text)) {
+      errors.insert(0, JsonEditorL10n.of(context).maskIncomplete(mask.hint));
+    }
     setState(() => _errors = errors);
-    widget.onChanged(text.isEmpty ? null : text);
+    widget.onChanged(value);
   }
 
   void _clearToNull() {
@@ -90,6 +113,7 @@ class _StringEditorState extends State<StringEditor> {
     final isConstValue = widget.schema.constValue != null;
     final isDisabled = isConstValue || widget.schema.readOnly == true;
     final isObscured = widget.schema.writeOnly == true;
+    final mask = _mask;
 
     return Padding(
       padding: editorTheme.fieldPadding,
@@ -101,11 +125,16 @@ class _StringEditorState extends State<StringEditor> {
               controller: _controller,
               enabled: !isDisabled,
               obscureText: isObscured,
-              keyboardType: _keyboardType(),
+              keyboardType:
+                  mask != null && !mask.pattern.contains(RegExp('[A*]'))
+                  ? TextInputType.number
+                  : _keyboardType(),
+              inputFormatters: mask == null ? null : [mask.formatter],
               maxLines: isDisabled ? null : 1,
               minLines: isDisabled ? 1 : null,
               decoration: InputDecoration(
                 labelText: _buildLabel(),
+                hintText: mask?.hint,
                 helperText: widget.schema.description,
                 errorText: localizeFirstValidationError(
                   JsonEditorL10n.of(context),

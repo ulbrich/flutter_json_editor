@@ -34,6 +34,42 @@
   "selectOptionLabel": "Select…",
   "@selectOptionLabel": { "description": "Placeholder of a picture choice field while nothing is chosen" },
 
+  "increaseTooltip": "Increase",
+  "@increaseTooltip": { "description": "Tooltip of the + button of a stepper field" },
+
+  "decreaseTooltip": "Decrease",
+  "@decreaseTooltip": { "description": "Tooltip of the − button of a stepper field" },
+
+  "undoTooltip": "Undo",
+  "@undoTooltip": { "description": "Tooltip of the button that removes the last stroke of a signature field" },
+
+  "signatureHint": "Sign here",
+  "@signatureHint": { "description": "Hint shown on an empty signature pad" },
+
+  "hoursLabel": "Hours",
+  "@hoursLabel": { "description": "Label of the hours field of a duration" },
+
+  "minutesLabel": "Minutes",
+  "@minutesLabel": { "description": "Label of the minutes field of a duration" },
+
+  "invalidDurationFormat": "Invalid duration",
+  "@invalidDurationFormat": { "description": "Error when a stored duration isn't an ISO 8601 duration the editor can read" },
+
+  "choosePictureLabel": "Choose picture",
+  "@choosePictureLabel": { "description": "Button of the image data editor that picks a picture from the photo library or a file" },
+
+  "takePhotoLabel": "Take photo",
+  "@takePhotoLabel": { "description": "Button of the image data editor that takes a picture with the camera" },
+
+  "removeImageTooltip": "Remove picture",
+  "@removeImageTooltip": { "description": "Tooltip of the button that removes the picture of an image data field" },
+
+  "invalidImageData": "Invalid image data",
+  "@invalidImageData": { "description": "Error when a stored value isn't a base64 string or data URI" },
+
+  "imagePickFailed": "The picture could not be loaded",
+  "@imagePickFailed": { "description": "Error when picking or taking a picture failed, e.g. without camera permission" },
+
   "noImagesAvailableLabel": "No images available",
   "@noImagesAvailableLabel": { "description": "Shown when an image picker has no images to display" },
 
@@ -137,5 +173,62 @@
     "placeholders": {
       "typeName": { "type": "String" }
     }
-  }
+  },
+
+  "npsLowLabel": "Not at all likely",
+  "@npsLowLabel": {"description": "Label under the lowest NPS score"},
+  "npsHighLabel": "Extremely likely",
+  "@npsHighLabel": {"description": "Label under the highest NPS score"},
+  "moveUpTooltip": "Move up",
+  "@moveUpTooltip": {"description": "Tooltip of the button that moves a ranked choice up"},
+  "moveDownTooltip": "Move down",
+  "@moveDownTooltip": {"description": "Tooltip of the button that moves a ranked choice down"},
+  "rankingHint": "Drag or use the arrows to put the choices in order",
+  "@rankingHint": {"description": "Hint above a ranking that hasn't been ordered yet"},
+  "dateRangeLabel": "From – to",
+  "@dateRangeLabel": {"description": "Label of the date range field"},
+  "phoneCountryLabel": "Country",
+  "@phoneCountryLabel": {"description": "Label of the country menu of a phone number"},
+  "phoneNumberLabel": "Number",
+  "@phoneNumberLabel": {"description": "Label of the number part of a phone number"},
+  "invalidPhoneNumber": "Not a valid phone number for this country",
+  "@invalidPhoneNumber": {"description": "Error for an invalid phone number"},
+  "wizardBack": "Back",
+  "@wizardBack": {"description": "Button to the previous wizard page"},
+  "wizardNext": "Next",
+  "@wizardNext": {"description": "Button to the next wizard page"},
+  "wizardFinish": "Finish",
+  "@wizardFinish": {"description": "Button that submits the form on the last wizard page"},
+  "wizardStepIncomplete": "Please fill in the required fields on this page",
+  "@wizardStepIncomplete": {"description": "Error when going on from an incomplete wizard page"},
+  "tabIncomplete": "Some answers on this tab are missing or invalid",
+  "@tabIncomplete": {"description": "Tooltip of the mark on a tab with missing or invalid answers"},
+  "calcCycleError": "This calculation depends on itself",
+  "@calcCycleError": {"description": "Error on a calculated field whose formulas form a loop"},
+  "chooseFileLabel": "Choose file",
+  "@chooseFileLabel": {"description": "Button that opens the file chooser"},
+  "replaceFileLabel": "Replace file",
+  "@replaceFileLabel": {"description": "Button that chooses another file in place of the current one"},
+  "removeFileTooltip": "Remove file",
+  "@removeFileTooltip": {"description": "Tooltip of the button that removes a file"},
+  "unnamedFile": "Unnamed file",
+  "@unnamedFile": {"description": "Name shown for a stored file without one"},
+  "filePickFailed": "The file couldn't be read",
+  "@filePickFailed": {"description": "Error when choosing a file failed"},
+  "invalidFileData": "The stored file can't be read",
+  "@invalidFileData": {"description": "Error when a stored file isn't valid base64"},
+  "consentRequired": "Please agree to continue",
+  "@consentRequired": {"description": "Error when a required consent isn't given"},
+  "dayCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@dayCount": {"description": "Number of days in a date range", "placeholders": {"count": {"type": "int"}}},
+  "wizardStep": "Step {current} of {total}",
+  "@wizardStep": {"description": "Progress text of a wizard", "placeholders": {"current": {"type": "int"}, "total": {"type": "int"}}},
+  "fileTooLarge": "The file is larger than {size}",
+  "@fileTooLarge": {"description": "Error for a file over the size limit", "placeholders": {"size": {"type": "String"}}},
+  "fileTypeNotAllowed": "Only these are allowed: {types}",
+  "@fileTypeNotAllowed": {"description": "Error for a file of a type not allowed", "placeholders": {"types": {"type": "String"}}},
+  "maxFileSizeHint": "Up to {size}",
+  "@maxFileSizeHint": {"description": "Hint with the largest file allowed", "placeholders": {"size": {"type": "String"}}},
+  "maskIncomplete": "Please enter it as {pattern}",
+  "@maskIncomplete": {"description": "Error when a masked text isn't complete", "placeholders": {"pattern": {"type": "String"}}}
 }
